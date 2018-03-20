@@ -1,3 +1,4 @@
 # eshop
 
-Basic project with mock data
+University group project on building an e-shop.
+
