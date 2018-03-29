@@ -48,7 +48,7 @@ public class ProductController {
                 byte[] buffer = new byte[targetStream.available()];
                 targetStream.read(buffer);
 
-                File targetFile = new File(String.format("productImages/%d_%s", id, images[i].getOriginalFilename()));
+                File targetFile = new File(String.format("product-images/%d_%s", id, images[i].getOriginalFilename()));
                 OutputStream outStream = new FileOutputStream(targetFile);
                 outStream.write(buffer);
             } catch (Exception e) {
