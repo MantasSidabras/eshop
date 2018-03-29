@@ -1,6 +1,6 @@
 package com.eshop.services;
 
-import com.eshop.dao.ProductDao;
+import com.eshop.repositories.ProductRepository;
 import com.eshop.entities.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,13 +13,16 @@ import java.util.Collection;
 @Service
 public class ProductService {
     @Autowired
-    private ProductDao productDao;
+    private ProductRepository productRepository;
 
-    public Collection<Product> getItems() {
-        return this.productDao.getItems();
+    public Product save(Product product) {
+        return this.productRepository.save(product);
+    }
+    public Collection<Product> getAll() {
+        return this.productRepository.getAll();
     }
 
-    public Product getItemById(int id) {
-        return this.productDao.getItemById(id);
+    public Product getById(int id) {
+        return this.productRepository.getById(id);
     }
 }
