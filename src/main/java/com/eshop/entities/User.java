@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "USERS")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -19,6 +19,7 @@ public class User {
     private Integer id;
 
     @Size(min = 3, max = 128)
+    @Column(unique = true)
     private String email;
 
     private String password;
@@ -29,11 +30,11 @@ public class User {
 
     private LocalDateTime dateCreated;
 
-//    @OneToMany(mappedBy = "userId")
-//    private List<CartProduct> productList = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "userId")
-//    private List<Order> orderList = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    private List<CartProduct> cartProductList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Order> orderList = new ArrayList<>();
 
     public User(){}
 
@@ -91,5 +92,21 @@ public class User {
 
     public void setDateCreated(LocalDateTime dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    public List<Order> getOrderList() {
+        return orderList;
+    }
+
+    public void setOrderList(List<Order> orderList) {
+        this.orderList = orderList;
+    }
+
+    public List<CartProduct> getCartProductList() {
+        return cartProductList;
+    }
+
+    public void setCartProductList(List<CartProduct> cartProductList) {
+        this.cartProductList = cartProductList;
     }
 }

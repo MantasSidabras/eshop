@@ -1,12 +1,12 @@
 package com.eshop.controllers;
 
+import com.eshop.controllers.requestors.UserCreateRequest;
+import com.eshop.entities.Order;
 import com.eshop.entities.User;
 import com.eshop.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,13 +17,22 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @ResponseBody
     @GetMapping
     public List<User> getAllUsers(){
+//        List<User> users = userService.getAllUsers();
+//        for (User user : users) {
+//            for (Order order :user.getOrderList()) {
+//                order
+//            }
+//
+//        }
         return userService.getAllUsers();
     }
 
-//    @PostMapping
-//    public User createUser(){
-//       // return userService.createUser();
-//    }
+    @ResponseBody
+    @PostMapping(consumes = "application/json", produces = "application/json")
+    public User createUser(@RequestBody UserCreateRequest ucr){
+        return userService.createUser(ucr.getEmail(), ucr.getPassword());
+    }
 }
