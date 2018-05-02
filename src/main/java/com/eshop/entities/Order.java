@@ -36,6 +36,17 @@ public class Order {
     @OneToMany(mappedBy = "order")
     private List<OrderProduct> orderProductList = new ArrayList<>();
 
+    public Order(){}
+
+    public Order(User user, String address){
+        this.user = user;
+        this.price = new BigDecimal(0);
+        this.state = false;
+        this.dateCreated =  LocalDateTime.now();
+        this.address = address;
+
+    }
+
     public Integer getId() {
         return id;
     }
