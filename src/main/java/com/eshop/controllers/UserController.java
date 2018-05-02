@@ -49,7 +49,7 @@ public class UserController {
 
     @ResponseBody
     @PutMapping(consumes = "application/json", produces = "application/json")
-    public User update(@RequestBody User user){
+    public User updateUser(@RequestBody User user){
         return userService.update(user);
     }
 }
