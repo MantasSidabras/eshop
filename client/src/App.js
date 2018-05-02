@@ -31,13 +31,7 @@ const Backdrop = styled.div`
 class State extends Component {
   state = {
     products: [],
-    users: [
-      { id: 1, email: "balchen@hotmail.com", isBlocked: false },
-      { id: 2, email: "juerd@sbcglobal.net", isBlocked: false },
-      { id: 3, email: "gavinls@icloud.com", isBlocked: true },
-      { id: 4, email: "magusnet@optonline.net", isBlocked: false },
-      { id: 5, email: "jginspace@msn.com", isBlocked: true }
-    ]
+    users: []
   }
 
   toggleBlockUser = id => { 
@@ -55,16 +49,22 @@ class State extends Component {
       .then(products => this.setState({ products }))
       .catch(error => console.error(error))
 
-    fetch('http://localhost:8080/api/user/1')
-      .then(res => {
-        if (res.status === 404) {
-          throw Error("User not found")
-        } else {
-          return res.json()
-        }
-      })
-      .then(res => console.log(res))
+      
+    fetch('http://localhost:8080/api/user')
+      .then(res => res.json())
+      .then(users => this.setState({ users }))
       .catch(error => console.error(error))
+
+    // fetch('http://localhost:8080/api/user/1')
+    //   .then(res => {
+    //     if (res.status === 404) {
+    //       throw Error("User not found")
+    //     } else {
+    //       return res.json()
+    //     }
+    //   })
+    //   .then(res => console.log(res))
+    //   .catch(error => console.error(error))
 
   }
 
