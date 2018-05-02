@@ -10,5 +10,5 @@ import java.util.List;
 public interface CartProductDAO extends JpaRepository<CartProduct, Integer> {
     //Basic CRUD auto-implemented
 
-    List<CartProduct> findByUserId(Integer id);
+    List<CartProduct> findAllByUserId(Integer id);
 }
