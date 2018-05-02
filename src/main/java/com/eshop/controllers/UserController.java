@@ -3,6 +3,7 @@ package com.eshop.controllers;
 import com.eshop.controllers.requestors.UserCreateRequest;
 import com.eshop.entities.Order;
 import com.eshop.entities.User;
+import com.eshop.services.CartProductService;
 import com.eshop.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,13 +21,6 @@ public class UserController {
     @ResponseBody
     @GetMapping
     public List<User> getAllUsers(){
-//        List<User> users = userService.getAllUsers();
-//        for (User user : users) {
-//            for (Order order :user.getOrderList()) {
-//                order
-//            }
-//
-//        }
         return userService.getAllUsers();
     }
 

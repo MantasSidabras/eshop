@@ -28,6 +28,13 @@ public class CartProduct {
     @Size(min = 0)
     private Integer quantity;
 
+    public CartProduct(){}
+
+    public CartProduct(User user, Product product, Integer quantity){
+        this.user = user;
+        this.product = product;
+        this.quantity = quantity;
+    }
 
     public Integer getId() {
         return id;
