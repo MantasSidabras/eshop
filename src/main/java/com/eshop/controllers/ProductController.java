@@ -1,7 +1,7 @@
 package com.eshop.controllers;
 
-import com.eshop.entities.ProductOLD;
-import com.eshop.services.ProductOLDService;
+import com.eshop.entities.Product;
+import com.eshop.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -21,19 +21,21 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:3000")
 public class ProductController {
     @Autowired
-    private ProductOLDService productOLDService;
+    private ProductService productService;
 
     @GetMapping(value = "/products", produces = "application/json")
     @ResponseBody
-    public Collection<ProductOLD> getProducts() {
-        return productOLDService.getAll();
+    public Collection<Product> getProducts() {
+        return productService.getAllProducts();
     }
 
     @PostMapping(value = "/products", consumes = "application/json", produces = "application/json")
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductOLD setProduct(@RequestBody ProductOLD productOLD) {
-        return this.productOLDService.save(productOLD);
+    public Product setProduct(@RequestBody Product project) {
+        //TODO: refactor UI to use Project instead of ProjectOld
+        //return this.productService.save(productOLD);
+        return null;
     }
 
     @PostMapping(value = "/products/{id}/images", consumes = "multipart/form-data", produces = "application/json")
@@ -64,7 +66,10 @@ public class ProductController {
 
     @GetMapping(value = "/products/{id}", produces = "application/json")
     @ResponseBody
-    public ProductOLD getProductById(@PathVariable("id") int id) {
-        return productOLDService.getById(id);
+
+    public Product getProductById(@PathVariable("id") int id) {
+        //TODO: refactor UI to use Project instead of ProjectOld
+        //return productService.getById(id);
+        return null;
     }
 }

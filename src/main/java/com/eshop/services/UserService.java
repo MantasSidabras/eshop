@@ -29,4 +29,8 @@ public class UserService {
     public User update(User user) {
         return userDAO.save(user);
     }
+
+    public User getUserByEmail(String email) {
+        return userDAO.findByEmail(email);
+    }
 }
