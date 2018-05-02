@@ -42,7 +42,7 @@ public class ProductController {
         Map<String, String> res = new HashMap<>();
 
         for (int i = 0; i < images.length; i++) {
-            System.out.println(String.format("File name %s", images[i].getOriginalFilename()));
+            System.out.println(String.format("File name: %s", images[i].getOriginalFilename()));
             try {
                 InputStream targetStream = images[i].getInputStream();
                 byte[] buffer = new byte[targetStream.available()];

@@ -1,6 +1,7 @@
 package com.eshop.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 
@@ -33,12 +34,15 @@ public class Product {
 
     private LocalDateTime dateCreated;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "product")
     private List<ProductPicture> productPictureList = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "product")
     private List<CartProduct> cartProductList = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "product")
     private List<OrderProduct> orderProductList = new ArrayList<>();
 
