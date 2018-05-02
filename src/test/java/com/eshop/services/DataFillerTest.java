@@ -26,11 +26,11 @@ public class DataFillerTest {
 
         //Create users
 
-        userService.createUser("Mantas", "slaptikas");
-        userService.createUser("Benas", "miau");
-        userService.createUser("Paulius", "swx");
-        userService.createUser("Domas", "asdfasdf");
-        userService.createUser("Karolis", "ponas");
+        userService.create("Mantas", "slaptikas");
+        userService.create("Benas", "miau");
+        userService.create("Paulius", "swx");
+        userService.create("Domas", "asdfasdf");
+        userService.create("Karolis", "ponas");
 
         //Create products
         productService.createProduct("Vienkartinės nosinaitės", "Išsipūsk savo nosį!", BigDecimal.valueOf(0.35), 5);

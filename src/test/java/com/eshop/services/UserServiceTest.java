@@ -20,7 +20,7 @@ public class UserServiceTest {
         //Act
         String email = "Jonas@joneliai.comasdfasdgfasdgsssss";
         String password = "senuks";
-        userService.createUser(email, password);
+        userService.create(email, password);
 
         //Assert
         User user = userService.getUserByEmail(email);
