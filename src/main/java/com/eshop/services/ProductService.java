@@ -14,9 +14,8 @@ public class ProductService {
     @Autowired
     private ProductDAO productDAO;
 
-    public Product createProduct(String name, String description, BigDecimal price, Integer quantity){
-        Product newProduct = new Product(name,description,price,quantity);
-        return productDAO.save(newProduct);
+    public Product create(Product product){
+        return productDAO.save(product);
     }
 
     public List<Product> getAllProducts(){

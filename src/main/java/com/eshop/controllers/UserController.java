@@ -41,8 +41,8 @@ public class UserController {
 
     @ResponseBody
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public User createUser(@RequestBody UserCreateRequest ucr){
-        return userService.create(ucr.getEmail(), ucr.getPassword());
+    public User createUser(@RequestBody User user){
+        return userService.create(user);
     }
 
     @ResponseBody

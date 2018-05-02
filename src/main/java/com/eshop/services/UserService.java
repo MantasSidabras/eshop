@@ -13,9 +13,8 @@ public class UserService {
     @Autowired
     private UserDAO userDAO;
 
-    public User create(String email, String password){
-        User newUser = new User(email, password);
-        return userDAO.save(newUser);
+    public User create(User user){
+        return userDAO.save(user);
     }
 
     public List<User> getAll(){

@@ -38,11 +38,11 @@ public class User {
 
     public User(){}
 
-    public User(String email, String password){
+    public User(String email, String password, Boolean isAdmin, Boolean isDeleted){
         this.email = email;
         this.password = password;
-        this.isAdmin = false;
-        this.isDeleted = false;
+        this.isAdmin = isAdmin;
+        this.isDeleted = isDeleted;
         this.dateCreated =  LocalDateTime.now();
     }
 
