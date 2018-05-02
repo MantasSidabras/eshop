@@ -19,7 +19,7 @@ public class ProductService {
         return productDAO.save(newProduct);
     }
 
-    public List<Product> getAllUsers(){
+    public List<Product> getAllProducts(){
         return productDAO.findAll();
     }
 }
