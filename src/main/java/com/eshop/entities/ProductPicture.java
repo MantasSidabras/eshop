@@ -19,8 +19,8 @@ public class ProductPicture {
     @ManyToOne
     private Product product;
 
-    @Size(min = 1, max = 256)
-    private String path;
+    @Size(min = 1, max = 512)
+    private String url;
 
     public Integer getId() {
         return id;
@@ -38,11 +38,11 @@ public class ProductPicture {
         this.product = product;
     }
 
-    public String getPath() {
-        return path;
+    public String getUrl() {
+        return url;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setUrl(String path) {
+        this.url = path;
     }
 }

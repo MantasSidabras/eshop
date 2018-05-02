@@ -45,6 +45,15 @@ public class Product {
     public Product() {
     }
 
+    public Product(String name, String description, BigDecimal price, Integer quantity){
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.isDeleted = false;
+        this.quantity = quantity;
+        this.dateCreated =  LocalDateTime.now();
+    }
+
     public Integer getId() {
         return id;
     }
