@@ -33,6 +33,7 @@ public class Order {
     @Size(min = 1, max = 256)
     private String address;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "order")
     private List<OrderProduct> orderProductList = new ArrayList<>();
 

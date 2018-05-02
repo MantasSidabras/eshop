@@ -13,13 +13,20 @@ public class UserService {
     @Autowired
     private UserDAO userDAO;
 
-    public User createUser(String email, String password){
+    public User create(String email, String password){
         User newUser = new User(email, password);
         return userDAO.save(newUser);
     }
 
-    public List<User> getAllUsers(){
+    public List<User> getAll(){
         return userDAO.findAll();
     }
 
+    public User getById(Integer id) {
+        return userDAO.findById(id).orElse(null);
+    }
+
+    public User update(User user) {
+        return userDAO.save(user);
+    }
 }

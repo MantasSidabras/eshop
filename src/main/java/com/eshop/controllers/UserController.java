@@ -5,13 +5,18 @@ import com.eshop.entities.Order;
 import com.eshop.entities.User;
 import com.eshop.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/api/user")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     @Autowired
@@ -20,12 +25,29 @@ public class UserController {
     @ResponseBody
     @GetMapping
     public List<User> getAllUsers(){
-        return userService.getAllUsers();
+        return userService.getAll();
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/{id}", produces = "application/json")
+    public ResponseEntity<User> getUserById(@PathVariable("id") Integer id){
+        User user = userService.getById(id);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } else {
+            return ResponseEntity.ok(user);
+        }
     }
 
     @ResponseBody
     @PostMapping(consumes = "application/json", produces = "application/json")
     public User createUser(@RequestBody UserCreateRequest ucr){
-        return userService.createUser(ucr.getEmail(), ucr.getPassword());
+        return userService.create(ucr.getEmail(), ucr.getPassword());
+    }
+
+    @ResponseBody
+    @PutMapping(consumes = "application/json", produces = "application/json")
+    public User update(@RequestBody User user){
+        return userService.update(user);
     }
 }
