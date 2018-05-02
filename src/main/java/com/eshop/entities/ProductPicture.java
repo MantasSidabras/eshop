@@ -22,6 +22,13 @@ public class ProductPicture {
     @Size(min = 1, max = 512)
     private String url;
 
+    public ProductPicture(){}
+
+    public ProductPicture(Product product, String url){
+        this.product = product;
+        this.url = url;
+    }
+
     public Integer getId() {
         return id;
     }
