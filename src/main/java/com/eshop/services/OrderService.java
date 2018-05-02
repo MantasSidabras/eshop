@@ -20,7 +20,7 @@ public class OrderService {
     }
 
     public Order update(Order order){
-        orderDAO.save(order);
+        return orderDAO.save(order);
     }
 
     public void delete(Order order){
