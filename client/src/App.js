@@ -1,0 +1,100 @@
+import React, { Component } from 'react';
+import styled from 'styled-components';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+
+import Context from 'MyContext';
+import Header from './components/Header';
+import Home from './pages/Home/Home';
+import Manage from './pages/Manage/Manage'
+
+const ContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+  
+  @media (max-width: 1230px) {
+    width: calc(100% - 30px);
+  }
+`;
+
+const Backdrop = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 135px;
+  box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.2);
+  z-index: -1;
+  background-color: hsl(0, 0%, 99%);
+`;
+
+class State extends Component {
+  state = {
+    products: [],
+    users: [
+      { id: 1, email: "balchen@hotmail.com", isBlocked: false },
+      { id: 2, email: "juerd@sbcglobal.net", isBlocked: false },
+      { id: 3, email: "gavinls@icloud.com", isBlocked: true },
+      { id: 4, email: "magusnet@optonline.net", isBlocked: false },
+      { id: 5, email: "jginspace@msn.com", isBlocked: true }
+    ]
+  }
+
+  toggleBlockUser = id => { 
+    const userList = this.state.users;
+    const userIndex = userList.findIndex(user => user.id === id);
+
+    userList[userIndex].isBlocked = !userList[userIndex].isBlocked; 
+
+    this.setState({ users: userList});
+  }
+
+  componentDidMount() {
+    fetch('http://localhost:8080/api/products')
+      .then(res => res.json())
+      .then(products => this.setState({ products }))
+      .catch(error => console.error(error))
+
+    fetch('http://localhost:8080/api/user/1')
+      .then(res => {
+        if (res.status === 404) {
+          throw Error("User not found")
+        } else {
+          return res.json()
+        }
+      })
+      .then(res => console.log(res))
+      .catch(error => console.error(error))
+
+  }
+
+  render() {
+    return (
+      <Context.Provider value={{...this.state, toggleBlockUser: this.toggleBlockUser}}>
+        {this.props.children}
+      </Context.Provider>
+    );
+  }
+}
+
+class App extends Component {
+  render() {
+    return (
+      <State>
+        <Backdrop />
+        <Router>
+          <ContentWrapper>
+            <Header>e-Shop</Header>
+            <Switch>
+              <Route exact path='/' component={Home}/>
+              <Route path='/manage' component={Manage}/>
+              <Redirect to='/'/>
+            </Switch>
+          </ContentWrapper>
+        </Router>
+      </State>
+    );
+  }
+}
+
+export default App;
