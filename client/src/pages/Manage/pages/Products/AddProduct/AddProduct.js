@@ -141,7 +141,7 @@ class AddProduct extends Component {
       formData.append('file', image)
     }
 
-    fetch('http://localhost:8080/api/products', {
+    fetch('http://localhost:8080/api/product', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -150,7 +150,7 @@ class AddProduct extends Component {
     })
       .then(res => res.json())
       .then(added => (
-        fetch(`http://localhost:8080/api/products/${added.id}/images`, {
+        fetch(`http://localhost:8080/api/product/${added.id}/images`, {
           method: 'POST',
           body: formData
         })

@@ -3,5 +3,6 @@
 
 target/
 client/node_modules/
+client/build/
 
-productImages/
+src/main/resources/static/product-pictures/

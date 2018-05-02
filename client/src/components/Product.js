@@ -69,11 +69,11 @@ class Product extends Component {
   }
 
   render() {
-    const { name, price, path } = this.props;
+    const { name, price, productPictureList } = this.props;
     return (
       <Wrapper>
         <Name>{name}</Name>
-        {path ? <Image src={path} /> : <Placeholder>No image</Placeholder>}
+        {productPictureList.length > 0 ? <Image src={`/product-pictures/${productPictureList[0].url}`} /> : <Placeholder>No image</Placeholder>}
         <Price>{price.toFixed(2)}€</Price>
         <Add onClick={this.handleAdd}>Add to cart</Add>
       </Wrapper>

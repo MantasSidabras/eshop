@@ -34,7 +34,6 @@ public class Product {
 
     private LocalDateTime dateCreated;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "product")
     private List<ProductPicture> productPictureList = new ArrayList<>();
 

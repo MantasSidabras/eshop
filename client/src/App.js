@@ -44,7 +44,7 @@ class State extends Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:8080/api/products')
+    fetch('http://localhost:8080/api/product')
       .then(res => res.json())
       .then(products => this.setState({ products }))
       .catch(error => console.error(error))
