@@ -20,13 +20,6 @@ public class UserController {
     @ResponseBody
     @GetMapping
     public List<User> getAllUsers(){
-//        List<User> users = userService.getAllUsers();
-//        for (User user : users) {
-//            for (Order order :user.getOrderList()) {
-//                order
-//            }
-//
-//        }
         return userService.getAllUsers();
     }
 
