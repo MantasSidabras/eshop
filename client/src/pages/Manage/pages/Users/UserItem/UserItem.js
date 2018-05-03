@@ -61,10 +61,20 @@ class UserItem extends Component {
   hideIcons = () => this.setState({ showIcons: false });
   
   handleBlock = () => {
-    console.log(this.props.email, 'blocked')
-    this.props.handleBlock(this.props.id);
+    const { ...user} = this.props;
+    
+    user.blocked = !user.blocked;
 
-    // TODO: send user id to backend to block
+    fetch('http://localhost:8080/api/user', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(user)
+    })
+      .then(res => res.json())
+      .then(updated => this.props.fetchAllUsers())
+      .catch(error => console.error(error));
   }
 
   render() {

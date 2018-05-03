@@ -46,10 +46,10 @@ class AllProducts extends Component {
   render() { 
     return ( 
       <Context.Consumer>
-        {({ products }) => 
+        {({ products, fetchAllProducts }) => 
           <Wrapper>
             <Search onChange={this.handleSearch} />
-            {products.filter(this.filterProducts).map(product => <ProductItem key={product.id} {...product} />)}
+            {products.filter(this.filterProducts).map(product => <ProductItem fetchAllProducts={fetchAllProducts} key={product.id} {...product} />)}
           </Wrapper>
         }
       </Context.Consumer>  

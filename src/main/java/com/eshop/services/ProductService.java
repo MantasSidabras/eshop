@@ -25,4 +25,12 @@ public class ProductService {
     public Product getById(Integer id) {
         return productDAO.findById(id).orElse(null);
     }
+
+    public Product update(Product product) {
+        return productDAO.save(product);
+    }
+
+    public void deleteById(Integer id) {
+        productDAO.deleteById(id);
+    }
 }

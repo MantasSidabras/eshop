@@ -55,18 +55,34 @@ class ProductItem extends Component {
   showConfirm = () => this.setState({ showConfirm: true });
   
   handleEdit = product => {
-    console.log(this.props.name, 'edited')
-    console.log(product);
-    this.setState({ showEdit: false });
-
-    // TODO: send product to backend
+    fetch('http://localhost:8080/api/product', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(product)
+    })
+      .then(res => res.json())
+      .then(updated => {
+        this.setState({ showEdit: false });
+        this.props.fetchAllProducts();
+      })
+      .catch(error => console.error(error));
   }
 
   handleDelete = () => {
-    console.log(this.props.name, 'deleted')
-    this.setState({ showConfirm: false });
-
-    // TODO: send product to backend
+    fetch(`http://localhost:8080/api/product/${this.props.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        this.setState({ showConfirm: false });
+        this.props.fetchAllProducts();
+      })
+      .catch(error => console.error(error));
   }
 
   handleCancel = () => this.setState({ showEdit: false, showConfirm: false });

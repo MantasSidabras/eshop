@@ -57,11 +57,11 @@ class Users extends Component {
   render() {
     return ( 
       <Context.Consumer>
-        {({ users, toggleBlockUser }) => 
+        {({ users, fetchAllUsers }) => 
           <Wrapper>
             <Title>Users</Title>
             <Search onChange={this.handleSearch} />
-            {users.filter(this.filterUsers).map(user => <UserItem key={user.id} {...user} handleBlock={toggleBlockUser} />)}
+            {users.filter(this.filterUsers).map(user => <UserItem key={user.id} {...user} fetchAllUsers={fetchAllUsers} />)}
           </Wrapper>
         }
       </Context.Consumer>  

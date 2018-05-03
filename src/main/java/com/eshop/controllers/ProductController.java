@@ -52,6 +52,23 @@ public class ProductController {
         return this.productService.create(product);
     }
 
+    @PutMapping(consumes = "application/json", produces = "application/json")
+    @ResponseBody
+    public Product updateProduct(@RequestBody Product product) {
+        return this.productService.update(product);
+    }
+
+    @DeleteMapping(value = "/{id}", produces = "application/json")
+    @ResponseBody
+    public Map<String, String> deleteProduct(@PathVariable("id") Integer id) {
+        Map<String, String> res = new HashMap<>();
+
+        this.productService.deleteById(id);
+
+        res.put("message", "success");
+        return res;
+    }
+
     @PostMapping(value = "/{id}/images", consumes = "multipart/form-data", produces = "application/json")
     @ResponseBody
     public Map<String, String> setImages(@RequestParam("file") MultipartFile[] images, @PathVariable("id") Integer id) {

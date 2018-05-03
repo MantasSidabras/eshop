@@ -41,22 +41,16 @@ class State extends Component {
       .catch(error => console.error(error))
   }
 
-  toggleBlockUser = id => { 
-    const userList = this.state.users;
-    const userIndex = userList.findIndex(user => user.id === id);
-
-    userList[userIndex].blocked = !userList[userIndex].blocked; 
-
-    this.setState({ users: userList});
-  }
-
-  componentDidMount() {
-    this.fetchAllProducts()
-      
+  fetchAllUsers = () => {
     fetch('http://localhost:8080/api/user')
       .then(res => res.json())
       .then(users => this.setState({ users }))
       .catch(error => console.error(error))
+  }
+
+  componentDidMount() {
+    this.fetchAllProducts();
+    this.fetchAllUsers();
 
     // fetch('http://localhost:8080/api/user/1')
     //   .then(res => {
@@ -73,7 +67,7 @@ class State extends Component {
 
   render() {
     return (
-      <Context.Provider value={{...this.state, toggleBlockUser: this.toggleBlockUser, fetchAllProducts: this.fetchAllProducts}}>
+      <Context.Provider value={{...this.state, fetchAllProducts: this.fetchAllProducts, fetchAllUsers: this.fetchAllUsers}}>
         {this.props.children}
       </Context.Provider>
     );
