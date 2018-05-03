@@ -32,8 +32,8 @@ public class CommerceService {
     public CartProduct updateCartProduct(CartProduct cartProduct){
         return cartProductDAO.save(cartProduct);
     }
-    public void removeFromCart(CartProduct cartProduct){
-        cartProductDAO.delete(cartProduct);
+    public void removeFromCart(Integer id){
+        cartProductDAO.deleteById(id);
     }
     //    public Order makeOrderForUserById(Integer id){
 //        Order newOrder =

@@ -20,8 +20,8 @@ public class ProductPictureService {
         return productPictureDAO.save(productPicture);
     }
 
-    public void delete(ProductPicture order){
-        productPictureDAO.delete(order);
+    public void deleteById(Integer id){
+        productPictureDAO.deleteById(id);
     }
 
     public ProductPicture findByName(String name) {
