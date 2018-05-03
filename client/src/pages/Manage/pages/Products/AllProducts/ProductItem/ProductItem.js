@@ -54,16 +54,33 @@ class ProductItem extends Component {
   
   showConfirm = () => this.setState({ showConfirm: true });
   
-  handleEdit = product => {
-    fetch('http://localhost:8080/api/product', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(product)
-    })
-      .then(res => res.json())
-      .then(updated => {
+  handleEdit = ({ product, imageIdsToDelete, newImages }) => {
+    const formData = new FormData();
+
+    for (const image of newImages) {
+      formData.append('file', image)
+    }
+
+    Promise.all([fetch('http://localhost:8080/api/product', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(product)
+      }),
+      ...imageIdsToDelete.map(id => fetch(`http://localhost:8080/api/product-picture/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+      ),
+      fetch(`http://localhost:8080/api/product/${product.id}/images`, {
+        method: 'POST',
+        body: formData
+      })
+    ])
+      .then(res => {
         this.setState({ showEdit: false });
         this.props.fetchAllProducts();
       })

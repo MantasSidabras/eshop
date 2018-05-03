@@ -1,7 +1,5 @@
 package com.eshop.controllers;
 
-import com.eshop.controllers.requestors.UserCreateRequest;
-import com.eshop.entities.Order;
 import com.eshop.entities.User;
 import com.eshop.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/api/user")
@@ -26,13 +22,13 @@ public class UserController {
     @ResponseBody
     @GetMapping
     public List<User> getAllUsers(){
-        return userService.getAll();
+        return userService.findAll();
     }
 
     @ResponseBody
     @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<User> getUserById(@PathVariable("id") Integer id){
-        User user = userService.getById(id);
+        User user = userService.findById(id);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         } else {

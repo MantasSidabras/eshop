@@ -23,7 +23,7 @@ public class UserServiceTest {
         userService.create(new User(email, password, false, false));
 
         //Assert
-        User user = userService.getUserByEmail(email);
+        User user = userService.findByEmail(email);
         assertEquals(email, user.getEmail());
         assertEquals(password, user.getPassword());
     }

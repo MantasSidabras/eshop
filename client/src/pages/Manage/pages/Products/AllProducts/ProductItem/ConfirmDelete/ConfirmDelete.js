@@ -9,6 +9,7 @@ const Wrapper = styled.div`
   top: 0;
   right: 0;
   bottom: 0;
+  padding: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,10 +21,9 @@ const Message = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 80%;
+  width: 100%;
   max-width: 500px;
-  padding: 20px;
-  margin-top: -20vh;
+  padding: 1rem;
   background: hsl(0, 0%, 100%);
   border-radius: 3px;
 `

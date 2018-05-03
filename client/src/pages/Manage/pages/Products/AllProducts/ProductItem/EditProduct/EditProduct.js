@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import Dropzone from 'react-dropzone';
 
 import ScaleUp from 'animations/ScaleUp';
+import { formatBytes } from 'utils';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -9,19 +11,17 @@ const Wrapper = styled.div`
   top: 0;
   right: 0;
   bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   padding: 1rem;
   background: hsla(0, 0%, 0%, 0.6);
   z-index: 999;
+  overflow-y: scroll;
 `
 
 const Form = styled.form`
   width: 100%;
-  max-width: 350px;
+  max-width: 500px;
+  margin: 0 auto;
   padding: 1rem;
-  margin-top: -20vh;
   background: hsl(0, 0%, 100%);
   border-radius: 3px;
 
@@ -78,6 +78,57 @@ const Cancel = Button.extend`
   box-shadow: none;
 `
 
+const StyledDropzone = styled(Dropzone)`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 250px;
+  padding: 10px;
+  margin-bottom: 20px;
+  color: hsla(0, 0%, 0%, 0.6);
+  border: 2px dashed hsl(0, 0%, 75%);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out; 
+
+  :hover {
+    background-color: hsl(210, 80%, 96%);
+  }
+`
+
+const Images = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+`
+
+const ImageWrapper = styled.div`
+  position: relative;
+  width: 30%;
+  margin-bottom: 5px;
+  margin-right: 7px;
+  font-size: 0.8rem;
+  text-align: center;
+  border-radius: 3px;
+  z-index: 1;
+`
+
+const Image = styled.img`
+  width: 100%;
+  margin-bottom: 5px;
+  border-radius: 3px;
+`
+
+const ImageInfo = styled.div`
+  margin-bottom: 2px;
+  color: hsla(0, 0%, 0%, 0.75);
+  overflow: hidden;
+  ${props => props.bold && 'font-weight: bold;'}
+`
+
 class EditProduct extends Component {
   constructor(props){
     super(props);
@@ -85,8 +136,15 @@ class EditProduct extends Component {
       name: props.name,
       description: props.description,
       price: props.price,
-      quantity: props.quantity
-    }
+      quantity: props.quantity,
+      productPictures: props.productPictures,
+      newImages: [],
+      imageIdsToDelete: []
+    };
+  }
+
+  handleDrop = newImages => { 
+    this.setState({ newImages });
   }
 
   handleChange = e => {
@@ -96,8 +154,16 @@ class EditProduct extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    const product = { id: this.props.id, ...this.state };
-    this.props.onEdit(product);
+    const { imageIdsToDelete, newImages } = this.state;
+    const product = { 
+      id: this.props.id,
+      name: this.state.name,
+      description: this.state.description,
+      price: this.state.price,
+      quantity: this.state.quantity
+    };
+    
+    this.props.onEdit({ product, imageIdsToDelete, newImages });
   }
 
   handleCancel = e => {
@@ -105,8 +171,18 @@ class EditProduct extends Component {
     this.props.onCancel();
   }
 
+  handleProductPictureClick = (e, id) => {
+    e.stopPropagation();
+    this.setState({ imageIdsToDelete: [...this.state.imageIdsToDelete, id], productPictures: this.state.productPictures.filter(i => i.id !== id )});
+  }
+
+  handleNewImageClick = (e, name) => {
+    e.stopPropagation();
+    this.setState({ newImages: this.state.newImages.filter(i => i.name !== name )});
+  }
+
   render() {
-    const { name, description, price, quantity } = this.state;
+    const { name, description, price, quantity, productPictures, newImages } = this.state;
     return (
       <Wrapper onClick={this.handleCancel}>
         <ScaleUp>
@@ -127,6 +203,35 @@ class EditProduct extends Component {
 
             <label htmlFor='desc'>Description <span style={{ fontSize: '0.8rem', color: 'hsla(0, 0%, 0%, 0.6)', fontStyle: 'italic' }}>(optional)</span></label>
             <textarea id='desc' name='description' value={description} onChange={this.handleChange} />
+
+            <StyledDropzone
+              accept="image/*"
+              onDrop={this.handleDrop}
+              acceptStyle={{ border: '3px solid hsl(110, 50%, 80%)', background: 'hsl(110, 50%, 97%)'}}
+              rejectStyle={{ border: '3px solid hsl(00, 50%, 80%)', background: 'hsl(0, 50%, 97%)'}}
+            >
+              {productPictures.length === 0 && newImages.length === 0 && 
+                <div style={{marginTop: 0, marginBottom: 10}}>
+                  Drop images here or click to select
+                </div>
+              }
+
+              <Images>
+                {productPictures.map(i => 
+                  <ImageWrapper key={i.name}>
+                    <Image onClick={e => this.handleProductPictureClick(e, i.id)} alt={i.name} src={`http://localhost:8080/api/product-picture/${i.id}`}/>
+                    <ImageInfo bold>{i.name}</ImageInfo>
+                  </ImageWrapper>
+                )}
+                {newImages.map(i => 
+                  <ImageWrapper key={i.name}>
+                    <Image onClick={e => this.handleNewImageClick(e, i.name)} alt={i.name} src={i.preview}/>
+                    <ImageInfo bold>{i.name}</ImageInfo>
+                    <ImageInfo>{formatBytes(i.size)}</ImageInfo>
+                  </ImageWrapper>
+                )}
+              </Images>
+            </StyledDropzone>
 
             <Save>Save</Save>
             <Cancel onClick={this.handleCancel}>Cancel</Cancel>

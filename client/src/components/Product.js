@@ -78,7 +78,7 @@ class Product extends Component {
     return (
       <Wrapper>
         <Name>{name}</Name>
-        {productPictures.length > 0 ? <Image src={`/api/product-picture/${productPictures[0].name}`} /> : <Placeholder>No image</Placeholder>}
+        {productPictures.length > 0 ? <Image src={`http://localhost:8080/api/product-picture/${productPictures[0].id}`} /> : <Placeholder>No image</Placeholder>}
         <div style={{ width: '100%'}}>
           <Price>{price.toFixed(2)}€</Price>
           <Add onClick={this.handleAdd}>Add to cart</Add>
