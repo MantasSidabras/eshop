@@ -18,8 +18,8 @@ public class UserServiceTest {
     @Test
     public void createUser_NormalParameters_CreatesUser() {
         //Act
-        String email = "Jonas@joneliai.comasdfasdgfasdgsssss";
-        String password = "senuks";
+        String email = "Jonas@joneliai.comasdgfasdgsssss";
+        String password = "senkuks";
         userService.create(new User(email, password, false, false));
 
         //Assert
