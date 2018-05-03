@@ -8,8 +8,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "product_pictures")
-public class ProductPicture {
+@Table(name = "product_images")
+public class ProductImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,9 +27,9 @@ public class ProductPicture {
     @JsonIgnore
     private byte[] data;
 
-    public ProductPicture(){}
+    public ProductImage(){}
 
-    public ProductPicture(Product product, String name){
+    public ProductImage(Product product, String name){
         this.product = product;
         this.name = name;
     }

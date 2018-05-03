@@ -1,8 +1,8 @@
 package com.eshop.controllers;
 
 import com.eshop.entities.Product;
-import com.eshop.entities.ProductPicture;
-import com.eshop.services.ProductPictureService;
+import com.eshop.entities.ProductImage;
+import com.eshop.services.ProductImageService;
 import com.eshop.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +30,7 @@ public class ProductController {
     private ProductService productService;
 
     @Autowired
-    private ProductPictureService productPictureService;
+    private ProductImageService productImageService;
 
     @GetMapping(produces = "application/json")
     @ResponseBody
@@ -75,13 +75,13 @@ public class ProductController {
                 targetStream.read(buffer);
                 targetStream.close();
 
-                ProductPicture pp = new ProductPicture();
+                ProductImage pp = new ProductImage();
                 Product product = productService.findById(id);
                 pp.setProduct(product);
                 pp.setData(buffer);
                 pp.setName(String.format("%d_%s", id, image.getOriginalFilename()));
 
-                productPictureService.create(pp);
+                productImageService.create(pp);
             } catch (Exception e) {
                 System.out.println("ERROR input stream" + e.toString());
                 res.put("message", "failure");

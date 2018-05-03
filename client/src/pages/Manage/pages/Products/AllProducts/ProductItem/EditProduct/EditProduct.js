@@ -137,7 +137,7 @@ class EditProduct extends Component {
       description: props.description,
       price: props.price,
       quantity: props.quantity,
-      productPictures: props.productPictures,
+      productImages: props.productImages,
       newImages: [],
       imageIdsToDelete: []
     };
@@ -171,9 +171,9 @@ class EditProduct extends Component {
     this.props.onCancel();
   }
 
-  handleProductPictureClick = (e, id) => {
+  handleProductImageClick = (e, id) => {
     e.stopPropagation();
-    this.setState({ imageIdsToDelete: [...this.state.imageIdsToDelete, id], productPictures: this.state.productPictures.filter(i => i.id !== id )});
+    this.setState({ imageIdsToDelete: [...this.state.imageIdsToDelete, id], productImages: this.state.productImages.filter(i => i.id !== id )});
   }
 
   handleNewImageClick = (e, name) => {
@@ -182,7 +182,7 @@ class EditProduct extends Component {
   }
 
   render() {
-    const { name, description, price, quantity, productPictures, newImages } = this.state;
+    const { name, description, price, quantity, productImages, newImages } = this.state;
     return (
       <Wrapper onClick={this.handleCancel}>
         <ScaleUp>
@@ -210,16 +210,16 @@ class EditProduct extends Component {
               acceptStyle={{ border: '3px solid hsl(110, 50%, 80%)', background: 'hsl(110, 50%, 97%)'}}
               rejectStyle={{ border: '3px solid hsl(00, 50%, 80%)', background: 'hsl(0, 50%, 97%)'}}
             >
-              {productPictures.length === 0 && newImages.length === 0 && 
+              {productImages.length === 0 && newImages.length === 0 && 
                 <div style={{marginTop: 0, marginBottom: 10}}>
                   Drop images here or click to select
                 </div>
               }
 
               <Images>
-                {productPictures.map(i => 
+                {productImages.map(i => 
                   <ImageWrapper key={i.name}>
-                    <Image onClick={e => this.handleProductPictureClick(e, i.id)} alt={i.name} src={`http://localhost:8080/api/product-picture/${i.id}`}/>
+                    <Image onClick={e => this.handleProductImageClick(e, i.id)} alt={i.name} src={`http://localhost:8080/api/product-image/${i.id}`}/>
                     <ImageInfo bold>{i.name}</ImageInfo>
                   </ImageWrapper>
                 )}

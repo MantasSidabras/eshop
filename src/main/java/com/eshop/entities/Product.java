@@ -33,7 +33,7 @@ public class Product {
     private LocalDateTime dateCreated;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
-    private List<ProductPicture> productPictures = new ArrayList<>();
+    private List<ProductImage> productImages = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "product")
@@ -119,12 +119,12 @@ public class Product {
         this.cartProducts = cartProducts;
     }
 
-    public List<ProductPicture> getProductPictures() {
-        return productPictures;
+    public List<ProductImage> getProductImages() {
+        return productImages;
     }
 
-    public void setProductPictures(List<ProductPicture> productPictures) {
-        this.productPictures = productPictures;
+    public void setProductImages(List<ProductImage> productImages) {
+        this.productImages = productImages;
     }
 
     public List<OrderProduct> getOrderProducts() {

@@ -68,7 +68,7 @@ class ProductItem extends Component {
         },
         body: JSON.stringify(product)
       }),
-      ...imageIdsToDelete.map(id => fetch(`http://localhost:8080/api/product-picture/${id}`, {
+      ...imageIdsToDelete.map(id => fetch(`http://localhost:8080/api/product-image/${id}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json'
