@@ -32,7 +32,7 @@ public class Product {
 
     private LocalDateTime dateCreated;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     private List<ProductPicture> productPictures = new ArrayList<>();
 
     @JsonIgnore

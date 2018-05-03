@@ -45,6 +45,7 @@ const StyledDropzone = styled(Dropzone)`
   width: 100%;
   min-height: 250px;
   padding: 10px;
+  margin-bottom: 20px;
   color: hsla(0, 0%, 0%, 0.6);
   border: 2px dashed hsl(0, 0%, 75%);
   border-radius: 3px;
@@ -58,7 +59,6 @@ const StyledDropzone = styled(Dropzone)`
 
 const Add = styled.button`
   padding: 7px 14px;
-  margin-top: 10px;
   font-family: 'Roboto', sans-serif;
   font-size: 0.9rem;
   background: hsl(110, 50%, 78%);
