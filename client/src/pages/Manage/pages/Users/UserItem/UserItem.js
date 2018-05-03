@@ -68,20 +68,20 @@ class UserItem extends Component {
   }
 
   render() {
-    const { email, isBlocked } = this.props;
+    const { email, blocked } = this.props;
     const { showIcons } = this.state;
     return ( 
       <Wrapper>
         <User
           onMouseOver={this.showIcons} 
           onMouseLeave={this.hideIcons}
-          blocked={isBlocked}
+          blocked={blocked}
         >
           <Email>{email}</Email>
-          {isBlocked && <Blocked>BLOCKED</Blocked>}
+          {blocked && <Blocked>BLOCKED</Blocked>}
           <div style={{ width: 30, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', cursor: 'pointer' }}>
             <FadeIn in={showIcons} enterDuration={200} exitDuration={200}>
-              {isBlocked ? <i title="Unblock" className="fas fa-check-square fa-lg" onClick={this.handleBlock} /> : <i title="Block" className="fas fa-ban fa-lg" onClick={this.handleBlock} />}
+              {blocked ? <i title="Unblock" className="fas fa-check-square fa-lg" onClick={this.handleBlock} /> : <i title="Block" className="fas fa-ban fa-lg" onClick={this.handleBlock} />}
             </FadeIn>
           </div>
         </User>

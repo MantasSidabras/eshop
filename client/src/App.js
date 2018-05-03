@@ -45,7 +45,7 @@ class State extends Component {
     const userList = this.state.users;
     const userIndex = userList.findIndex(user => user.id === id);
 
-    userList[userIndex].isBlocked = !userList[userIndex].isBlocked; 
+    userList[userIndex].blocked = !userList[userIndex].blocked; 
 
     this.setState({ users: userList});
   }
