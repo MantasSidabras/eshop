@@ -12,21 +12,29 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/api/user")
-@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("api/user")
+@CrossOrigin("http://localhost:3000")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
+    @PostMapping
     @ResponseBody
+    @ResponseStatus(HttpStatus.CREATED)
+    public User createUser(@RequestBody User user){
+        user.setDateCreated(LocalDateTime.now());
+        return userService.create(user);
+    }
+
     @GetMapping
+    @ResponseBody
     public List<User> getAllUsers(){
         return userService.findAll();
     }
 
+    @GetMapping("/{id}")
     @ResponseBody
-    @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<User> getUserById(@PathVariable("id") Integer id){
         User user = userService.findById(id);
         if (user == null) {
@@ -36,15 +44,8 @@ public class UserController {
         }
     }
 
+    @PutMapping
     @ResponseBody
-    @PostMapping(consumes = "application/json", produces = "application/json")
-    public User createUser(@RequestBody User user){
-        user.setDateCreated(LocalDateTime.now());
-        return userService.create(user);
-    }
-
-    @ResponseBody
-    @PutMapping(consumes = "application/json", produces = "application/json")
     public User updateUser(@RequestBody User user){
         return userService.update(user);
     }

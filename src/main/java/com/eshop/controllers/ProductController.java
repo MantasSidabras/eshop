@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletContext;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -19,12 +18,9 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping(value = "/api/product")
-@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/api/product")
+@CrossOrigin("http://localhost:3000")
 public class ProductController {
-
-    @Autowired
-    ServletContext context;
 
     @Autowired
     private ProductService productService;
@@ -32,13 +28,7 @@ public class ProductController {
     @Autowired
     private ProductImageService productImageService;
 
-    @GetMapping(produces = "application/json")
-    @ResponseBody
-    public List<Product> getAllProducts() {
-        return productService.findAll();
-    }
-
-    @PostMapping(consumes = "application/json", produces = "application/json")
+    @PostMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     public Product createProduct(@RequestBody Product product) {
@@ -46,26 +36,41 @@ public class ProductController {
         return this.productService.create(product);
     }
 
-    @PutMapping(consumes = "application/json", produces = "application/json")
+    @GetMapping
+    @ResponseBody
+    public List<Product> getAllProducts() {
+        return productService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    @ResponseBody
+    public ResponseEntity<Product> getProductById(@PathVariable("id") Integer id) {
+        Product product = productService.findById(id);
+        if (product == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } else {
+            return ResponseEntity.ok(product);
+        }
+    }
+
+    @PutMapping
     @ResponseBody
     public Product updateProduct(@RequestBody Product product) {
         return this.productService.update(product);
     }
 
-    @DeleteMapping(value = "/{id}", produces = "application/json")
+    @DeleteMapping("/{id}")
     @ResponseBody
     public Map<String, String> deleteProduct(@PathVariable("id") Integer id) {
         Map<String, String> res = new HashMap<>();
-
         this.productService.deleteById(id);
-
         res.put("message", "success");
         return res;
     }
 
-    @PostMapping(value = "/{id}/images", consumes = "multipart/form-data", produces = "application/json")
+    @PostMapping("/{id}/images")
     @ResponseBody
-    public Map<String, String> setImages(@RequestParam("file") MultipartFile[] images, @PathVariable("id") Integer id) {
+    public Map<String, String> setImages(@PathVariable("id") Integer id, @RequestParam("file") MultipartFile[] images) {
         Map<String, String> res = new HashMap<>();
 
         for (MultipartFile image : images) {
@@ -79,7 +84,7 @@ public class ProductController {
                 Product product = productService.findById(id);
                 pp.setProduct(product);
                 pp.setData(buffer);
-                pp.setName(String.format("%d_%s", id, image.getOriginalFilename()));
+                pp.setName(image.getOriginalFilename());
 
                 productImageService.create(pp);
             } catch (Exception e) {
@@ -91,16 +96,5 @@ public class ProductController {
 
         res.put("message", "success");
         return res;
-    }
-
-    @GetMapping(value = "/{id}", produces = "application/json")
-    @ResponseBody
-    public ResponseEntity<Product> getProductById(@PathVariable("id") Integer id) {
-        Product product = productService.findById(id);
-        if (product == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        } else {
-            return ResponseEntity.ok(product);
-        }
     }
 }

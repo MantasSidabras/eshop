@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
 import Context from 'MyContext';
+import ProductApi from 'api/ProductApi'
+import UserApi from 'api/UserApi';
 import Header from './components/Header';
 import Home from './pages/Home/Home';
 import Manage from './pages/Manage/Manage'
@@ -35,15 +37,13 @@ class State extends Component {
   }
 
   fetchAllProducts = () => {
-    fetch('http://localhost:8080/api/product')
-      .then(res => res.json())
+    ProductApi.getAll()
       .then(products => this.setState({ products }))
       .catch(error => console.error(error))
   }
 
   fetchAllUsers = () => {
-    fetch('http://localhost:8080/api/user')
-      .then(res => res.json())
+    UserApi.getAll()
       .then(users => this.setState({ users }))
       .catch(error => console.error(error))
   }
@@ -51,23 +51,16 @@ class State extends Component {
   componentDidMount() {
     this.fetchAllProducts();
     this.fetchAllUsers();
-
-    // fetch('http://localhost:8080/api/user/1')
-    //   .then(res => {
-    //     if (res.status === 404) {
-    //       throw Error("User not found")
-    //     } else {
-    //       return res.json()
-    //     }
-    //   })
-    //   .then(res => console.log(res))
-    //   .catch(error => console.error(error))
-
   }
 
   render() {
     return (
-      <Context.Provider value={{...this.state, fetchAllProducts: this.fetchAllProducts, fetchAllUsers: this.fetchAllUsers}}>
+      <Context.Provider value={{
+          ...this.state, 
+          fetchAllProducts: this.fetchAllProducts, 
+          fetchAllUsers: this.fetchAllUsers
+        }}
+      >
         {this.props.children}
       </Context.Provider>
     );

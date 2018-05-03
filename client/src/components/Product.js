@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
+import ProductImageApi from 'api/ProductImageApi';
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -78,7 +80,7 @@ class Product extends Component {
     return (
       <Wrapper>
         <Name>{name}</Name>
-        {productImages.length > 0 ? <Image src={`http://localhost:8080/api/product-image/${productImages[0].id}`} /> : <Placeholder>No image</Placeholder>}
+        {productImages.length > 0 ? <Image src={ProductImageApi.get(productImages[0].id)} /> : <Placeholder>No image</Placeholder>}
         <div style={{ width: '100%'}}>
           <Price>{price.toFixed(2)}€</Price>
           <Add onClick={this.handleAdd}>Add to cart</Add>

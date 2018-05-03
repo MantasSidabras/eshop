@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
+import UserApi from 'api/UserApi';
 import FadeIn from 'animations/FadeIn';
 
 const Wrapper = styled.div`
@@ -65,15 +66,8 @@ class UserItem extends Component {
     
     user.blocked = !user.blocked;
 
-    fetch('http://localhost:8080/api/user', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(user)
-    })
-      .then(res => res.json())
-      .then(updated => this.props.fetchAllUsers())
+    UserApi.update(user)
+      .then(res => this.props.fetchAllUsers())
       .catch(error => console.error(error));
   }
 

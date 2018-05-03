@@ -9,28 +9,34 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
-@RequestMapping(value = "/api/product-image")
-@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/api/product-image")
+@CrossOrigin("http://localhost:3000")
 public class ProductImageController {
 
-  @Autowired
-  private ProductImageService productImageService;
+    @Autowired
+    private ProductImageService productImageService;
 
-  @GetMapping(value = "/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
-  public ResponseEntity<byte[]> getImage(@PathVariable Integer id) {
-    ProductImage pp = productImageService.findById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<byte[]> getImage(@PathVariable Integer id) {
+        ProductImage pp = productImageService.findById(id);
 
-    if (pp == null) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-    } else {
-      return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(pp.getData());
+        if (pp == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } else {
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(pp.getData());
+        }
     }
-  }
 
-  @DeleteMapping("/{id}")
-  @ResponseBody
-  public void deleteImage(@PathVariable Integer id) {
-    this.productImageService.deleteById(id);
-  }
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public Map<String, String> deleteImage(@PathVariable Integer id) {
+        Map<String, String> res = new HashMap<>();
+        this.productImageService.deleteById(id);
+        res.put("message", "success");
+        return res;
+    }
 }

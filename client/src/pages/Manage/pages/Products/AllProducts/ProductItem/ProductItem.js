@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
+import ProductApi from 'api/ProductApi';
+import ProductImageApi from 'api/ProductImageApi';
 import EditProduct from './EditProduct/EditProduct';
 import ConfirmDelete from './ConfirmDelete/ConfirmDelete';
 import FadeIn from 'animations/FadeIn';
@@ -54,33 +56,19 @@ class ProductItem extends Component {
   
   showConfirm = () => this.setState({ showConfirm: true });
   
-  handleEdit = ({ product, imageIdsToDelete, newImages }) => {
+  handleEdit = ({ product, imageIdsToDelete, images }) => {
     const formData = new FormData();
 
-    for (const image of newImages) {
+    for (const image of images) {
       formData.append('file', image)
     }
 
-    Promise.all([fetch('http://localhost:8080/api/product', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(product)
-      }),
-      ...imageIdsToDelete.map(id => fetch(`http://localhost:8080/api/product-image/${id}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-      ),
-      fetch(`http://localhost:8080/api/product/${product.id}/images`, {
-        method: 'POST',
-        body: formData
-      })
+    Promise.all([
+      ProductApi.update(product),
+      ProductApi.addImages(product.id, formData),
+      ...imageIdsToDelete.map(id => ProductImageApi.delete(id))  
     ])
-      .then(res => {
+      .then(() => {
         this.setState({ showEdit: false });
         this.props.fetchAllProducts();
       })
@@ -88,14 +76,8 @@ class ProductItem extends Component {
   }
 
   handleDelete = () => {
-    fetch(`http://localhost:8080/api/product/${this.props.id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(res => res.json())
-      .then(res => {
+    ProductApi.delete(this.props.id)
+      .then(() => {
         this.setState({ showConfirm: false });
         this.props.fetchAllProducts();
       })
