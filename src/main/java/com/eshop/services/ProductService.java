@@ -18,11 +18,11 @@ public class ProductService {
         return productDAO.save(product);
     }
 
-    public List<Product> getAll(){
+    public List<Product> findAll(){
         return productDAO.findAll();
     }
 
-    public Product getById(Integer id) {
+    public Product findById(Integer id) {
         return productDAO.findById(id).orElse(null);
     }
 

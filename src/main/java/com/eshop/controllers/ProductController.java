@@ -12,13 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +35,7 @@ public class ProductController {
     @GetMapping(produces = "application/json")
     @ResponseBody
     public List<Product> getAllProducts() {
-        return productService.getAll();
+        return productService.findAll();
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
@@ -82,7 +76,7 @@ public class ProductController {
                 targetStream.close();
 
                 ProductPicture pp = new ProductPicture();
-                Product product = productService.getById(id);
+                Product product = productService.findById(id);
                 pp.setProduct(product);
                 pp.setData(buffer);
                 pp.setName(String.format("%d_%s", id, image.getOriginalFilename()));
@@ -102,7 +96,7 @@ public class ProductController {
     @GetMapping(value = "/{id}", produces = "application/json")
     @ResponseBody
     public ResponseEntity<Product> getProductById(@PathVariable("id") Integer id) {
-        Product product = productService.getById(id);
+        Product product = productService.findById(id);
         if (product == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         } else {

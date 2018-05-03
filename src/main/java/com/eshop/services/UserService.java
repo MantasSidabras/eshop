@@ -21,11 +21,11 @@ public class UserService {
         return userDAO.save(new User(email, password, false, false));
     }
 
-    public List<User> getAll(){
+    public List<User> findAll() {
         return userDAO.findAll();
     }
 
-    public User getById(Integer id) {
+    public User findById(Integer id) {
         return userDAO.findById(id).orElse(null);
     }
 
@@ -33,7 +33,7 @@ public class UserService {
         return userDAO.save(user);
     }
 
-    public User getUserByEmail(String email) {
+    public User findByEmail(String email) {
         return userDAO.findByEmail(email);
     }
 }
