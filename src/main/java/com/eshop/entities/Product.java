@@ -2,8 +2,6 @@ package com.eshop.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jdk.nashorn.internal.objects.annotations.Getter;
-import jdk.nashorn.internal.objects.annotations.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -34,17 +32,16 @@ public class Product {
 
     private LocalDateTime dateCreated;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "product")
-    private List<ProductPicture> productPictureList = new ArrayList<>();
+    private List<ProductPicture> productPictures = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "product")
-    private List<CartProduct> cartProductList = new ArrayList<>();
+    private List<CartProduct> cartProducts = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "product")
-    private List<OrderProduct> orderProductList = new ArrayList<>();
+    private List<OrderProduct> orderProducts = new ArrayList<>();
 
     public Product() {
     }
@@ -114,27 +111,27 @@ public class Product {
         this.dateCreated = dateCreated;
     }
 
-    public List<CartProduct> getCartProductList() {
-        return cartProductList;
+    public List<CartProduct> getCartProducts() {
+        return cartProducts;
     }
 
-    public void setCartProductList(List<CartProduct> cartProductList) {
-        this.cartProductList = cartProductList;
+    public void setCartProducts(List<CartProduct> cartProducts) {
+        this.cartProducts = cartProducts;
     }
 
-    public List<ProductPicture> getProductPictureList() {
-        return productPictureList;
+    public List<ProductPicture> getProductPictures() {
+        return productPictures;
     }
 
-    public void setProductPictureList(List<ProductPicture> productPictureList) {
-        this.productPictureList = productPictureList;
+    public void setProductPictures(List<ProductPicture> productPictures) {
+        this.productPictures = productPictures;
     }
 
-    public List<OrderProduct> getOrderProductList() {
-        return orderProductList;
+    public List<OrderProduct> getOrderProducts() {
+        return orderProducts;
     }
 
-    public void setOrderProductList(List<OrderProduct> orderProductList) {
-        this.orderProductList = orderProductList;
+    public void setOrderProducts(List<OrderProduct> orderProducts) {
+        this.orderProducts = orderProducts;
     }
 }

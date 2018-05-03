@@ -1,6 +1,7 @@
 package com.eshop.services;
 
 import com.eshop.entities.Product;
+import com.eshop.entities.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +26,14 @@ public class DataFillerTest {
     public void createTestData() {
 
         //Create users
-
-        userService.create("Mantas", "slaptikas");
-        userService.create("Benas", "miau");
-        userService.create("Paulius", "swx");
-        userService.create("Domas", "asdfasdf");
-        userService.create("Karolis", "ponas");
+        userService.create(new User("Mantas", "slaptikas", false, true));
+        userService.create(new User("Benas", "miau", false, false));
+        userService.create(new User("Paulius", "swx", false, false));
+        userService.create(new User("Domas", "asdfasdf", false, true));
+        userService.create(new User("Karolis", "ponas", false, false));
 
         //Create products
-        productService.createProduct("Vienkartinės nosinaitės", "Išsipūsk savo nosį!", BigDecimal.valueOf(0.35), 5);
-        productService.createProduct("Tualetinis popierius", "Gali valytis, o gali ir ne", BigDecimal.valueOf(2.79), 100);
+        productService.create(new Product("Vienkartinės nosinaitės", "Išsipūsk savo nosį!", BigDecimal.valueOf(0.35), 5));
+        productService.create(new Product("Tualetinis popierius", "Gali valytis, o gali ir ne", BigDecimal.valueOf(2.79), 100));
     }
 }

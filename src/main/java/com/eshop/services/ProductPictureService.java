@@ -12,9 +12,8 @@ public class ProductPictureService {
     @Autowired
     private ProductPictureDAO productPictureDAO;
 
-    public ProductPicture create(Product product, String url){
-        ProductPicture newUser = new ProductPicture(product, url);
-        return productPictureDAO.save(newUser);
+    public ProductPicture create(ProductPicture pp){
+        return productPictureDAO.save(pp);
     }
 
     public ProductPicture update(ProductPicture productPicture){
@@ -23,5 +22,9 @@ public class ProductPictureService {
 
     public void delete(ProductPicture order){
         productPictureDAO.delete(order);
+    }
+
+    public ProductPicture findByName(String name) {
+        return productPictureDAO.findByName(name);
     }
 }

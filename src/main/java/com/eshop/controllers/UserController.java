@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,13 +42,14 @@ public class UserController {
 
     @ResponseBody
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public User createUser(@RequestBody UserCreateRequest ucr){
-        return userService.create(ucr.getEmail(), ucr.getPassword());
+    public User createUser(@RequestBody User user){
+        user.setDateCreated(LocalDateTime.now());
+        return userService.create(user);
     }
 
     @ResponseBody
     @PutMapping(consumes = "application/json", produces = "application/json")
-    public User update(@RequestBody User user){
+    public User updateUser(@RequestBody User user){
         return userService.update(user);
     }
 }

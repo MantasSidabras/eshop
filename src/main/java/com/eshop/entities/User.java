@@ -1,9 +1,5 @@
 package com.eshop.entities;
 
-import com.fasterxml.jackson.annotation.JsonTypeId;
-import jdk.nashorn.internal.objects.annotations.Getter;
-import jdk.nashorn.internal.objects.annotations.Setter;
-
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -26,7 +22,7 @@ public class User {
 
     private boolean isAdmin;
 
-    private boolean isDeleted;
+    private boolean isBlocked;
 
     private LocalDateTime dateCreated;
 
@@ -38,11 +34,11 @@ public class User {
 
     public User(){}
 
-    public User(String email, String password){
+    public User(String email, String password, Boolean isAdmin, Boolean isBlocked){
         this.email = email;
         this.password = password;
-        this.isAdmin = false;
-        this.isDeleted = false;
+        this.isAdmin = isAdmin;
+        this.isBlocked = isBlocked;
         this.dateCreated =  LocalDateTime.now();
     }
 
@@ -78,12 +74,12 @@ public class User {
         isAdmin = admin;
     }
 
-    public boolean isDeleted() {
-        return isDeleted;
+    public boolean isBlocked() {
+        return isBlocked;
     }
 
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
+    public void setBlocked(boolean blocked) {
+        isBlocked = blocked;
     }
 
     public LocalDateTime getDateCreated() {

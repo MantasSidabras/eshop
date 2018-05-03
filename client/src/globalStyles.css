@@ -1,0 +1,58 @@
+html {
+  box-sizing: border-box;
+  min-width: 350px;
+  min-height: 100vh;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+  
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: hsla(0, 0%, 0%, 0.75);
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(hsl(0, 0%, 93%), hsl(0, 0%, 96%));
+  overflow-y: scroll;
+}
+
+.active {
+  color: hsla(0, 0%, 0%, 0.85) !important;
+  border-bottom: 2px solid hsl(210, 60%, 60%) !important;
+}
+
+.active-manage {
+  background: hsl(0, 0%, 100%) !important;
+  color: hsl(210, 50%, 50%) !important;
+  border-left-color:  hsl(210, 60%, 60%) !important;
+  border-right-color: transparent !important;
+}
+
+@media (max-width: 480px) {
+  .active-manage {
+    border-top-color:  hsl(210, 60%, 60%) !important;
+    border-bottom-color: transparent !important;
+  }
+}
+
+.fas {
+  color: hsla(0, 0%, 0%, 0.6);
+  transition: all 0.1s ease-in-out;
+}
+
+.fas:active {
+  transform: scale(0.95);
+}
+  
+.fa-edit:hover{
+  color: hsl(210, 60%, 50%)
+}
+
+.fa-check-square:hover {
+  color: hsl(110, 50%, 40%);
+}
+  
+.fa-trash-alt:hover, .fa-ban:hover{
+  color: hsl(0, 60%, 50%);
+}

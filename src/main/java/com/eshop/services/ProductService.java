@@ -14,12 +14,23 @@ public class ProductService {
     @Autowired
     private ProductDAO productDAO;
 
-    public Product createProduct(String name, String description, BigDecimal price, Integer quantity){
-        Product newProduct = new Product(name,description,price,quantity);
-        return productDAO.save(newProduct);
+    public Product create(Product product){
+        return productDAO.save(product);
     }
 
-    public List<Product> getAllProducts(){
+    public List<Product> getAll(){
         return productDAO.findAll();
+    }
+
+    public Product getById(Integer id) {
+        return productDAO.findById(id).orElse(null);
+    }
+
+    public Product update(Product product) {
+        return productDAO.save(product);
+    }
+
+    public void deleteById(Integer id) {
+        productDAO.deleteById(id);
     }
 }
