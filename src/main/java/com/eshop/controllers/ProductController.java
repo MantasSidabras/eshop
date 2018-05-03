@@ -11,10 +11,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +28,9 @@ import java.util.Map;
 @RequestMapping(value = "/api/product")
 @CrossOrigin(origins = "http://localhost:3000")
 public class ProductController {
+
+    @Autowired
+    ServletContext context;
 
     @Autowired
     private ProductService productService;
@@ -51,22 +58,17 @@ public class ProductController {
         Map<String, String> res = new HashMap<>();
 
         for (MultipartFile image : images) {
-            System.out.println(String.format("File name: %s", image.getOriginalFilename()));
             try {
                 InputStream targetStream = image.getInputStream();
                 byte[] buffer = new byte[targetStream.available()];
                 targetStream.read(buffer);
                 targetStream.close();
 
-                File imageFile = new File(String.format("src/main/resources/static/product-pictures/%d_%s", id, image.getOriginalFilename()));
-                OutputStream outStream = new FileOutputStream(imageFile);
-                outStream.write(buffer);
-                outStream.close();
-
                 ProductPicture pp = new ProductPicture();
                 Product product = productService.getById(id);
                 pp.setProduct(product);
-                pp.setUrl(imageFile.getName());
+                pp.setData(buffer);
+                pp.setName(String.format("%d_%s", id, image.getOriginalFilename()));
 
                 productPictureService.create(pp);
             } catch (Exception e) {

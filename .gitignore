@@ -4,5 +4,3 @@
 target/
 client/node_modules/
 client/build/
-
-src/main/resources/static/product-pictures/

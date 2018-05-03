@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
+import Context from 'MyContext';
 import AddProduct from './AddProduct/AddProduct';
 import AllProducts from './AllProducts/AllProducts';
 
@@ -87,7 +88,11 @@ class Products extends Component {
         </ButtonGroup>
 
         {showAllProducts && <AllProducts />}
-        {showAddProduct && <AddProduct />}
+        {showAddProduct && 
+          <Context.Consumer>
+            {({ fetchAllProducts }) => <AddProduct fetchAllProducts={fetchAllProducts} />}
+          </Context.Consumer>
+        }
       </Wrapper>
     );
   }

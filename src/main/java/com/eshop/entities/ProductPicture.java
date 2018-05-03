@@ -20,13 +20,18 @@ public class ProductPicture {
     private Product product;
 
     @Size(min = 1, max = 512)
-    private String url;
+    private String name;
+
+    @Lob
+    @Column(columnDefinition="mediumblob")
+    @JsonIgnore
+    private byte[] data;
 
     public ProductPicture(){}
 
-    public ProductPicture(Product product, String url){
+    public ProductPicture(Product product, String name){
         this.product = product;
-        this.url = url;
+        this.name = name;
     }
 
     public Integer getId() {
@@ -45,11 +50,19 @@ public class ProductPicture {
         this.product = product;
     }
 
-    public String getUrl() {
-        return url;
+    public String getName() {
+        return name;
     }
 
-    public void setUrl(String path) {
-        this.url = path;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setData(byte[] data) {
+        this.data = data;
+    }
+
+    public byte[] getData() {
+        return this.data;
     }
 }

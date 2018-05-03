@@ -155,7 +155,10 @@ class AddProduct extends Component {
           body: formData
         })
           .then(res => res.json())
-          .then(res => alert(res.message))
+          .then(res => {
+            alert(res.message);
+            this.props.fetchAllProducts();
+          })
       ))
       .catch(error => console.error(error));
   }

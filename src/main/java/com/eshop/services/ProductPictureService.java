@@ -23,4 +23,8 @@ public class ProductPictureService {
     public void delete(ProductPicture order){
         productPictureDAO.delete(order);
     }
+
+    public ProductPicture findByName(String name) {
+        return productPictureDAO.findByName(name);
+    }
 }

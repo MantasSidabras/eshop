@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   width: 160px;
   padding: 5px;
   margin: 0 10px 20px 10px;
@@ -33,6 +37,7 @@ const Placeholder = styled.div`
   justify-content: center;
   align-items: center;
   height: 120px;
+  width: 100%;
   border: 1px solid hsl(0, 0%, 75%);
 `;
 
@@ -69,13 +74,15 @@ class Product extends Component {
   }
 
   render() {
-    const { name, price, productPictureList } = this.props;
+    const { name, price, productPictures } = this.props;
     return (
       <Wrapper>
         <Name>{name}</Name>
-        {productPictureList.length > 0 ? <Image src={`/product-pictures/${productPictureList[0].url}`} /> : <Placeholder>No image</Placeholder>}
-        <Price>{price.toFixed(2)}€</Price>
-        <Add onClick={this.handleAdd}>Add to cart</Add>
+        {productPictures.length > 0 ? <Image src={`/api/product-picture/${productPictures[0].name}`} /> : <Placeholder>No image</Placeholder>}
+        <div style={{ width: '100%'}}>
+          <Price>{price.toFixed(2)}€</Price>
+          <Add onClick={this.handleAdd}>Add to cart</Add>
+        </div>
       </Wrapper>
     );
   }

@@ -34,6 +34,13 @@ class State extends Component {
     users: []
   }
 
+  fetchAllProducts = () => {
+    fetch('http://localhost:8080/api/product')
+      .then(res => res.json())
+      .then(products => this.setState({ products }))
+      .catch(error => console.error(error))
+  }
+
   toggleBlockUser = id => { 
     const userList = this.state.users;
     const userIndex = userList.findIndex(user => user.id === id);
@@ -44,11 +51,7 @@ class State extends Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:8080/api/product')
-      .then(res => res.json())
-      .then(products => this.setState({ products }))
-      .catch(error => console.error(error))
-
+    this.fetchAllProducts()
       
     fetch('http://localhost:8080/api/user')
       .then(res => res.json())
@@ -70,7 +73,7 @@ class State extends Component {
 
   render() {
     return (
-      <Context.Provider value={{...this.state, toggleBlockUser: this.toggleBlockUser}}>
+      <Context.Provider value={{...this.state, toggleBlockUser: this.toggleBlockUser, fetchAllProducts: this.fetchAllProducts}}>
         {this.props.children}
       </Context.Provider>
     );
