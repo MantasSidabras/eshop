@@ -32,9 +32,14 @@ public class CommerceService {
         return cartProductDAO.findAllByUserId(user.getId());
     }
 
+
     public CartProduct addToCartForUser(User user, Product product, Integer quantity){
+
+
+
         return cartProductDAO.save(new CartProduct(user, product, quantity));
     }
+
     public CartProduct updateCartProduct(CartProduct cartProduct){
         return cartProductDAO.save(cartProduct);
     }
