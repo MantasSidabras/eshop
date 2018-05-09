@@ -45,14 +45,10 @@ public class CommerceService {
         if(quantity > product.getQuantity()){
             throw new InvalidProductQuantityException();
         }
-        /*else{
-            product.setQuantity(product.getQuantity() - quantity);
-
-            productDAO.save(product);
-        }*/
 
         return cartProductDAO.save(new CartProduct(user, product, quantity));
     }
+
 
     public CartProduct updateCartProduct(CartProduct cartProduct){
         return cartProductDAO.save(cartProduct);
