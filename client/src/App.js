@@ -7,10 +7,11 @@ import ProductApi from 'api/ProductApi'
 import UserApi from 'api/UserApi';
 import Header from './components/Header';
 import Home from './pages/Home/Home';
+
 import Manage from './pages/Manage/Manage';
 import Register from './pages/Register/Register';
 import Login from './pages/Login/Login';
-
+import Cart from './pages/Cart/Cart';
 
 const ContentWrapper = styled.div`
   display: flex;
@@ -82,7 +83,8 @@ class App extends Component {
               <Route exact path='/' component={Home}/>
               <Route path='/manage' component={Manage}/>
               <Route path='/register' component={Register}/>
-            <Route path='/login' component={Login}/>
+              <Route path='/login' component={Login}/>
+              <Route path='/cart' component={Cart}/>
               <Redirect to='/'/>
             </Switch>
           </ContentWrapper>
