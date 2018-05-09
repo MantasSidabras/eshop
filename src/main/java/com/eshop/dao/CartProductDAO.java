@@ -11,4 +11,6 @@ public interface CartProductDAO extends JpaRepository<CartProduct, Integer> {
     //Basic CRUD auto-implemented
 
     List<CartProduct> findAllByUserId(Integer id);
+    CartProduct findByProductIdAndUserId(Integer prodId, Integer userId);
+    void deleteAllByUserId(Integer id);
 }

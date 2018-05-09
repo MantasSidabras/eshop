@@ -59,9 +59,9 @@ class Home extends Component {
       <Wrapper>
         <Search onChange={this.handleSearch} />
           <Context.Consumer>
-            {({ products }) =>
+            {({ products, fetchUser }) =>
               <Products>
-                {products.filter(this.filterProducts).map(product => <Product key={product.id} {...product} />)}
+                {products.filter(this.filterProducts).map(product => <Product key={product.id} {...product} fetchUser={fetchUser}/>)}
               </Products>
             }
           </Context.Consumer>

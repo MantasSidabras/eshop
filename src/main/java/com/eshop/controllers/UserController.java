@@ -13,7 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("api/user")
@@ -23,7 +25,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
+    @Autowired
+    private CommerceService commerceService;
 
     @PostMapping
     @ResponseBody
@@ -55,5 +58,13 @@ public class UserController {
         return userService.update(user);
     }
 
+    @DeleteMapping("/{id}/cartProduct")
+    @ResponseBody
+    public Map<String, String> deleteAllCartProducts(@PathVariable Integer id) {
+        Map<String, String> res = new HashMap<>();
+        this.commerceService.removeAllFromCartByUserId(id);
+        res.put("message", "success");
+        return res;
+    }
 
 }

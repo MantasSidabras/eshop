@@ -72,7 +72,20 @@ const Add = styled.button`
 
 class Product extends Component {
   handleAdd = () => {
-    console.log(`${this.props.name} added to the cart.`)
+    const cartProduct = {
+      productId: this.props.id,
+      userId: 1 
+    }
+
+    fetch(`http://localhost:8080/api/cartProduct`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(cartProduct)
+    })
+      .then(res => res.json())
+      .then(res => this.props.fetchUser())
   }
 
   render() {

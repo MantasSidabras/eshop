@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { NavLink, Link } from 'react-router-dom';
 
+import Context from 'MyContext';
 import EditAccount from './EditAccount';
 
 const Wrapper = styled.header`
@@ -166,6 +167,7 @@ const CartLink = styled(NavLink)`
   text-decoration: none;
   cursor: pointer;
   outline: none;
+  letter-spacing: 1px;
   transition: all 0.2s ease-in-out; 
 
   &:hover {
@@ -178,6 +180,22 @@ const CartLink = styled(NavLink)`
   }
 `
 
+const CartCount = styled.div`
+  position:absolute;
+  left: 5px;
+  bottom: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  font-size: 0.8rem;
+  border-radius: 50%;
+  background: hsl(210, 60%, 60%);
+  color: hsl(0, 0%, 100%);
+  font-family: 'Roboto', sans-serif;
+  padding: 5px;
+`
 class Header extends Component {
   state = {
     showEditAccount: false
@@ -185,24 +203,33 @@ class Header extends Component {
 
   render() {
     return (
-      <Wrapper>
-        <Title>{this.props.children}</Title>
-        <Nav>
-          <li><NavLink exact to='/'>Home</NavLink></li>
-          <li><NavLink to='/manage'>Manage</NavLink></li>
-        </Nav>
+      <Context.Consumer>
+        {({ cartProductCount }) => (
+          <Wrapper>
+          <Title>{this.props.children}</Title>
+          <Nav>
+            <li><NavLink exact to='/'>Home</NavLink></li>
+            <li><NavLink to='/manage'>Manage</NavLink></li>
+          </Nav>
 
-        <LoginNav>
-          <RegisterLink to="/register">Register</RegisterLink>
-          <RegisterLink to="/login">Login</RegisterLink>
-        </LoginNav>
+          <LoginNav>
+            <RegisterLink to="/register">Register</RegisterLink>
+            <RegisterLink to="/login">Login</RegisterLink>
+          </LoginNav>
 
-        <MyAccount onClick={() => this.setState({ showEditAccount: !this.state.showEditAccount })}>
-          My Account
-          {this.state.showEditAccount && <EditAccount />}
-        </MyAccount>
-        <CartLink to='/cart'><i className="fas fa-shopping-cart"></i> Cart</CartLink>
-      </Wrapper>
+          <MyAccount onClick={() => this.setState({ showEditAccount: !this.state.showEditAccount })}>
+            My Account
+            {this.state.showEditAccount && <EditAccount />}
+          </MyAccount>
+        <CartLink to='/cart'>
+          <i style={{ position: 'relative', marginRight: 2}} className="fas fa-shopping-cart fa-lg">
+            <CartCount>{cartProductCount}</CartCount>
+          </i> 
+          CART
+        </CartLink>
+        </Wrapper>
+        )}
+      </Context.Consumer>
     );
   }
 }

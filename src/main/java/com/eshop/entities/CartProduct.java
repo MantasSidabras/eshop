@@ -5,6 +5,7 @@ import jdk.nashorn.internal.objects.annotations.Getter;
 import jdk.nashorn.internal.objects.annotations.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -20,11 +21,10 @@ public class CartProduct {
     @ManyToOne
     private User user;
 
-    @JsonIgnore
     @ManyToOne
     private Product product;
 
-    @Size(min = 0)
+    @Min(0)
     private Integer quantity;
 
     public CartProduct(){}

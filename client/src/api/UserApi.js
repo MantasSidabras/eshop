@@ -5,6 +5,11 @@ class UserApi {
       .then(res => res.json())
   }
 
+  getById = id => {
+    return fetch(`http://localhost:8080/api/user/${id}`)
+      .then(res => res.json())
+  }
+
   update = user => {
     return fetch('http://localhost:8080/api/user', {
       method: 'PUT',

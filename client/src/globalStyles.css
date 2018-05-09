@@ -53,6 +53,6 @@ body {
   color: hsl(110, 50%, 40%);
 }
 
-.fa-trash-alt:hover, .fa-ban:hover{
+.fa-trash-alt:hover, .fa-ban:hover, .fa-times:hover{
   color: hsl(0, 60%, 50%);
 }

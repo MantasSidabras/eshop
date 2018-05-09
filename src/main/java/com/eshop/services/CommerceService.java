@@ -1,5 +1,6 @@
 package com.eshop.services;
 
+import com.eshop.controllers.requestors.CartProductRequest;
 import com.eshop.dao.CartProductDAO;
 import com.eshop.dao.OrderDAO;
 import com.eshop.dao.OrderProductDAO;
@@ -7,16 +8,16 @@ import com.eshop.dao.ProductDAO;
 import com.eshop.entities.*;
 import com.eshop.exceptions.InvalidProductQuantityException;
 import com.eshop.exceptions.ProductCartEmptyException;
+import com.eshop.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 
 @Service
 public class CommerceService {
-
-
 
     @Autowired
     private CartProductDAO cartProductDAO;
@@ -30,7 +31,14 @@ public class CommerceService {
     @Autowired
     private ProductDAO productDAO;
 
-    public List<CartProduct> getCartProductsForUserById(Integer id){
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private UserService userService;
+
+    public List<CartProduct> getCartProductsByUserId(Integer id){
         return cartProductDAO.findAllByUserId(id);
     }
 
@@ -38,23 +46,63 @@ public class CommerceService {
         return cartProductDAO.findAllByUserId(user.getId());
     }
 
+    public CartProduct getCartProductById(Integer id){
+        return cartProductDAO.findById(id).orElse(null);
+    }
 
-    public CartProduct addToCartForUser(User user, Product product, Integer quantity)
-            throws InvalidProductQuantityException {
+    public CartProduct createCartProduct(CartProductRequest cartProductRequest) {
+        CartProduct existing = cartProductDAO.findByProductIdAndUserId(cartProductRequest.getProductId(), cartProductRequest.getUserId());
 
-        if(quantity > product.getQuantity()){
+        if (existing != null) {
+            existing.setQuantity(existing.getQuantity() + 1);
+            return cartProductDAO.save(existing);
+        }
+
+        CartProduct cp = new CartProduct();
+        Product product = productService.findById(cartProductRequest.getProductId());
+        User user;
+
+        cp.setQuantity(1);
+        cp.setProduct(product);
+
+        try {
+            user = userService.findById(cartProductRequest.getUserId());
+            cp.setUser(user);
+        } catch (UserNotFoundException e) { e.printStackTrace();}
+
+        return cartProductDAO.save(cp);
+    }
+
+//    public CartProduct addToCartForUser(User user, Product product, Integer quantity)
+//            throws InvalidProductQuantityException {
+//
+//        if (quantity > product.getQuantity()) {
+//            throw new InvalidProductQuantityException();
+//        }
+//
+//        return cartProductDAO.save(new CartProduct(user, product, quantity));
+//    }
+
+    public CartProduct updateCartProduct(CartProduct cartProduct) throws InvalidProductQuantityException {
+        CartProduct oldCartProduct = this.getCartProductById(cartProduct.getId());
+
+        if (cartProduct.getQuantity() > oldCartProduct.getProduct().getQuantity()) {
             throw new InvalidProductQuantityException();
         }
 
-        return cartProductDAO.save(new CartProduct(user, product, quantity));
-    }
+        cartProduct.setProduct(oldCartProduct.getProduct());
+        cartProduct.setUser(oldCartProduct.getUser());
 
-
-    public CartProduct updateCartProduct(CartProduct cartProduct){
         return cartProductDAO.save(cartProduct);
     }
+
     public void removeFromCart(Integer id){
         cartProductDAO.deleteById(id);
+    }
+
+    @Transactional
+    public void removeAllFromCartByUserId(Integer id){
+        cartProductDAO.deleteAllByUserId(id);
     }
 
     public Order createOrderForUser(User user) throws ProductCartEmptyException {

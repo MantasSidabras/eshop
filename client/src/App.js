@@ -37,7 +37,8 @@ const Backdrop = styled.div`
 class State extends Component {
   state = {
     products: [],
-    users: []
+    users: [],
+    user: null,
   }
 
   fetchAllProducts = () => {
@@ -52,17 +53,26 @@ class State extends Component {
       .catch(error => console.error(error))
   }
 
+  fetchUser = () => {
+    UserApi.getById(1)
+      .then(user => this.setState({ user }))
+      .catch(error => console.error(error))
+  }
+
   componentDidMount() {
     this.fetchAllProducts();
     this.fetchAllUsers();
+    this.fetchUser();
   }
 
   render() {
     return (
       <Context.Provider value={{
           ...this.state,
+          cartProductCount: this.state.user && this.state.user.cartProductList.length,
           fetchAllProducts: this.fetchAllProducts,
-          fetchAllUsers: this.fetchAllUsers
+          fetchAllUsers: this.fetchAllUsers,
+          fetchUser: this.fetchUser
         }}
       >
         {this.props.children}
