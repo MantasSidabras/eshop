@@ -27,7 +27,7 @@ public class UserService {
 
 
     public User create(String email, String password, String address, String zipCode, String firstName, String lastName, Boolean isAdmin, Boolean isBlocked){
-        return userDAO.save(new User(email, passwordEncoder.encode(password), address, zipCode, firstName, lastName,false, false));
+        return userDAO.save(new User(email, passwordEncoder.encode(password), address, zipCode, firstName, lastName,isAdmin, isBlocked));
     }
 
     public List<User> findAll() {

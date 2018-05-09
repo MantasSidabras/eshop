@@ -12,7 +12,6 @@ import javax.validation.constraints.Size;
 public class CartProduct {
 
 
-    //cant live without?
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
