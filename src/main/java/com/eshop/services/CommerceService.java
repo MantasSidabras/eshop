@@ -8,6 +8,7 @@ import com.eshop.exceptions.ProductCartEmptyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -56,7 +57,7 @@ public class CommerceService {
                 newOrder.getOrderProductList().add(orderProductDAO.save(new OrderProduct(newOrder, cartProductProduct, cp.getQuantity())));
 
                 //Total price calculation
-                newOrder.getPrice().add(cartProductProduct.getPrice());
+                newOrder.getPrice().add(cartProductProduct.getPrice().multiply(new BigDecimal(cp.getQuantity())));
             }
 
             //Clear current cart
