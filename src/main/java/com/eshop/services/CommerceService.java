@@ -1,10 +1,10 @@
 package com.eshop.services;
 
 import com.eshop.dao.CartProductDAO;
-import com.eshop.entities.CartProduct;
-import com.eshop.entities.Order;
-import com.eshop.entities.Product;
-import com.eshop.entities.User;
+import com.eshop.dao.OrderDAO;
+import com.eshop.dao.OrderProductDAO;
+import com.eshop.entities.*;
+import com.eshop.exceptions.ProductCartEmptyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +17,12 @@ public class CommerceService {
 
     @Autowired
     private CartProductDAO cartProductDAO;
+
+    @Autowired
+    private OrderProductDAO orderProductDAO;
+
+    @Autowired
+    private OrderDAO orderDAO;
 
     public List<CartProduct> getCartProductsForUserById(Integer id){
         return cartProductDAO.findAllByUserId(id);
@@ -35,7 +41,28 @@ public class CommerceService {
     public void removeFromCart(Integer id){
         cartProductDAO.deleteById(id);
     }
-    //    public Order makeOrderForUserById(Integer id){
-//        Order newOrder =
-//    }
+
+    public Order createOrderForUser(User user, String address) throws ProductCartEmptyException {
+
+        if(user.getCartProductList().size() == 0){
+            throw new ProductCartEmptyException();
+        }
+        else {
+            Order newOrder = new Order(user, address);
+            for (CartProduct cp : user.getCartProductList()) {
+                Product cartProductProduct = cp.getProduct();
+
+                //Creating order products for order
+                newOrder.getOrderProductList().add(orderProductDAO.save(new OrderProduct(newOrder, cartProductProduct, cp.getQuantity())));
+
+                //Total price calculation
+                newOrder.getPrice().add(cartProductProduct.getPrice());
+            }
+
+            //Clear current cart
+            user.getCartProductList().clear();
+
+            return orderDAO.save(newOrder);
+        }
+    }
 }

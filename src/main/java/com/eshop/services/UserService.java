@@ -3,6 +3,7 @@ package com.eshop.services;
 import com.eshop.dao.UserDAO;
 import com.eshop.entities.CartProduct;
 import com.eshop.entities.User;
+import com.eshop.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +26,14 @@ public class UserService {
         return userDAO.findAll();
     }
 
-    public User findById(Integer id) {
-        return userDAO.findById(id).orElse(null);
+    public User findById(Integer id) throws UserNotFoundException {
+        User userFound = userDAO.findById(id).orElse(null);
+        if(userFound == null){
+            throw new UserNotFoundException();
+        }
+        else{
+            return userFound;
+        }
     }
 
     public User update(User user) {

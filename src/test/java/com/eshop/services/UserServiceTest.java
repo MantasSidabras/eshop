@@ -18,7 +18,7 @@ public class UserServiceTest {
     @Test
     public void createUser_NormalParameters_CreatesUser() {
         //Act
-        String email = "Jonas@joneliai.comasdgfasdgsssss";
+        String email = "vardeniss@domain.lt";
         String password = "senkuks";
         userService.create(new User(email, password, false, false));
 

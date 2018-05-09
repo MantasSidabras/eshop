@@ -1,6 +1,10 @@
 package com.eshop.controllers;
 
+import com.eshop.entities.Order;
 import com.eshop.entities.User;
+import com.eshop.exceptions.ProductCartEmptyException;
+import com.eshop.exceptions.UserNotFoundException;
+import com.eshop.services.CommerceService;
 import com.eshop.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +23,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+
+
     @PostMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
@@ -36,11 +42,10 @@ public class UserController {
     @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity<User> getUserById(@PathVariable("id") Integer id){
-        User user = userService.findById(id);
-        if (user == null) {
+        try{
+            return ResponseEntity.ok(userService.findById(id));
+        }catch(UserNotFoundException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        } else {
-            return ResponseEntity.ok(user);
         }
     }
 
@@ -49,4 +54,6 @@ public class UserController {
     public User updateUser(@RequestBody User user){
         return userService.update(user);
     }
+
+
 }

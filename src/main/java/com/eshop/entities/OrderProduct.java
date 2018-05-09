@@ -26,6 +26,14 @@ public class OrderProduct {
     @Size(min = 0)
     private Integer quantity;
 
+    public OrderProduct(){}
+
+    public OrderProduct(Order order, Product product, Integer quantity){
+        this.order = order;
+        this.product = product;
+        this.quantity = quantity;
+    }
+
     public Integer getId() {
         return id;
     }
