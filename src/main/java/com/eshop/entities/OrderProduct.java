@@ -6,6 +6,7 @@ import jdk.nashorn.internal.objects.annotations.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "order_products")
@@ -26,12 +27,15 @@ public class OrderProduct {
     @Size(min = 0)
     private Integer quantity;
 
+    private BigDecimal price;
+
     public OrderProduct(){}
 
     public OrderProduct(Order order, Product product, Integer quantity){
         this.order = order;
         this.product = product;
         this.quantity = quantity;
+        this.price = product.getPrice();
     }
 
     public Integer getId() {
