@@ -57,7 +57,7 @@ public class CommerceService {
         cartProductDAO.deleteById(id);
     }
 
-    public Order createOrderForUser(User user, String address) throws ProductCartEmptyException {
+    public Order createOrderForUser(User user) throws ProductCartEmptyException {
 
         if(user.getCartProductList().size() == 0){
             throw new ProductCartEmptyException();

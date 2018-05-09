@@ -24,7 +24,7 @@ public class OrderController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Order> createOrder(@RequestBody User user, @RequestBody String address){
         try{
-            return ResponseEntity.ok(commerceService.createOrderForUser(user, address));
+            return ResponseEntity.ok(commerceService.createOrderForUser(user));
         }catch (ProductCartEmptyException ex){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }

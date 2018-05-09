@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.*;
@@ -14,6 +15,9 @@ public class UserServiceTest {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Test
     public void createUser_NormalParameters_CreatesUser() {
@@ -25,6 +29,7 @@ public class UserServiceTest {
         String firstName = "FirstNameExample";
         String lastName = "LastNameExample";
 
+        String encodedpassword = passwordEncoder.encode(password);
         userService.create(new User(email, password, address, zipCode, firstName, lastName, false, false));
 
         //Assert
