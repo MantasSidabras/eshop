@@ -20,11 +20,21 @@ public class User {
 
     private String password;
 
+    private String address;
+
+    private String zipCode;
+
+    private String firstName;
+
+    private String lastName;
+
     private boolean isAdmin;
 
     private boolean isBlocked;
 
     private LocalDateTime dateCreated;
+
+
 
     @OneToMany(mappedBy = "user")
     private List<CartProduct> cartProductList = new ArrayList<>();
@@ -34,9 +44,13 @@ public class User {
 
     public User(){}
 
-    public User(String email, String password, Boolean isAdmin, Boolean isBlocked){
+    public User(String email, String password, String address, String zipCode, String firstName, String lastName, Boolean isAdmin, Boolean isBlocked){
         this.email = email;
         this.password = password;
+        this.address = address;
+        this.zipCode = zipCode;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.isAdmin = isAdmin;
         this.isBlocked = isBlocked;
         this.dateCreated =  LocalDateTime.now();
@@ -104,5 +118,37 @@ public class User {
 
     public void setCartProductList(List<CartProduct> cartProductList) {
         this.cartProductList = cartProductList;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }
