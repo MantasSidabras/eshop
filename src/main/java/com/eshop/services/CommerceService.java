@@ -48,7 +48,7 @@ public class CommerceService {
             throw new ProductCartEmptyException();
         }
         else {
-            Order newOrder = new Order(user, address);
+            Order newOrder = new Order(user);
             for (CartProduct cp : user.getCartProductList()) {
                 Product cartProductProduct = cp.getProduct();
 

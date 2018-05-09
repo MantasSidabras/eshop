@@ -20,11 +20,20 @@ public class UserServiceTest {
         //Act
         String email = "vardeniss@domain.lt";
         String password = "senkuks";
-        userService.create(new User(email, password, false, false));
+        String address = "pvz addresiukas";
+        String zipCode = "33333333";
+        String firstName = "FirstNameExample";
+        String lastName = "LastNameExample";
+
+        userService.create(new User(email, password, address, zipCode, firstName, lastName, false, false));
 
         //Assert
         User user = userService.findByEmail(email);
         assertEquals(email, user.getEmail());
         assertEquals(password, user.getPassword());
+        assertEquals(address, user.getAddress());
+        assertEquals(zipCode, user.getZipCode());
+        assertEquals(firstName, user.getFirstName());
+        assertEquals(lastName, user.getLastName());
     }
 }

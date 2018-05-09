@@ -39,12 +39,12 @@ public class Order {
 
     public Order(){}
 
-    public Order(User user, String address){
+    public Order(User user){
         this.user = user;
         this.price = new BigDecimal(0);
         this.state = false;
         this.dateCreated =  LocalDateTime.now();
-        this.address = address;
+        this.address = user.getAddress();
 
     }
 
