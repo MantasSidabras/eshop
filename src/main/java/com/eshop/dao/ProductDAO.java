@@ -10,5 +10,5 @@ import java.util.List;
 public interface ProductDAO extends JpaRepository<Product, Integer> {
     //Basic CRUD auto-implemented
 
-    List<Product> findByName(Integer id);
+    List<Product> findByName(String name);
 }
