@@ -2,13 +2,16 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { NavLink, Link } from 'react-router-dom';
 
+import EditAccount from './EditAccount';
+
 const Wrapper = styled.header`
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-end;
   width: 100%;
   padding: 10px 0;
   padding-top: 25px;
-  background-color: hsl(0, 0%, 98%);
+  background-color: hsl(0, 0%, 99%);
 `
 
 const Title = styled.h1`
@@ -126,8 +129,60 @@ ${'' /*
 `
 
 
+const MyAccount = styled.button`
+  position: relative;
+  padding: 0;
+  padding-bottom: 2px;
+  height: 32px;
+  color: hsla(0, 0%, 0%, 0.75);
+  font-size: 1rem;
+  font-family: 'Roboto', sans-serif;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease-in-out; 
+
+  &:hover {
+    color: hsla(0, 0%, 0%, 0.85);
+    border-bottom: 2px solid hsl(210, 70%, 60%);
+  }
+`
+
+const CartLink = styled(NavLink)`
+  padding: 5px 0;
+  padding-bottom: 2px;
+  height: 32px;
+  margin-left: 20px;
+  display: inline-block;
+  color: hsla(0, 0%, 0%, 0.75);
+  font-size: 1.1rem;
+  font-family: 'Roboto', sans-serif;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease-in-out; 
+
+  &:hover {
+    color: hsla(0, 0%, 0%, 0.85);
+    border-bottom: 2px solid hsl(210, 70%, 60%);
+
+    i {
+      color: hsl(210, 60%, 50%)
+    }
+  }
+`
 
 class Header extends Component {
+  state = {
+    showEditAccount: false
+  }
+
   render() {
     return (
       <Wrapper>
@@ -136,10 +191,17 @@ class Header extends Component {
           <li><NavLink exact to='/'>Home</NavLink></li>
           <li><NavLink to='/manage'>Manage</NavLink></li>
         </Nav>
+
         <LoginNav>
           <RegisterLink to="/register">Register</RegisterLink>
-        <RegisterLink to="/login">Login</RegisterLink>
+          <RegisterLink to="/login">Login</RegisterLink>
         </LoginNav>
+
+        <MyAccount onClick={() => this.setState({ showEditAccount: !this.state.showEditAccount })}>
+          My Account
+          {this.state.showEditAccount && <EditAccount />}
+        </MyAccount>
+        <CartLink to='/cart'><i className="fas fa-shopping-cart"></i> Cart</CartLink>
       </Wrapper>
     );
   }
