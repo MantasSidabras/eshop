@@ -24,6 +24,8 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userDAO.save(user);
     }
+
+
     public User create(String email, String password, String address, String zipCode, String firstName, String lastName, Boolean isAdmin, Boolean isBlocked){
         return userDAO.save(new User(email, passwordEncoder.encode(password), address, zipCode, firstName, lastName,false, false));
     }

@@ -7,7 +7,10 @@ import ProductApi from 'api/ProductApi'
 import UserApi from 'api/UserApi';
 import Header from './components/Header';
 import Home from './pages/Home/Home';
-import Manage from './pages/Manage/Manage'
+import Manage from './pages/Manage/Manage';
+import Register from './pages/Register/Register';
+import Login from './pages/Login/Login';
+
 
 const ContentWrapper = styled.div`
   display: flex;
@@ -15,7 +18,7 @@ const ContentWrapper = styled.div`
   width: 1200px;
   margin: 0 auto;
   min-height: 100vh;
-  
+
   @media (max-width: 1230px) {
     width: calc(100% - 30px);
   }
@@ -56,8 +59,8 @@ class State extends Component {
   render() {
     return (
       <Context.Provider value={{
-          ...this.state, 
-          fetchAllProducts: this.fetchAllProducts, 
+          ...this.state,
+          fetchAllProducts: this.fetchAllProducts,
           fetchAllUsers: this.fetchAllUsers
         }}
       >
@@ -78,6 +81,8 @@ class App extends Component {
             <Switch>
               <Route exact path='/' component={Home}/>
               <Route path='/manage' component={Manage}/>
+              <Route path='/register' component={Register}/>
+            <Route path='/login' component={Login}/>
               <Redirect to='/'/>
             </Switch>
           </ContentWrapper>
