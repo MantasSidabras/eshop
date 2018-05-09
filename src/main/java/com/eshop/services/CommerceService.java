@@ -3,7 +3,9 @@ package com.eshop.services;
 import com.eshop.dao.CartProductDAO;
 import com.eshop.dao.OrderDAO;
 import com.eshop.dao.OrderProductDAO;
+import com.eshop.dao.ProductDAO;
 import com.eshop.entities.*;
+import com.eshop.exceptions.InvalidProductQuantityException;
 import com.eshop.exceptions.ProductCartEmptyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,9 @@ public class CommerceService {
     @Autowired
     private OrderDAO orderDAO;
 
+    @Autowired
+    private ProductDAO productDAO;
+
     public List<CartProduct> getCartProductsForUserById(Integer id){
         return cartProductDAO.findAllByUserId(id);
     }
@@ -33,9 +38,18 @@ public class CommerceService {
         return cartProductDAO.findAllByUserId(user.getId());
     }
 
-    public CartProduct addToCartForUser(User user, Product product, Integer quantity){
+
+    public CartProduct addToCartForUser(User user, Product product, Integer quantity)
+            throws InvalidProductQuantityException {
+
+        if(quantity > product.getQuantity()){
+            throw new InvalidProductQuantityException();
+        }
+
         return cartProductDAO.save(new CartProduct(user, product, quantity));
     }
+
+
     public CartProduct updateCartProduct(CartProduct cartProduct){
         return cartProductDAO.save(cartProduct);
     }

@@ -1,6 +1,7 @@
 .idea/
 *.iml
 
+src/main/resources/application.properties
 target/
 client/node_modules/
 client/build/
