@@ -18,8 +18,10 @@ public class UserService {
     public User create(User user){
         return userDAO.save(user);
     }
+
+
     public User create(String email, String password, String address, String zipCode, String firstName, String lastName, Boolean isAdmin, Boolean isBlocked){
-        return userDAO.save(new User(email, password, address, zipCode, firstName, lastName,false, false));
+        return userDAO.save(new User(email, password, address, zipCode, firstName, lastName, isAdmin, isBlocked));
     }
 
     public List<User> findAll() {
