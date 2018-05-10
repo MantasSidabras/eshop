@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { inject } from 'mobx-react';
 
 import ProductApi from 'api/ProductApi';
 import ProductImageApi from 'api/ProductImageApi';
@@ -70,7 +71,7 @@ class ProductItem extends Component {
     ])
       .then(() => {
         this.setState({ showEdit: false });
-        this.props.fetchAllProducts();
+        this.props.productStore.getAll();
       })
       .catch(error => console.error(error));
   }
@@ -79,7 +80,7 @@ class ProductItem extends Component {
     ProductApi.delete(this.props.id)
       .then(() => {
         this.setState({ showConfirm: false });
-        this.props.fetchAllProducts();
+        this.props.productStore.getAll();
       })
       .catch(error => console.error(error));
   }
@@ -116,4 +117,4 @@ class ProductItem extends Component {
   }
 }
  
-export default ProductItem;
+export default inject('productStore')(ProductItem);

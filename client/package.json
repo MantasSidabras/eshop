@@ -4,6 +4,9 @@
   "private": true,
   "dependencies": {
     "animejs": "^2.2.0",
+    "jwt-decode": "^2.2.0",
+    "mobx": "^4.2.1",
+    "mobx-react": "^5.1.2",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-dropzone": "^4.2.9",

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { inject } from 'mobx-react';
 
 import UserApi from 'api/UserApi';
 import FadeIn from 'animations/FadeIn';
@@ -67,7 +68,7 @@ class UserItem extends Component {
     user.blocked = !user.blocked;
 
     UserApi.update(user)
-      .then(res => this.props.fetchAllUsers())
+      .then(res => this.props.userStore.getAll())
       .catch(error => console.error(error));
   }
 
@@ -94,4 +95,4 @@ class UserItem extends Component {
   }
 }
  
-export default UserItem;
+export default inject('userStore')(UserItem);

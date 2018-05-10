@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { inject } from 'mobx-react';
 
 import ProductImageApi from 'api/ProductImageApi';
 
@@ -72,20 +73,7 @@ const Add = styled.button`
 
 class Product extends Component {
   handleAdd = () => {
-    const cartProduct = {
-      productId: this.props.id,
-      userId: 1 
-    }
-
-    fetch(`http://localhost:8080/api/cartProduct`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(cartProduct)
-    })
-      .then(res => res.json())
-      .then(res => this.props.fetchUser())
+    this.props.userStore.addCartProductById(this.props.id);
   }
 
   render() {
@@ -103,4 +91,4 @@ class Product extends Component {
   }
 }
 
-export default Product;
+export default inject('userStore')(Product);

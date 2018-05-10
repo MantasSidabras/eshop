@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, withRouter } from 'react-router-dom';
+import { inject, observer } from 'mobx-react';
 
-import Context from 'MyContext';
 import EditAccount from './EditAccount';
 
 const Wrapper = styled.header`
@@ -201,37 +201,41 @@ class Header extends Component {
     showEditAccount: false
   }
 
-  render() {
-    return (
-      <Context.Consumer>
-        {({ cartProductCount }) => (
-          <Wrapper>
-          <Title>{this.props.children}</Title>
-          <Nav>
-            <li><NavLink exact to='/'>Home</NavLink></li>
-            <li><NavLink to='/manage'>Manage</NavLink></li>
-          </Nav>
+  handleHideEdit = () => this.setState({ showEditAccount: false });
 
+  render() {
+    const { cartProductList, isLoggedIn, isAdmin } = this.props.userStore;
+    return (
+      <Wrapper>
+        <Title>{this.props.children}</Title>
+        <Nav>
+          <li><NavLink exact to='/'>Home</NavLink></li>
+          {isLoggedIn && isAdmin && <li><NavLink to='/manage'>Manage</NavLink></li>}
+        </Nav>
+
+        {!isLoggedIn && 
           <LoginNav>
             <RegisterLink to="/register">Register</RegisterLink>
             <RegisterLink to="/login">Login</RegisterLink>
           </LoginNav>
+        }
 
+        {isLoggedIn && 
           <MyAccount onClick={() => this.setState({ showEditAccount: !this.state.showEditAccount })}>
             My Account
-            {this.state.showEditAccount && <EditAccount />}
+            {this.state.showEditAccount && <EditAccount hide={this.handleHideEdit}/>}
           </MyAccount>
+        }
+
         <CartLink to='/cart'>
           <i style={{ position: 'relative', marginRight: 2}} className="fas fa-shopping-cart fa-lg">
-            <CartCount>{cartProductCount}</CartCount>
+            <CartCount>{cartProductList.length}</CartCount>
           </i> 
           CART
         </CartLink>
-        </Wrapper>
-        )}
-      </Context.Consumer>
+      </Wrapper>
     );
   }
 }
 
-export default Header;
+export default withRouter(inject('userStore')(observer(Header)));

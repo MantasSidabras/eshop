@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { inject, observer } from 'mobx-react';
 
-import Context from 'MyContext';
 import UserItem from './UserItem/UserItem';
 
 const Wrapper = styled.div`
@@ -50,23 +50,24 @@ class Users extends Component {
     searchQuery: ''
   }
 
+  componentDidMount() {
+    this.props.userStore.getAll();
+  }
+  
   handleSearch = e => this.setState({ searchQuery: e.target.value});
 
   filterUsers = user => user.email.toLowerCase().includes(this.state.searchQuery.toLowerCase());
 
   render() {
+    const { allUsers } = this.props.userStore;
     return ( 
-      <Context.Consumer>
-        {({ users, fetchAllUsers }) => 
-          <Wrapper>
-            <Title>Users</Title>
-            <Search onChange={this.handleSearch} />
-            {users.filter(this.filterUsers).map(user => <UserItem key={user.id} {...user} fetchAllUsers={fetchAllUsers} />)}
-          </Wrapper>
-        }
-      </Context.Consumer>  
+      <Wrapper>
+        <Title>Users</Title>
+        <Search onChange={this.handleSearch} />
+        {allUsers.filter(this.filterUsers).map(user => <UserItem key={user.id} {...user} />)}
+      </Wrapper>
     )
   }
 }
 
-export default Users;
+export default inject('userStore')(observer(Users));

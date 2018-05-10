@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import { inject } from 'mobx-react';
 
-import Context from 'MyContext';
-import ProductApi from 'api/ProductApi'
-import UserApi from 'api/UserApi';
 import Header from './components/Header';
 import Home from './pages/Home/Home';
-
 import Manage from './pages/Manage/Manage';
 import Register from './pages/Register/Register';
 import Login from './pages/Login/Login';
 import Cart from './pages/Cart/Cart';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const ContentWrapper = styled.div`
   display: flex;
@@ -34,64 +32,22 @@ const Backdrop = styled.div`
   background-color: hsl(0, 0%, 99%);
 `;
 
-class State extends Component {
-  state = {
-    products: [],
-    users: [],
-    user: null,
-  }
-
-  fetchAllProducts = () => {
-    ProductApi.getAll()
-      .then(products => this.setState({ products }))
-      .catch(error => console.error(error))
-  }
-
-  fetchAllUsers = () => {
-    UserApi.getAll()
-      .then(users => this.setState({ users }))
-      .catch(error => console.error(error))
-  }
-
-  fetchUser = () => {
-    UserApi.getById(1)
-      .then(user => this.setState({ user }))
-      .catch(error => console.error(error))
-  }
-
-  componentDidMount() {
-    this.fetchAllProducts();
-    this.fetchAllUsers();
-    this.fetchUser();
-  }
-
-  render() {
-    return (
-      <Context.Provider value={{
-          ...this.state,
-          cartProductCount: this.state.user && this.state.user.cartProductList.length,
-          fetchAllProducts: this.fetchAllProducts,
-          fetchAllUsers: this.fetchAllUsers,
-          fetchUser: this.fetchUser
-        }}
-      >
-        {this.props.children}
-      </Context.Provider>
-    );
-  }
-}
-
 class App extends Component {
+  componentDidMount() {
+    this.props.productStore.getAll();
+    this.props.userStore.fetchUser(); 
+  }
+
   render() {
     return (
-      <State>
+      <div>
         <Backdrop />
         <Router>
           <ContentWrapper>
             <Header>e-Shop</Header>
             <Switch>
               <Route exact path='/' component={Home}/>
-              <Route path='/manage' component={Manage}/>
+              <ProtectedRoute path='/manage' component={Manage}/>
               <Route path='/register' component={Register}/>
               <Route path='/login' component={Login}/>
               <Route path='/cart' component={Cart}/>
@@ -99,9 +55,9 @@ class App extends Component {
             </Switch>
           </ContentWrapper>
         </Router>
-      </State>
+      </div>
     );
   }
 }
 
-export default App;
+export default inject('productStore', 'userStore')(App);

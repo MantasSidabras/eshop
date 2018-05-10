@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-import UserApi from 'api/UserApi';
+import { inject } from 'mobx-react';
 
 const Wrapper = styled.div`
   position: absolute;
@@ -19,14 +19,15 @@ const Wrapper = styled.div`
 
     &:hover {
       color: hsla(0, 0%, 0%, 0.85);
-      background: hsl(0, 0%, 98%);
+      background: hsl(0, 0%, 97%);
     }
   }
 `
 
 class EditAccount extends Component {
   handleLogout = () => {
-    // TODO: implement logout
+    this.props.userStore.logout()
+    this.props.hide();
   }
 
   render() { 
@@ -40,4 +41,4 @@ class EditAccount extends Component {
   }
 }
  
-export default EditAccount;
+export default inject('userStore')(EditAccount);

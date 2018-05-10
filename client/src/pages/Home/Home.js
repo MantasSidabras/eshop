@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { inject, observer } from 'mobx-react';
 
 import Product from '../../components/Product';
-import Context from 'MyContext';
 
 const Wrapper = styled.div`
   display: flex;
@@ -58,16 +58,12 @@ class Home extends Component {
     return (
       <Wrapper>
         <Search onChange={this.handleSearch} />
-          <Context.Consumer>
-            {({ products, fetchUser }) =>
-              <Products>
-                {products.filter(this.filterProducts).map(product => <Product key={product.id} {...product} fetchUser={fetchUser}/>)}
-              </Products>
-            }
-          </Context.Consumer>
+        <Products>
+          {this.props.productStore.products.filter(this.filterProducts).map(product => <Product key={product.id} {...product} />)}
+        </Products>
       </Wrapper>
     );
   }
 }
 
-export default Home;
+export default inject('productStore')(observer(Home));

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { inject } from 'mobx-react';
+import { Redirect } from 'react-router-dom';
 
-import Context from 'MyContext';
 import UserApi from 'api/UserApi';
 
 const Wrapper = styled.div`
@@ -90,7 +91,7 @@ class Register extends Component {
     this.setState({ [name]: value });
   }
 
-  register = (e, fetchAllUsers) => {
+  register = (e) => {
     e.preventDefault();
     if(this.state.password !== this.state.password2) {
       this.setState({ err: true, errMsg: 'Nesutampa pass'});
@@ -98,42 +99,38 @@ class Register extends Component {
     }
     console.log(this.state);
 
-    UserApi.create(this.state).then(() => {
-      fetchAllUsers();
-      this.props.history.push('/login');
-    });
+    UserApi.create(this.state).then(() => this.props.history.push('/login'));
   }
 
-  render(){
-    return (
-      <Context.Consumer>
-        {({ fetchAllUsers }) => (
-          <Wrapper>
-            <div>
-              <h2>Register</h2>
-              <form onSubmit={e => this.register(e, fetchAllUsers)}>
-                <label htmlFor='firstname'>First name</label>
-                <input type="text" id='firstname' name='firstname' onChange={this.onChange} required />
-                <label htmlFor='lastname'>Last name</label>
-                <input type="text" id='lastname' name='lastname' onChange={this.onChange} required />
-                <label htmlFor='email'>Email</label>
-                <input type="text" id='email' name='email' onChange={this.onChange} required />
-                <label htmlFor='adress'>Adress</label>
-                <input type="text" id='adress' name='adress' onChange={this.onChange} required />
-                <label htmlFor='password'>Password</label>
-                {this.state.err && <span>{this.state.errMsg}</span>}
-                <input type="password" id='password' name='password' minLength='8' onChange={this.onChange} required />
-                <label htmlFor='password2'>Repeat password</label>
-                <input type="password" id='password2' name='password2' onChange={this.onChange} required />
-                <button type="submit">Register</button>
-              </form>
-            </div>
-          </Wrapper>
-        )}
-      </Context.Consumer>
-
-    )
+  render() {
+    if (this.props.userStore.isLoggedIn) {
+      return <Redirect to='/' />
+    } else {
+      return (
+        <Wrapper>
+          <div>
+            <h2>Register</h2>
+            <form onSubmit={this.register}>
+              <label htmlFor='firstname'>First name</label>
+              <input type="text" id='firstname' name='firstname' onChange={this.onChange} required />
+              <label htmlFor='lastname'>Last name</label>
+              <input type="text" id='lastname' name='lastname' onChange={this.onChange} required />
+              <label htmlFor='email'>Email</label>
+              <input type="text" id='email' name='email' onChange={this.onChange} required />
+              <label htmlFor='adress'>Adress</label>
+              <input type="text" id='adress' name='adress' onChange={this.onChange} required />
+              <label htmlFor='password'>Password</label>
+              {this.state.err && <span>{this.state.errMsg}</span>}
+              <input type="password" id='password' name='password' minLength='8' onChange={this.onChange} required />
+              <label htmlFor='password2'>Repeat password</label>
+              <input type="password" id='password2' name='password2' onChange={this.onChange} required />
+              <button type="submit">Register</button>
+            </form>
+          </div>
+        </Wrapper>
+      )
+    }
   }
 }
 
-export default Register;
+export default inject('userStore')(Register);

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { inject } from 'mobx-react';
 
 import ProductApi from 'api/ProductApi'
 import ImageSelect from 'components/ImageSelect';
@@ -71,7 +72,7 @@ class AddProduct extends Component {
         ProductApi.addImages(added.id, formData)
           .then(res => {
             alert(res.message);
-            this.props.fetchAllProducts();
+            this.props.productStore.getAll();
           })
       ))
       .catch(error => console.error(error));
@@ -98,4 +99,4 @@ class AddProduct extends Component {
   }
 }
  
-export default AddProduct;
+export default inject('productStore')(AddProduct);

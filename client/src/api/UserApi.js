@@ -1,5 +1,5 @@
 class UserApi {
-
+  
   getAll = () => {
     return fetch('http://localhost:8080/api/user')
       .then(res => res.json())
@@ -28,6 +28,16 @@ class UserApi {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(user)
+    })
+      .then(res => res.json())
+  }
+
+  deleteAllCartProducts = id => {
+    return fetch(`http://localhost:8080/api/user/${id}/cartProduct`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
     })
       .then(res => res.json())
   }

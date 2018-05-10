@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-
-import Context from 'MyContext';
-import UserApi from 'api/UserApi';
+import { inject, observer } from 'mobx-react';
+import { Redirect } from 'react-router-dom';
 
 const Wrapper = styled.div`
   display: flex;
@@ -78,25 +77,30 @@ class Login extends Component {
 
   login = (e) => {
     e.preventDefault();
+    this.props.userStore.login(this.state);
     // TODO: login user
   }
 
-  render(){
-    return (
-      <Wrapper>
-        <div>
-          <h2>Login</h2>
-        <form onSubmit={this.login}>
-            <label htmlFor='email'>Email</label>
-            <input type="text" id='email' name='email' onChange={this.onChange} required />
-            <label htmlFor='password2'>Password</label>
-            <input type="password" id='password' name='password' onChange={this.onChange} required />
-            <button type="submit">Login</button>
-          </form>
-        </div>
-      </Wrapper>
-    )
+  render() {
+    if (this.props.userStore.isLoggedIn) {
+      return <Redirect to='/' />
+    } else {
+      return (
+        <Wrapper>
+          <div>
+            <h2>Login</h2>
+            <form onSubmit={this.login}>
+              <label htmlFor='email'>Email</label>
+              <input type="text" id='email' name='email' onChange={this.onChange} required />
+              <label htmlFor='password2'>Password</label>
+              <input type="password" id='password' name='password' onChange={this.onChange} required />
+              <button type="submit">Login</button>
+            </form>
+          </div>
+        </Wrapper>
+      )
+    }
   }
 }
 
-export default Login;
+export default inject('userStore')(observer(Login));

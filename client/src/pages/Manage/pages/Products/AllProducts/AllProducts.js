@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { inject, observer } from 'mobx-react';
 
-import Context from 'MyContext';
 import ProductItem from './ProductItem/ProductItem';
 
 const Wrapper = styled.div`
@@ -43,18 +43,15 @@ class AllProducts extends Component {
 
   filterProducts = product => product.name.toLowerCase().includes(this.state.searchQuery.toLowerCase());
 
-  render() { 
+  render() {
+    const { products } = this.props.productStore;
     return ( 
-      <Context.Consumer>
-        {({ products, fetchAllProducts }) => 
-          <Wrapper>
-            <Search onChange={this.handleSearch} />
-            {products.filter(this.filterProducts).map(product => <ProductItem fetchAllProducts={fetchAllProducts} key={product.id} {...product} />)}
-          </Wrapper>
-        }
-      </Context.Consumer>  
+      <Wrapper>
+        <Search onChange={this.handleSearch} />
+        {products.filter(this.filterProducts).map(product => <ProductItem key={product.id} {...product} />)}
+      </Wrapper>
     )
   }
 }
  
-export default AllProducts;
+export default inject('productStore')(observer(AllProducts));
