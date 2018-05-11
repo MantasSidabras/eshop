@@ -7,6 +7,7 @@ import ProductImageApi from 'api/ProductImageApi';
 import EditProduct from './EditProduct/EditProduct';
 import ConfirmDelete from './ConfirmDelete/ConfirmDelete';
 import FadeIn from 'animations/FadeIn';
+import ScaleUp from 'animations/ScaleUp';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -38,11 +39,39 @@ const Name = styled.div`
   flex-grow: 1;
 `
 
+const Message = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: hsla(0, 0%, 0%, 0.6);
+  z-index: 999;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    background: hsl(110, 50%, 85%);
+    border-radius: 3px;
+
+    @media (min-width: 700px) {
+      margin-top: -20vh;
+    }
+  }
+`
+
 class ProductItem extends Component {
   state = { 
     showIcons: false, 
     showEdit: false,
-    showConfirm: false
+    showConfirm: false,
+    showMessage: false
   }
 
   showIcons = () => {
@@ -70,8 +99,9 @@ class ProductItem extends Component {
       ...imageIdsToDelete.map(id => ProductImageApi.delete(id))  
     ])
       .then(() => {
-        this.setState({ showEdit: false });
         this.props.productStore.getAll();
+        this.setState({ showMessage: true });
+        setTimeout(() => this.setState({ showEdit: false, showMessage: false }), 1200)
       })
       .catch(error => console.error(error));
   }
@@ -79,8 +109,8 @@ class ProductItem extends Component {
   handleDelete = () => {
     ProductApi.delete(this.props.id)
       .then(() => {
-        this.setState({ showConfirm: false });
         this.props.productStore.getAll();
+        this.setState({ showConfirm: false });
       })
       .catch(error => console.error(error));
   }
@@ -89,7 +119,7 @@ class ProductItem extends Component {
 
   render() {
     const { name } = this.props;
-    const { showIcons, showEdit, showConfirm } = this.state;
+    const { showIcons, showEdit, showConfirm, showMessage } = this.state;
     return ( 
       <Wrapper>
         <Product
@@ -111,6 +141,14 @@ class ProductItem extends Component {
 
         <FadeIn in={showConfirm}>
           <ConfirmDelete name={name} onDelete={this.handleDelete} onCancel={this.handleCancel}/>
+        </FadeIn>
+
+        <FadeIn in={showMessage}>
+          <Message>
+            <ScaleUp>
+              <div>Edited successfully!</div>
+            </ScaleUp>
+          </Message>
         </FadeIn>
       </Wrapper> 
     )

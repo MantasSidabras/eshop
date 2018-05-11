@@ -136,7 +136,7 @@ class EditAccount extends Component {
       .then(res => {
         this.props.userStore.fetchUser();
         this.setState({ showMessage: true, error: false, password: '', password2: '' });
-        setTimeout(() => this.setState({ showMessage: false }), 1500)
+        setTimeout(() => this.setState({ showMessage: false }), 1200)
       })
       .catch(error => console.error(error))
   }

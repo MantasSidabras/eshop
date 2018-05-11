@@ -6,6 +6,9 @@ import ProductApi from 'api/ProductApi'
 import ImageSelect from 'components/ImageSelect';
 import ProductForm from 'components/ProductForm';
 
+import FadeIn from 'animations/FadeIn';
+import ScaleUp from 'animations/ScaleUp';
+
 const Wrapper = styled.form`
   width: 100%;
   max-width: 450px;
@@ -32,13 +35,41 @@ const Add = styled.button`
   }
 `
 
+const Message = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: hsla(0, 0%, 0%, 0.6);
+  z-index: 999;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    background: hsl(110, 50%, 85%);
+    border-radius: 3px;
+
+    @media (min-width: 700px) {
+      margin-top: -20vh;
+    }
+  }
+`
+
 class AddProduct extends Component {
   state = {
     name: '',
     description: '',
     price: '',
     quantity: 1,
-    images: []
+    images: [],
+    showMessage: false,
   }
 
   handleDrop = images => { 
@@ -52,6 +83,8 @@ class AddProduct extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
+
+    this.setState({ showMessage: false });
 
     const product = { 
       id: this.props.id,
@@ -71,8 +104,9 @@ class AddProduct extends Component {
       .then(added => (
         ProductApi.addImages(added.id, formData)
           .then(res => {
-            alert(res.message);
             this.props.productStore.getAll();
+            this.setState({ showMessage: true });
+            setTimeout(() => this.setState({ showMessage: false }), 1200)
           })
       ))
       .catch(error => console.error(error));
@@ -81,7 +115,7 @@ class AddProduct extends Component {
   handleImageClick = name => this.setState({ images: this.state.images.filter(i => i.name !== name )});
   
   render() { 
-    const { images } = this.state;
+    const { images, showMessage } = this.state;
     return ( 
       <Wrapper onSubmit={this.handleSubmit}>
         <ProductForm onChange={this.handleChange} {...this.state} />
@@ -94,6 +128,14 @@ class AddProduct extends Component {
         />
 
         <Add>Add product</Add>
+
+        <FadeIn in={showMessage}>
+          <Message>
+            <ScaleUp>
+              <div>Added successfully!</div>
+            </ScaleUp>
+          </Message>
+        </FadeIn>
       </Wrapper>
      )
   }
