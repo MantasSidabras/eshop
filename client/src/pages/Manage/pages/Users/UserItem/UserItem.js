@@ -26,10 +26,12 @@ const User = styled.div`
   transition: all 0.2s ease-in-out;
 
   ${props => props.blocked && 'background: hsl(0, 70%, 97%);'}
+  ${props => props.admin && 'background: hsl(210, 70%, 97%);'}
 
   &:hover {
     background: hsl(0, 0%, 100%);
     ${props => props.blocked && 'background: hsl(0, 70%, 98%);'}
+    ${props => props.admin && 'background: hsl(210, 70%, 98%);'}
     transform: scale(1.01)
   }
 `
@@ -40,12 +42,17 @@ const Email = styled.div`
   flex-grow: 1;
 `
 
-const Blocked = styled.div`
+const Label = styled.div`
+  width: 66px;
   padding: 4px 6px;
-  background: hsl(0, 70%, 60%);
+  ${props => props.admin && 'background: hsl(210, 70%, 60%);'}
+  ${props => props.blocked && 'background: hsl(0, 70%, 60%);'}
   color: hsla(0, 0%, 100%, 0.95);
   font-size: 0.75rem;
-  border: 1px solid hsl(0, 30%, 50%);
+  text-align: center;
+  ${props => props.admin && 'border: 1px solid hsl(210, 30%, 50%);'}
+  ${props => props.blocked && 'background: hsl(0, 70%, 60%);'}
+  border: 1px solid hsl(210, 30%, 50%);
   border-radius: 3px;
 `
 
@@ -73,7 +80,7 @@ class UserItem extends Component {
   }
 
   render() {
-    const { email, blocked } = this.props;
+    const { email, blocked, admin } = this.props;
     const { showIcons } = this.state;
     return ( 
       <Wrapper>
@@ -81,13 +88,17 @@ class UserItem extends Component {
           onMouseOver={this.showIcons} 
           onMouseLeave={this.hideIcons}
           blocked={blocked}
+          admin={admin}
         >
           <Email>{email}</Email>
-          {blocked && <Blocked>BLOCKED</Blocked>}
-          <div style={{ width: 30, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', cursor: 'pointer' }}>
-            <FadeIn in={showIcons} enterDuration={200} exitDuration={200}>
-              {blocked ? <i title="Unblock" className="fas fa-check-square fa-lg" onClick={this.handleBlock} /> : <i title="Block" className="fas fa-ban fa-lg" onClick={this.handleBlock} />}
-            </FadeIn>
+          {admin && <Label admin>ADMIN</Label>}
+          {blocked && <Label blocked>BLOCKED</Label>}
+          <div style={{ width: 30, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', cursor: !admin && 'pointer' }}>
+            {!admin && 
+              <FadeIn in={showIcons} enterDuration={200} exitDuration={200}>
+                {blocked ? <i title="Unblock" className="fas fa-check-square fa-lg" onClick={this.handleBlock} /> : <i title="Block" className="fas fa-ban fa-lg" onClick={this.handleBlock} />}
+              </FadeIn>
+            }
           </div>
         </User>
       </Wrapper> 
