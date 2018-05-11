@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 import { inject } from 'mobx-react';
 
@@ -24,7 +25,19 @@ const Wrapper = styled.div`
   }
 `
 
-class EditAccount extends Component {
+const StyledLink = styled(Link)`
+  display: block;
+  padding: 8px 15px;
+  color: hsla(0, 0%, 0%, 0.75);
+  text-decoration: none;
+
+  &:hover {
+    color: hsla(0, 0%, 0%, 0.85);
+    background: hsl(0, 0%, 97%);
+  }
+`
+
+class MyAccount extends Component {
   handleLogout = () => {
     this.props.userStore.logout()
     this.props.hide();
@@ -33,7 +46,7 @@ class EditAccount extends Component {
   render() { 
     return ( 
       <Wrapper onClick={e => e.stopPropagation()}>
-        <div>Edit Account</div>
+        <StyledLink onClick={() => this.props.hide()} to='/editAccount'>Edit Account</StyledLink>
         <div>My history</div>
         <div style={{ marginTop: 5}} onClick={this.handleLogout} >Logout</div>
       </Wrapper>
@@ -41,4 +54,4 @@ class EditAccount extends Component {
   }
 }
  
-export default inject('userStore')(EditAccount);
+export default inject('userStore')(MyAccount);

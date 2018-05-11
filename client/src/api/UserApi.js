@@ -18,6 +18,13 @@ class UserApi {
       },
       body: JSON.stringify(user)
     })
+      .then(res => {
+        if (res.status === 400) {
+          throw new Error('Bad request')
+        } else {
+          return res;
+        }
+      })
       .then(res => res.json())
   }
 

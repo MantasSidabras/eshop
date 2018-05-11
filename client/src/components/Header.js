@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { NavLink, Link, withRouter } from 'react-router-dom';
 import { inject, observer } from 'mobx-react';
 
-import EditAccount from './EditAccount';
+import MyAccount from './MyAccount';
 
 const Wrapper = styled.header`
   display: flex;
@@ -130,7 +130,7 @@ ${'' /*
 `
 
 
-const MyAccount = styled.button`
+const MyAccountLink = styled.button`
   position: relative;
   padding: 0;
   padding-bottom: 2px;
@@ -198,10 +198,10 @@ const CartCount = styled.div`
 `
 class Header extends Component {
   state = {
-    showEditAccount: false
+    showMyAccount: false
   }
 
-  handleHideEdit = () => this.setState({ showEditAccount: false });
+  handleHideEdit = () => this.setState({ showMyAccount: false });
 
   render() {
     const { isLoggedIn, isAdmin } = this.props.userStore;
@@ -222,10 +222,10 @@ class Header extends Component {
         }
 
         {isLoggedIn && 
-          <MyAccount onClick={() => this.setState({ showEditAccount: !this.state.showEditAccount })}>
+          <MyAccountLink onClick={() => this.setState({ showMyAccount: !this.state.showMyAccount })}>
             My Account
-            {this.state.showEditAccount && <EditAccount hide={this.handleHideEdit}/>}
-          </MyAccount>
+            {this.state.showMyAccount && <MyAccount hide={this.handleHideEdit}/>}
+          </MyAccountLink>
         }
 
         <CartLink to='/cart'>

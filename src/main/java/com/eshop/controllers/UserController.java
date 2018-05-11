@@ -55,8 +55,15 @@ public class UserController {
 
     @PutMapping
     @ResponseBody
-    public User updateUser(@RequestBody User user){
-        return userService.update(user);
+    public ResponseEntity<User> updateUser(@RequestBody User user){
+        // TODO: pass in id from token
+        User updated = userService.update(1, user);
+
+        if (updated == null) {
+            return ResponseEntity.status(400).body(null);
+        } else {
+            return ResponseEntity.ok(updated);
+        }
     }
 
 

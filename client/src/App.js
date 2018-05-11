@@ -9,6 +9,7 @@ import Manage from './pages/Manage/Manage';
 import Register from './pages/Register/Register';
 import Login from './pages/Login/Login';
 import Cart from './pages/Cart/Cart';
+import EditAccount from './pages/EditAccount/EditAccount';
 import ProtectedRoute from './components/ProtectedRoute';
 
 const ContentWrapper = styled.div`
@@ -56,6 +57,7 @@ class App extends Component {
                 <Route path='/register' component={Register}/>
                 <Route path='/login' component={Login}/>
                 <Route path='/cart' component={Cart}/>
+                <Route path='/editAccount' component={EditAccount}/>
                 <Redirect to='/'/>
               </Switch>
             </ContentWrapper>

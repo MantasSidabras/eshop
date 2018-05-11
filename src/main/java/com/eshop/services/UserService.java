@@ -42,8 +42,46 @@ public class UserService {
         }
     }
 
-    public User update(User user) {
-        return userDAO.save(user);
+    private User processEditAccount(User existing, User updated) {
+        if (updated.getPassword() == null || updated.getPassword().equals("")) {
+            updated.setPassword(existing.getPassword());
+        }
+
+        updated.setDateCreated(existing.getDateCreated());
+        updated.setAdmin(existing.isAdmin());
+        updated.setBlocked(existing.isBlocked());
+
+        return userDAO.save(updated);
+    }
+
+    public User update(Integer senderId, User updated) {
+        try {
+            User sender = this.findById(senderId);
+            User existing = this.findById(updated.getId());
+
+            // jei admin
+            if (sender.isAdmin()) {
+                // jei editina savo acc
+                if (sender.getId().equals(updated.getId())) {
+                    return processEditAccount(existing, updated);
+                } else {
+                    // jei bando editint kita admin
+                    if (existing.isAdmin()) {
+                        return null;
+                    // jei bando editint user
+                    } else {
+                        existing.setBlocked(updated.isBlocked());
+                        return userDAO.save(existing);
+                    }
+                }
+            // jei user
+            } else {
+                return processEditAccount(existing, updated);
+            }
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public User findByEmail(String email) {
