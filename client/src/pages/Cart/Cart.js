@@ -108,7 +108,7 @@ class Cart extends Component {
   }
 
   render() {
-    const { cartProductList } = this.props.cartStore;
+    const { cartProductList, sum } = this.props.cartStore;
     return ( 
       <Wrapper>
         <Title>Your cart</Title>
@@ -129,8 +129,8 @@ class Cart extends Component {
               ? <p style={{textAlign: 'center', color: 'hsla(0, 0%, 0%, 0.6)'}}>Cart is empty</p> 
               : <div style={{ marginTop: 20, textAlign: 'right'}}>
                   <span>
-                    Price:
-                    <TotalPrice>{cartProductList.reduce((total, cp) => total += cp.quantity * cp.product.price, 0).toFixed(2)}€</TotalPrice>
+                    Sum:
+                    <TotalPrice>{sum}€</TotalPrice>
                   </span>
                 </div>
             }

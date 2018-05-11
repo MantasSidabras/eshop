@@ -18,6 +18,10 @@ class CartStore {
   }
 
   clearCart = () => this.cartProductList = [];
+
+  get sum() {
+    return this.cartProductList.reduce((total, cp) => total += cp.quantity * cp.product.price, 0).toFixed(2);
+  }
   
   addCartProductByProductId = productId => {
     if (!UserStore.isLoggedIn) {
@@ -61,6 +65,7 @@ class CartStore {
 
 decorate(CartStore, {
   cartProductList: observable,
+  sum: computed,
   getCart: action,
   clearCart: action,
   addCartProductByProductId: action,

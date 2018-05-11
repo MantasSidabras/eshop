@@ -205,7 +205,7 @@ class Header extends Component {
 
   render() {
     const { isLoggedIn, isAdmin } = this.props.userStore;
-    const { cartProductList } = this.props.cartStore;
+    const { cartProductList, sum } = this.props.cartStore;
     return (
       <Wrapper>
         <Title>{this.props.children}</Title>
@@ -232,7 +232,8 @@ class Header extends Component {
           <i style={{ position: 'relative', marginRight: 2}} className="fas fa-shopping-cart fa-lg">
             <CartCount>{cartProductList.length}</CartCount>
           </i> 
-          CART
+          <span style={{ marginRight: 5 }}>CART</span>
+          {cartProductList.length > 0 && <span style={{ fontWeight: 'bold'}} >{sum}€</span>}
         </CartLink>
       </Wrapper>
     );

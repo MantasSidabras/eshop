@@ -2,6 +2,63 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { inject } from 'mobx-react';
 
+const Wrapper = styled.div`
+  display: flex;
+  margin-bottom: 3px;
+`
+const Name = styled.div`
+  display: flex;
+  align-items: center; 
+  flex-grow: 1;
+  min-width: 80px;
+`
+
+const Price = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 110px;
+  text-align: center;
+`
+const QuantityWrapper = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70px;
+  text-align: center;
+`
+
+const Quantity = styled.input.attrs({
+  type: 'number',
+  min: 1
+})`
+  width: 50px;
+  padding: 5px 8px;
+  border: 1px solid hsl(0, 0%, 75%);
+  border-radius: 3px;
+`
+
+const RemoveIcon = styled.i`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+`
+
+const ErrorMsg = styled.div`
+  position: absolute;
+  top: 30px;
+  width: 150px;
+  padding: 5px;
+  background: hsl(0, 70%, 90%);
+  text-align: center;
+  border: 1px solid hsl(0, 40%, 70%);
+  border-radius: 3px;
+  box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.2);
+  transform: translateX(-30px);
+  z-index: 999;
+`
+
 class CartItem extends Component {
   state = {
     error: false,
@@ -27,19 +84,19 @@ class CartItem extends Component {
   }
 
   render() {
-    const { product, quantity } = this.props;
+    const { product: { name, price }, quantity } = this.props;
     const { error, errorMsg } = this.state;
     return (
-      <div  style={{ display: 'flex', marginBottom: 3 }}>
-        <div style={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>{product.name}</div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 110,  textAlign: 'center' }}>{product.price.toFixed(2)} €</div>
-        <span style={{ width: 70, textAlign: 'center', position: 'relative'}}>
-          <input style={{ width: 50, border: '1px solid hsl(0, 0%, 75%)', padding: '5px 8px', borderRadius: 3 }} type="number" min="1" onChange={this.handleQuantityChange} value={quantity}/>
-          {error && <div style={{ zIndex: 999, boxShadow: '0 1px 2px hsla(0, 0%, 0%, 0.2)', position: 'absolute', padding: 5, textAlign: 'center', background: 'hsl(0, 70%, 90%)', border: '1px solid hsl(0, 40%, 70%)', borderRadius: 3, width: 150, transform: 'translateX(-30px)', top: 30 }} >{errorMsg}</div>}
-        </span>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 110,  textAlign: 'center' }}>{(product.price * quantity).toFixed(2)} €</div>
-        <i style={{display: 'flex', alignItems: 'center', cursor: 'pointer'}} onClick={this.handleDelete} className="fas fa-times fa-lg" title='Remove item' />
-      </div>
+      <Wrapper>
+        <Name>{name}</Name>
+        <Price>{price.toFixed(2)}€</Price>
+        <QuantityWrapper>
+          <Quantity onChange={this.handleQuantityChange} value={quantity} />
+          {error && <ErrorMsg>{errorMsg}</ErrorMsg>}
+        </QuantityWrapper>
+        <Price>{(price * quantity).toFixed(2)}€</Price>
+        <RemoveIcon onClick={this.handleDelete} className="fas fa-times fa-lg" title='Remove item' />
+      </Wrapper>
     )
   }
 }
