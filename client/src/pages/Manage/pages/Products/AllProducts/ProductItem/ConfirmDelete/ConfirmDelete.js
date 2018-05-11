@@ -26,6 +26,10 @@ const Message = styled.div`
   padding: 1rem;
   background: hsl(0, 0%, 100%);
   border-radius: 3px;
+
+  @media (min-width: 700px) {
+    margin-top: -20vh;
+  }
 `
 
 const Buttons = styled.div`
