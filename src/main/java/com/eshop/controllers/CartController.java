@@ -52,10 +52,4 @@ public class CartController {
     return res;
   }
 
-//  @GetMapping("/{id}/cart")
-//  @ResponseBody
-//  public List<CartProduct> getCartByUserId(@PathVariable("id") Integer id){
-//    return commerceService.getCartProductsByUserId(id);
-//  }
-
 }

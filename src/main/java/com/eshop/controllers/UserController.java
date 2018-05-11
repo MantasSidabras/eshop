@@ -1,5 +1,6 @@
 package com.eshop.controllers;
 
+import com.eshop.entities.CartProduct;
 import com.eshop.entities.Order;
 import com.eshop.entities.User;
 import com.eshop.exceptions.ProductCartEmptyException;
@@ -56,6 +57,13 @@ public class UserController {
     @ResponseBody
     public User updateUser(@RequestBody User user){
         return userService.update(user);
+    }
+
+
+    @GetMapping("/{id}/cartProduct")
+    @ResponseBody
+    public List<CartProduct> getCartByUserId(@PathVariable("id") Integer id){
+        return commerceService.getCartProductsByUserId(id);
     }
 
     @DeleteMapping("/{id}/cartProduct")

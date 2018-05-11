@@ -204,7 +204,8 @@ class Header extends Component {
   handleHideEdit = () => this.setState({ showEditAccount: false });
 
   render() {
-    const { cartProductList, isLoggedIn, isAdmin } = this.props.userStore;
+    const { isLoggedIn, isAdmin } = this.props.userStore;
+    const { cartProductList } = this.props.cartStore;
     return (
       <Wrapper>
         <Title>{this.props.children}</Title>
@@ -238,4 +239,4 @@ class Header extends Component {
   }
 }
 
-export default withRouter(inject('userStore')(observer(Header)));
+export default withRouter(inject('userStore', 'cartStore')(observer(Header)));

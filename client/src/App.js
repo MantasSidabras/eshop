@@ -33,30 +33,38 @@ const Backdrop = styled.div`
 `;
 
 class App extends Component {
+  state = {
+    loaded: false
+  }
   componentDidMount() {
     this.props.productStore.getAll();
-    this.props.userStore.fetchUser(); 
+    this.props.userStore.fetchUser()
+      .then(() => this.setState({ loaded: true })) 
   }
 
   render() {
-    return (
-      <div>
-        <Backdrop />
-        <Router>
-          <ContentWrapper>
-            <Header>e-Shop</Header>
-            <Switch>
-              <Route exact path='/' component={Home}/>
-              <ProtectedRoute path='/manage' component={Manage}/>
-              <Route path='/register' component={Register}/>
-              <Route path='/login' component={Login}/>
-              <Route path='/cart' component={Cart}/>
-              <Redirect to='/'/>
-            </Switch>
-          </ContentWrapper>
-        </Router>
-      </div>
-    );
+    if (this.state.loaded) {
+      return (
+        <div>
+          <Backdrop />
+          <Router>
+            <ContentWrapper>
+              <Header>e-Shop</Header>
+              <Switch>
+                <Route exact path='/' component={Home}/>
+                <ProtectedRoute path='/manage' component={Manage}/>
+                <Route path='/register' component={Register}/>
+                <Route path='/login' component={Login}/>
+                <Route path='/cart' component={Cart}/>
+                <Redirect to='/'/>
+              </Switch>
+            </ContentWrapper>
+          </Router>
+        </div>
+      );
+    } else {
+      return null;
+    }
   }
 }
 

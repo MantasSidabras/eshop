@@ -7,10 +7,9 @@ class AuthApi {
   
   isTokenValid = () => {
     const token = this.getDecodedToken();
-
     if (!token) return false;
 
-    return token.exp < Date.now() / 1000 ? false : true;
+    return token.exp > Date.now() / 1000 ? true : false;
   }
 
   getDecodedToken = () => {

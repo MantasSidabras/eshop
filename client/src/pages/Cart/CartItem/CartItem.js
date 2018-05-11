@@ -11,13 +11,11 @@ class CartItem extends Component {
   handleQuantityChange = e => {
     this.setState({ error: false });
 
-    if (e.target.value < 1 || e.target.value === '') {
-      return;
-    }
-
+    if (e.target.value < 1 || e.target.value === '') return;
+    
     const cartProduct = { id: this.props.id, quantity: e.target.value };
 
-    this.props.userStore.updateCartProduct(cartProduct)
+    this.props.cartStore.updateCartProduct(cartProduct)
       .catch(error => {
         this.setState({ error: true, errorMsg: error.message });
         setTimeout(() => this.setState({ error: false }), 2500);
@@ -25,7 +23,7 @@ class CartItem extends Component {
   }
 
   handleDelete = () => {
-    this.props.userStore.deleteCartProductById(this.props.id);
+    this.props.cartStore.deleteCartProductById(this.props.id);
   }
 
   render() {
@@ -46,4 +44,4 @@ class CartItem extends Component {
   }
 }
 
-export default inject('userStore')(CartItem);
+export default inject('cartStore')(CartItem);

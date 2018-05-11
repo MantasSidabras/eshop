@@ -99,12 +99,16 @@ const TotalPrice = styled.span`
 `
 
 class Cart extends Component {
-  handleClearCart = () => {
-    this.props.userStore.clearCart();
+  componentDidMount() {
+    this.props.cartStore.getCart();
+  }
+
+  handleDeleteAll = () => {
+    this.props.cartStore.deleteAll();
   }
 
   render() {
-    const { cartProductList } = this.props.userStore;
+    const { cartProductList } = this.props.cartStore;
     return ( 
       <Wrapper>
         <Title>Your cart</Title>
@@ -118,8 +122,7 @@ class Cart extends Component {
               <div style={{ width: 70,  textAlign: 'center' }}>Units</div>
               <div style={{ width: 110,  textAlign: 'center', marginRight: 20 }}>Total Price</div>
             </div>
-
-            
+   
             {cartProductList.map(cp => <CartItem key={cp.id} {...cp} />)}
 
             {cartProductList.length === 0 
@@ -136,7 +139,7 @@ class Cart extends Component {
           {cartProductList.length > 0 &&
             <ButtonWrapper>
               <BackButton><i className="fas fa-arrow-left"></i> Back</BackButton>
-              <ClearButton onClick={this.handleClearCart} >Clear Cart</ClearButton>
+              <ClearButton onClick={this.handleDeleteAll} >Clear Cart</ClearButton>
               <ProceedButton>Proceed <i className="fas fa-arrow-right"></i></ProceedButton>
             </ButtonWrapper>
           }
@@ -146,4 +149,4 @@ class Cart extends Component {
   }
 }
  
-export default inject('userStore')(observer(Cart));
+export default inject('cartStore')(observer(Cart));

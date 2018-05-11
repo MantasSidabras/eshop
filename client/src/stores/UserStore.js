@@ -2,7 +2,7 @@ import { observable, action, decorate, computed } from 'mobx';
 
 import AuthApi from '../api/AuthApi';
 import UserApi from '../api/UserApi';
-import CartProductApi from '../api/CartProductApi';
+import CartStore from './CartStore';
 
 class UserStore {
   allUsers = [];
@@ -16,31 +16,30 @@ class UserStore {
 
   fetchUser = () => {
     const token = AuthApi.getDecodedToken();
-
-    if (!token) return;
+    if (!token) {
+      this.user = {};
+      return Promise.resolve();
+    }
     
-    return UserApi.getById(token.id)
-      .then(user => this.user = user)
+    return Promise.all([
+      UserApi.getById(token.id).then(user => this.user = user),
+      CartStore.getCart()
+    ])
       .catch(error => console.error(error))
   }
 
-  get cartProductList() {
-    return this.user ? this.user.cartProductList : [];
-  }
-
   get isLoggedIn() {
-    return this.user || AuthApi.isTokenValid();
+    return this.user && AuthApi.isTokenValid();
   }
 
   get isAdmin() {
-    const token = AuthApi.getDecodedToken();
-    return this.isLoggedIn && token.admin;
+    return this.user && this.user.admin;
   }
 
   // TODO: complete login
   login = user => {
-    // { id: 1, admin: true }
-    AuthApi.setToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJhZG1pbiI6InRydWUifQ.zozomEoqEKXLAlkaozTq4wypsJYOnHJNUB-FUM1zIS0');
+    // { id: 1, exp: 2526034923 }
+    AuthApi.setToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJleHAiOiIyNTI2MDM0OTIzIn0.at9alWgKvNrNHSncYW8yfEqzm0GVIlWS5AML5-7YW74');
     this.fetchUser();
     // UserApi.login(user)
     //   .then(res => {
@@ -53,43 +52,9 @@ class UserStore {
   logout = () => {
     AuthApi.removeToken();
     this.user = null;
+    CartStore.clearCart();
   }
 
-  addCartProductById = productId => {
-    if (!this.isLoggedIn) {
-      // TODO: somehow add product when not logged in
-      return console.error(new Error('Please login again'));
-    }
-
-    const token = AuthApi.getDecodedToken();
-
-    const cartProduct = {
-      productId,
-      userId: token.id 
-    }
-
-    return CartProductApi.add(cartProduct)
-      .then(res => this.fetchUser())
-      .catch(error => console.error(error))
-  }
-
-  updateCartProduct = cartProduct => {
-    return CartProductApi.update(cartProduct)
-      .then(res => this.fetchUser())
-  }
-
-  deleteCartProductById = id => {
-    return CartProductApi.deleteById(id)
-      .then(res => this.fetchUser())
-      .catch(error => console.error(error))
-  }
-
-  clearCart = () => {
-    const token = AuthApi.getDecodedToken();
-    return UserApi.deleteAllCartProducts(token.id)
-      .then(res => this.fetchUser())
-      .catch(error => console.error(error))
-  }
 }
 
 decorate(UserStore, {
@@ -97,15 +62,10 @@ decorate(UserStore, {
   user: observable,
   getAll: action,
   fetchUser: action,
-  cartProductList: computed,
   isLoggedIn: computed,
   isAdmin: computed,
   login: action,
   logout: action,
-  addCartProductById: action,
-  updateCartProduct: action,
-  deleteCartProductById: action,
-  deleteAllCartProducts: action
 })
 
 export default new UserStore();

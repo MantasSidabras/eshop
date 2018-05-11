@@ -73,7 +73,7 @@ const Add = styled.button`
 
 class Product extends Component {
   handleAdd = () => {
-    this.props.userStore.addCartProductById(this.props.id);
+    this.props.cartStore.addCartProductByProductId(this.props.id);
   }
 
   render() {
@@ -91,4 +91,4 @@ class Product extends Component {
   }
 }
 
-export default inject('userStore')(Product);
+export default inject('cartStore')(Product);
