@@ -32,6 +32,7 @@ const Name = styled.div`
 
 const Image = styled.img`
   max-width: 100%;
+  border-radius: 3px;
   height: auto;
 `;
 
@@ -42,6 +43,7 @@ const Placeholder = styled.div`
   height: 120px;
   width: 100%;
   border: 1px solid hsl(0, 0%, 75%);
+  border-radius: 3px;
 `;
 
 const Price = styled.div`
