@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { NavLink, Route, Switch } from 'react-router-dom';
+import { NavLink, Route, Switch, Redirect } from 'react-router-dom';
+import { inject, observer } from 'mobx-react';
 
 import Products from './pages/Products/Products';
 import Orders from './pages/Orders/Orders';
@@ -95,37 +96,41 @@ const Extra = styled.div`
 `
 class Manage extends Component {
   render() {
-    return (
-      <Wrapper>
-        <Menu>
-          <li>
-            <NavLink activeClassName='active-manage' exact to={`${this.props.match.path}`}>
-              <i className="fas fa-tag fa-sm"></i> Products
-            </NavLink>
-          </li>
-          <li>
-            <NavLink activeClassName='active-manage' to={`${this.props.match.path}/orders`}>
-              <i className="fas fa-clipboard-list fa-sm"></i> Orders
-            </NavLink>
-          </li>
-          <li>
-            <NavLink activeClassName='active-manage' to={`${this.props.match.path}/users`}>
-              <i className="fas fa-users fa-sm"></i> Users
-            </NavLink>
-          </li>
-          <Extra />
-        </Menu>
-        
-        <Content>
-          <Switch>
-            <Route exact path={this.props.match.url} component={Products}/>
-            <Route path={`${this.props.match.url}/orders`} component={Orders}/>
-            <Route path={`${this.props.match.url}/users`} component={Users}/>
-          </Switch>
-        </Content>
-      </Wrapper>
-    );
+    if (this.props.userStore.isLoggedIn && this.props.userStore.isAdmin) {
+      return ( 
+        <Wrapper>
+          <Menu>
+            <li>
+              <NavLink activeClassName='active-manage' exact to={`${this.props.match.path}`}>
+                <i className="fas fa-tag fa-sm"></i> Products
+              </NavLink>
+            </li>
+            <li>
+              <NavLink activeClassName='active-manage' to={`${this.props.match.path}/orders`}>
+                <i className="fas fa-clipboard-list fa-sm"></i> Orders
+              </NavLink>
+            </li>
+            <li>
+              <NavLink activeClassName='active-manage' to={`${this.props.match.path}/users`}>
+                <i className="fas fa-users fa-sm"></i> Users
+              </NavLink>
+            </li>
+            <Extra />
+          </Menu>
+          
+          <Content>
+            <Switch>
+              <Route exact path={this.props.match.url} component={Products}/>
+              <Route path={`${this.props.match.url}/orders`} component={Orders}/>
+              <Route path={`${this.props.match.url}/users`} component={Users}/>
+            </Switch>
+          </Content>
+        </Wrapper>
+      );
+    } else {
+      return <Redirect to='/' />
+    }
   }
 }
 
-export default Manage;
+export default inject('userStore')(observer(Manage));

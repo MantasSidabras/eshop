@@ -10,7 +10,6 @@ import Register from './pages/Register/Register';
 import Login from './pages/Login/Login';
 import Cart from './pages/Cart/Cart';
 import EditAccount from './pages/EditAccount/EditAccount';
-import ProtectedRoute from './components/ProtectedRoute';
 
 const ContentWrapper = styled.div`
   display: flex;
@@ -53,7 +52,7 @@ class App extends Component {
               <Header>e-Shop</Header>
               <Switch>
                 <Route exact path='/' component={Home}/>
-                <ProtectedRoute path='/manage' component={Manage}/>
+                <Route path='/manage' component={Manage}/>
                 <Route path='/register' component={Register}/>
                 <Route path='/login' component={Login}/>
                 <Route path='/cart' component={Cart}/>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { inject } from 'mobx-react';
+import { Redirect } from 'react-router-dom';
+import { inject, observer } from 'mobx-react';
 
 import UserApi from 'api/UserApi';
 import FadeIn from 'animations/FadeIn';
@@ -143,45 +144,50 @@ class EditAccount extends Component {
 
   render() {
     const { firstName, lastName, email, address, zipCode, showMessage, password, password2, error } = this.state;
-    return ( 
-      <Wrapper>
-        <Form onSubmit={this.handleSubmit}>
-          <label htmlFor='firstName'>First Name</label>
-          <input type="text" id='firstName' name='firstName' value={firstName} onChange={this.handleChange} required />
 
-          <label htmlFor='lastName'>Last Name</label>
-          <input type="text" id='lastName' name='lastName' value={lastName} onChange={this.handleChange} required />
+    if (this.props.userStore.isLoggedIn) {
+      return ( 
+        <Wrapper>
+          <Form onSubmit={this.handleSubmit}>
+            <label htmlFor='firstName'>First Name</label>
+            <input type="text" id='firstName' name='firstName' value={firstName} onChange={this.handleChange} required />
 
-          <label htmlFor='email'>Email</label>
-          <input type="text" id='email' name='email' value={email} onChange={this.handleChange} required />
+            <label htmlFor='lastName'>Last Name</label>
+            <input type="text" id='lastName' name='lastName' value={lastName} onChange={this.handleChange} required />
 
-          <label htmlFor='address'>Address</label>
-          <input type="text" id='address' name='address' value={address} onChange={this.handleChange} required />
+            <label htmlFor='email'>Email</label>
+            <input type="text" id='email' name='email' value={email} onChange={this.handleChange} required />
 
-          <label htmlFor='zipCode'>Zip Code</label>
-          <input type="text" id='zipCode' name='zipCode' value={zipCode} onChange={this.handleChange} required />
+            <label htmlFor='address'>Address</label>
+            <input type="text" id='address' name='address' value={address} onChange={this.handleChange} required />
 
-          <label htmlFor='password'>New password</label>
-          <input type="password" id='password' name='password' value={password} onChange={this.handleChange} />
+            <label htmlFor='zipCode'>Zip Code</label>
+            <input type="text" id='zipCode' name='zipCode' value={zipCode} onChange={this.handleChange} required />
 
-          <label htmlFor='password2'>Enter new passowrd again</label>
-          <input type="password" id='password2' name='password2' value={password2} onChange={this.handleChange} />
+            <label htmlFor='password'>New password</label>
+            <input type="password" id='password' name='password' value={password} onChange={this.handleChange} />
 
-          <Save>Save</Save>
-        </Form>
-        <FadeIn in={showMessage}>
-          <Message error={error}>
-            <ScaleUp>
-              {error 
-                ? <div>Passwords don't match</div>
-                : <div>Edited successfully!</div>
-              }
-            </ScaleUp>
-          </Message>
-        </FadeIn>
-      </Wrapper>
-    )
+            <label htmlFor='password2'>Enter new passowrd again</label>
+            <input type="password" id='password2' name='password2' value={password2} onChange={this.handleChange} />
+
+            <Save>Save</Save>
+          </Form>
+          <FadeIn in={showMessage}>
+            <Message error={error}>
+              <ScaleUp>
+                {error 
+                  ? <div>Passwords don't match</div>
+                  : <div>Edited successfully!</div>
+                }
+              </ScaleUp>
+            </Message>
+          </FadeIn>
+        </Wrapper>
+      )
+    } else {
+      return <Redirect to='/' />
+    }
   }
 }
  
-export default inject('userStore')(EditAccount);
+export default inject('userStore')(observer(EditAccount));
