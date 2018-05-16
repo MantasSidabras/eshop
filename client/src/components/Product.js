@@ -75,7 +75,8 @@ const Add = styled.button`
 
 class Product extends Component {
   handleAdd = () => {
-    this.props.cartStore.addCartProductByProductId(this.props.id);
+    this.props.cartStore.addCartProductByProductId(this.props.id)
+      .catch(error => console.error(error));
   }
 
   render() {

@@ -56,10 +56,13 @@ public class CommerceService {
         return cartProductDAO.findById(id).orElse(null);
     }
 
-    public CartProduct createCartProduct(CartProductRequest cartProductRequest) {
+    public CartProduct createCartProduct(CartProductRequest cartProductRequest) throws InvalidProductQuantityException {
         CartProduct existing = cartProductDAO.findByProductIdAndUserId(cartProductRequest.getProductId(), cartProductRequest.getUserId());
 
         if (existing != null) {
+            if (existing.getQuantity().equals(existing.getProduct().getQuantity())) {
+                throw new InvalidProductQuantityException();
+            }
             existing.setQuantity(existing.getQuantity() + 1);
             return cartProductDAO.save(existing);
         }

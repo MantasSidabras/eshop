@@ -74,13 +74,18 @@ class CartItem extends Component {
 
     this.props.cartStore.updateCartProduct(cartProduct)
       .catch(error => {
+        console.error(error);
         this.setState({ error: true, errorMsg: error.message });
-        setTimeout(() => this.setState({ error: false }), 2500);
+        this.timeout = setTimeout(() => this.setState({ error: false }), 2500);
       });
   }
 
   handleDelete = () => {
     this.props.cartStore.deleteCartProductById(this.props.id);
+  }
+  
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
   }
 
   render() {
