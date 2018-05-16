@@ -167,7 +167,7 @@ class EditAccount extends Component {
             <label htmlFor='password'>New password</label>
             <input type="password" id='password' name='password' value={password} onChange={this.handleChange} />
 
-            <label htmlFor='password2'>Enter new passowrd again</label>
+            <label htmlFor='password2'>Enter new password again</label>
             <input type="password" id='password2' name='password2' value={password2} onChange={this.handleChange} />
 
             <Save>Save</Save>
