@@ -148,8 +148,8 @@ class Purchase extends Component {
       address: props.userStore.user.address,
       zipCode: props.userStore.user.zipCode,
       number: '',
-      exp_year: '',
-      exp_month: '',
+      expYear: '',
+      expMonth: '',
       ccv: '',
       err: false
     }
@@ -165,10 +165,10 @@ class Purchase extends Component {
     if (name === 'number' && !(new RegExp(/^\d{0,16}$/).test(value))) {
       return;
     } 
-    if (name === 'exp_year' && !(new RegExp(/^\d{0,4}$/).test(value))) {
+    if (name === 'expYear' && !(new RegExp(/^\d{0,4}$/).test(value))) {
       return;
     }
-    if (name === 'exp_month' && !(new RegExp(/^\d{0,2}$/).test(value))) {
+    if (name === 'expMonth' && !(new RegExp(/^\d{0,2}$/).test(value))) {
       return;
     }
     if (name === 'ccv' && !(new RegExp(/^\d{0,3}$/).test(value))) {
@@ -194,7 +194,7 @@ class Purchase extends Component {
 
   render() {
     const { cartProductList, sum } = this.props.cartStore;
-    const { holder, address, zipCode, number, exp_year, exp_month, ccv, err } = this.state;
+    const { holder, address, zipCode, number, expYear, expMonth, ccv, err } = this.state;
 
     if (this.props.userStore.isLoggedIn && cartProductList.length > 0) {
       return ( 
@@ -219,13 +219,13 @@ class Purchase extends Component {
 
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between'}}>
                   <div style={{ width: '45%' }}>
-                    <label htmlFor='exp_year'>Exp. year</label>
-                    <input type="text" id='exp_year' name='exp_year' required value={exp_year} onChange={this.handleChange}/>
+                    <label htmlFor='expYear'>Exp. year</label>
+                    <input type="text" id='expYear' name='expYear' required value={expYear} onChange={this.handleChange}/>
                   </div>
 
                   <div style={{ width: '45%' }}>
-                    <label htmlFor='exp_month'>Exp. month</label>
-                    <input type="text" id='exp_month' name='exp_month' required value={exp_month} onChange={this.handleChange}/>
+                    <label htmlFor='expMonth'>Exp. month</label>
+                    <input type="text" id='expMonth' name='expMonth' required value={expMonth} onChange={this.handleChange}/>
                   </div>
                 </div>
 
