@@ -88,8 +88,15 @@ public class UserService {
         }
     }
 
-    public User findByEmail(String email) {
-        return userDAO.findByEmail(email);
+    public User findByEmail(String email) throws  UserNotFoundException{
+        User userFound = userDAO.findByEmail(email);
+
+        if(userFound == null){
+            throw new UserNotFoundException();
+        }
+        else{
+            return userFound;
+        }
     }
 
 

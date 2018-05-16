@@ -33,12 +33,17 @@ public class UserServiceTest {
         userService.create(new User(email, password, address, zipCode, firstName, lastName, false, false));
 
         //Assert
-        User user = userService.findByEmail(email);
-        assertEquals(email, user.getEmail());
-        assertEquals(password, user.getPassword());
-        assertEquals(address, user.getAddress());
-        assertEquals(zipCode, user.getZipCode());
-        assertEquals(firstName, user.getFirstName());
-        assertEquals(lastName, user.getLastName());
+        try {
+            User user = userService.findByEmail(email);
+            assertEquals(email, user.getEmail());
+            assertEquals(password, user.getPassword());
+            assertEquals(address, user.getAddress());
+            assertEquals(zipCode, user.getZipCode());
+            assertEquals(firstName, user.getFirstName());
+            assertEquals(lastName, user.getLastName());
+        }
+        catch(Exception e){
+            fail("COUGHT EXCEPTION IN USER CREATE NORMAL");
+        }
     }
 }

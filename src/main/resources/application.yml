@@ -1,0 +1,7 @@
+app:
+  name: milijonas-server
+
+jwt:
+  header: Authorization
+  expires_in: 300 # 5 minutes
+  secret: pskmilijonas
