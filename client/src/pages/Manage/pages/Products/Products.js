@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 import AddProduct from './AddProduct/AddProduct';
 import AllProducts from './AllProducts/AllProducts';
-import { inject, observer } from 'mobx-react';
 
 const Wrapper = styled.div`
   display: flex;
@@ -87,11 +86,8 @@ class Products extends Component {
           <Button>Import products</Button>
         </ButtonGroup>
 
-        {showAddProduct &&
-          <Context.Consumer>
-            {({ fetchAllProducts }) => <AddProduct fetchAllProducts={fetchAllProducts} />}
-          </Context.Consumer>
-        }
+        {showAllProducts && <AllProducts />}
+        {showAddProduct && <AddProduct />}
       </Wrapper>
     );
   }

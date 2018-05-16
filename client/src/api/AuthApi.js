@@ -4,7 +4,7 @@ class AuthApi {
   setToken = token => localStorage.setItem('jwt', token);
   removeToken = () => localStorage.removeItem('jwt');
   getToken = () => localStorage.getItem('jwt');
-  
+
   isTokenValid = () => {
     const token = this.getDecodedToken();
     if (!token) return false;
