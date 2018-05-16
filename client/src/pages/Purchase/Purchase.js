@@ -203,9 +203,7 @@ class Purchase extends Component {
           <Form onSubmit={this.handleSubmit}>
             <div style={{ textAlign: 'right', marginBottom: 5, color: 'hsla(0, 0%, 0%, 0.85)' }}>Step 2/2</div>
             <BorderWrapper>
-
               <FormContainer>
-                <div style={{ marginBottom: 3, fontSize: '1.1rem', color: 'hsla(0, 0%, 0%, 0.6)' }}>Delivery info</div>
                 <label htmlFor='holder'>Full name</label>
                 <input type="text" id='holder' name='holder' required value={holder} onChange={this.handleChange}/>
 
@@ -215,8 +213,7 @@ class Purchase extends Component {
                 <label htmlFor='zipCode'>Zip Code</label>
                 <input type="text" id='zipCode' name='zipCode' value={zipCode} onChange={this.handleChange} required />
 
-                <div style={{ marginTop: 10, marginBottom: 3, fontSize: '1.1rem', color: 'hsla(0, 0%, 0%, 0.6)'}}>Card info</div>
-                <label htmlFor='number'>Card number</label>
+                <label style={{ marginTop: 10 }} htmlFor='number'>Card number</label>
                 <input type="text" id='number' name='number' required value={number} onChange={this.handleChange}/>
                 {err && <div style={{ marginTop: -13, marginBottom: 5, fontSize: '0.8rem', color: 'hsla(0, 90%, 40%, 0.85)'}}>Invalid credit card number</div>}
 
