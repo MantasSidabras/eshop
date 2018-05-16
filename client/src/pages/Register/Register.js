@@ -68,6 +68,14 @@ const Wrapper = styled.div`
     }
   }
 
+  span{
+    font-family: 'Roboto', sans-serif;
+    background: hsl(60, 100%, 70%);
+    padding: 15px;
+    margin: 25px 0;
+    border-radius: 5px;
+  }
+
 
   `
 
@@ -80,6 +88,7 @@ class Register extends Component {
     lastname: '',
     email: '',
     adress: '',
+    zipCode: '',
     password: '',
     password2: '',
     err: null,
@@ -94,7 +103,7 @@ class Register extends Component {
   register = (e) => {
     e.preventDefault();
     if(this.state.password !== this.state.password2) {
-      this.setState({ err: true, errMsg: 'Nesutampa pass'});
+      this.setState({ err: true, errMsg: 'Passwords does not match'});
       return;
     }
     console.log(this.state);
@@ -102,6 +111,7 @@ class Register extends Component {
     UserApi.create(this.state).then(() => this.props.history.push('/login'));
   }
 
+<<<<<<< Updated upstream
   render() {
     if (this.props.userStore.isLoggedIn) {
       return <Redirect to='/' />
@@ -130,6 +140,39 @@ class Register extends Component {
         </Wrapper>
       )
     }
+=======
+  render(){
+    return (
+      <Context.Consumer>
+        {({ fetchAllUsers }) => (
+          <Wrapper>
+            <div>
+              <h2>Register</h2>
+              <form onSubmit={e => this.register(e, fetchAllUsers)}>
+                <label htmlFor='firstname'>First name</label>
+                <input type="text" id='firstname' name='firstname' onChange={this.onChange} required />
+                <label htmlFor='lastname'>Last name</label>
+                <input type="text" id='lastname' name='lastname' onChange={this.onChange} required />
+                <label htmlFor='email'>Email</label>
+                <input type="text" id='email' name='email' onChange={this.onChange} required />
+                <label htmlFor='adress'>Adress</label>
+                <input type="text" id='adress' name='adress' onChange={this.onChange} required />
+              <label htmlFor='zipCode'>Zip code</label>
+            <input type="text" id='zipCode' name='zipCode' onChange={this.onChange} required />
+                <label htmlFor='password'>Password</label>
+                <input type="password" id='password' name='password' minLength='8' onChange={this.onChange} required />
+                <label htmlFor='password2'>Repeat password</label>
+                <input type="password" id='password2' name='password2' onChange={this.onChange} required />
+              {this.state.err && <span>{this.state.errMsg}</span>}
+                <button type="submit">Register</button>
+              </form>
+            </div>
+          </Wrapper>
+        )}
+      </Context.Consumer>
+
+    )
+>>>>>>> Stashed changes
   }
 }
 

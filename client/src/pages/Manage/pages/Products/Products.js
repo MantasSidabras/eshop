@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import AddProduct from './AddProduct/AddProduct';
 import AllProducts from './AllProducts/AllProducts';
+import { inject, observer } from 'mobx-react';
 
 const Wrapper = styled.div`
   display: flex;
@@ -50,7 +51,7 @@ const Button = styled.button`
   outline: none;
   cursor: pointer;
   transition: 0.2s ease-in-out;
-  
+
   ${props => props.active && 'background: hsl(210, 50%, 45%);'}
   ${props => props.active && 'box-shadow: inset 0 2px 4px hsla(0, 0%, 0%, 0.2);'}
 
@@ -86,8 +87,11 @@ class Products extends Component {
           <Button>Import products</Button>
         </ButtonGroup>
 
-        {showAllProducts && <AllProducts />}
-        {showAddProduct && <AddProduct />}
+        {showAddProduct &&
+          <Context.Consumer>
+            {({ fetchAllProducts }) => <AddProduct fetchAllProducts={fetchAllProducts} />}
+          </Context.Consumer>
+        }
       </Wrapper>
     );
   }

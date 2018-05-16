@@ -2,6 +2,7 @@ package com.eshop.services;
 
 import com.eshop.entities.Product;
 import com.eshop.entities.User;
+import com.eshop.exceptions.UserNotCreatedException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class DataFillerTest {
     private ProductService productService;
 
     @Test
-    public void createTestData() {
+    public void createTestData() throws UserNotCreatedException {
 
         //Create users
         userService.create(new User("Mantas@mantas.com", "slaptikas", "daumantu g. 3", "11111111", "Mantas", "Mantvydas", false, true));
