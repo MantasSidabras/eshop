@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { inject } from 'mobx-react';
 import { Redirect } from 'react-router-dom';
 
+import FadeIn from 'animations/FadeIn';
+import ScaleUp from 'animations/ScaleUp';
 import UserApi from 'api/UserApi';
 
 const Wrapper = styled.div`
@@ -75,12 +77,35 @@ const Wrapper = styled.div`
     margin: 25px 0;
     border-radius: 5px;
   }
+`
 
 
-  `
+const Message = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: hsla(0, 0%, 0%, 0.6);
+  z-index: 999;
 
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    background: hsl(110, 50%, 85%);
+    border-radius: 3px;
 
-
+    @media (min-width: 700px) {
+      margin-top: -20vh;
+    }
+  }
+`
 
 class Register extends Component {
   state = {
@@ -92,6 +117,7 @@ class Register extends Component {
     password: '',
     password2: '',
     err: null,
+    displayPopup: null,
     errMsg: ''
   };
 
@@ -106,9 +132,10 @@ class Register extends Component {
       this.setState({ err: true, errMsg: 'Passwords does not match'});
       return;
     }
-    console.log(this.state);
-
+    this.setState({ displayPopup: true });
+    setTimeout(() => this.setState({ displayPopup: false }), 2000);
     UserApi.create(this.state).then(() => this.props.history.push('/login'));
+    console.log(this.state);
   }
 
   render() {
@@ -135,11 +162,19 @@ class Register extends Component {
               <input type="password" id='password2' name='password2' onChange={this.onChange} required />
               <button type="submit">Register</button>
             </form>
+            <FadeIn in={this.state.displayPopup}>
+              <Message>
+                <ScaleUp>
+                  <div>Registration successful!</div>
+                </ScaleUp>
+              </Message>
+            </FadeIn>
           </div>
         </Wrapper>
       )
     }
   }
 }
+
 
 export default inject('userStore')(Register);
