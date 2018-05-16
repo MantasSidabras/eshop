@@ -38,6 +38,12 @@ public class CommerceService {
     @Autowired
     private UserService userService;
 
+    public CommerceService(CartProductDAO cartProductDAO, OrderProductDAO orderProductDAO, OrderDAO orderDAO, ProductDAO productDAO) {
+        this.cartProductDAO = cartProductDAO;
+        this.orderProductDAO = orderProductDAO;
+        this.orderDAO = orderDAO;
+        this.productDAO = productDAO;
+    }
     public List<CartProduct> getCartProductsByUserId(Integer id){
         return cartProductDAO.findAllByUserId(id);
     }
@@ -119,7 +125,7 @@ public class CommerceService {
                 newOrder.getOrderProductList().add(orderProductDAO.save(new OrderProduct(newOrder, cartProductProduct, cp.getQuantity())));
 
                 //Total price calculation
-                newOrder.getPrice().add(cartProductProduct.getPrice().multiply(new BigDecimal(cp.getQuantity())));
+                newOrder.setPrice(newOrder.getPrice().add(cartProductProduct.getPrice().multiply(new BigDecimal(cp.getQuantity()))));
             }
 
             //Clear current cart
