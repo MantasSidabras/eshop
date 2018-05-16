@@ -28,6 +28,10 @@ class UserStore {
       .catch(error => console.error(error))
   }
 
+  get fullName() {
+    return `${this.user.firstName} ${this.user.lastName}`;
+  }
+  
   get isLoggedIn() {
     return this.user && AuthApi.isTokenValid();
   }

@@ -10,6 +10,7 @@ import Register from './pages/Register/Register';
 import Login from './pages/Login/Login';
 import Cart from './pages/Cart/Cart';
 import EditAccount from './pages/EditAccount/EditAccount';
+import Purchase from './pages/Purchase/Purchase';
 
 const ContentWrapper = styled.div`
   display: flex;
@@ -56,6 +57,7 @@ class App extends Component {
                 <Route path='/register' component={Register}/>
                 <Route path='/login' component={Login}/>
                 <Route path='/cart' component={Cart}/>
+                <Route path='/purchase' component={Purchase}/>
                 <Route path='/editAccount' component={EditAccount}/>
                 <Redirect to='/'/>
               </Switch>

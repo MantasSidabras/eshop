@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import { inject, observer } from 'mobx-react';
 
 import CartItem from './CartItem/CartItem';
@@ -48,21 +49,6 @@ const Button = styled.button`
   transition: 0.2s ease-in-out;
 `
 
-const BackButton = Button.extend`
-  background: hsl(0, 0%, 90%);
-  margin-right: 10px;
-  border: 1px solid hsl(0, 0%, 50%);
-
-  &:hover {
-    background: hsl(0, 0%, 87%);
-  }
-
-  &:active {
-    background: hsl(0, 0%, 85%);
-    transform: scale(0.98);
-  }
-`
-
 const ClearButton = Button.extend`
   background: hsl(0, 70%, 65%);
   border: 1px solid hsl(0, 30%, 50%);
@@ -77,10 +63,19 @@ const ClearButton = Button.extend`
   }
 `
 
-const ProceedButton = Button.extend`
+const ProceedButton = styled(Link)`
+  padding: 7px 14px;
+  width: 100px;
   margin-left: auto;
   background: hsl(110, 50%, 78%);
+  color: hsla(0, 0%, 0%, 0.750);
+  font-size: 0.9rem;
+  text-decoration: none;
   border: 1px solid hsl(110, 30%, 50%);
+  border-radius: 3px;
+  box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.2);
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
 
   &:hover {
     background: hsl(110, 50%, 72%);
@@ -138,9 +133,8 @@ class Cart extends Component {
 
           {cartProductList.length > 0 &&
             <ButtonWrapper>
-              <BackButton><i className="fas fa-arrow-left"></i> Back</BackButton>
               <ClearButton onClick={this.handleDeleteAll} >Clear Cart</ClearButton>
-              <ProceedButton>Proceed <i className="fas fa-arrow-right"></i></ProceedButton>
+              <ProceedButton to='/purchase'>Proceed <i className="fas fa-arrow-right"></i></ProceedButton>
             </ButtonWrapper>
           }
         </Container>
