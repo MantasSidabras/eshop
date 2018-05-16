@@ -101,7 +101,7 @@ class ProductItem extends Component {
       .then(() => {
         this.props.productStore.getAll();
         this.setState({ showMessage: true });
-        setTimeout(() => this.setState({ showEdit: false, showMessage: false }), 1200)
+        this.timeout = setTimeout(() => this.setState({ showEdit: false, showMessage: false }), 1200)
       })
       .catch(error => console.error(error));
   }
@@ -116,6 +116,11 @@ class ProductItem extends Component {
   }
 
   handleCancel = () => this.setState({ showEdit: false, showConfirm: false });
+
+  handleClose = () => {
+    clearTimeout(this.timeout);
+    this.setState({ showMessage: false });
+  }
 
   render() {
     const { name } = this.props;
@@ -144,7 +149,7 @@ class ProductItem extends Component {
         </FadeIn>
 
         <FadeIn in={showMessage}>
-          <Message>
+          <Message onClick={this.handleClose}>
             <ScaleUp>
               <div>Edited successfully!</div>
             </ScaleUp>
