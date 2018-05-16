@@ -26,8 +26,15 @@ public class CartController {
   @PostMapping
   @ResponseBody
   @ResponseStatus(HttpStatus.CREATED)
-  public CartProduct createCartProduct(@RequestBody CartProductRequest cartProductRequest){
-    return commerceService.createCartProduct(cartProductRequest);
+  public ResponseEntity<CartProduct> createCartProduct(@RequestBody CartProductRequest cartProductRequest){
+    CartProduct newCp;
+    try {
+      newCp = commerceService.createCartProduct(cartProductRequest);
+    } catch (InvalidProductQuantityException e) {
+      e.printStackTrace();
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    }
+    return ResponseEntity.ok(newCp);
   }
 
   @PutMapping

@@ -7,6 +7,13 @@ class CartProductApi {
       },
       body: JSON.stringify(cartProduct)
     })
+      .then(res => {
+        if (res.status === 400) {
+          throw new Error('Not enough items')
+        } else {
+          return res;
+        }
+      })
       .then(res => res.json())
   }
 

@@ -38,7 +38,6 @@ class CartStore {
 
     return CartProductApi.add(cartProduct)
       .then(res => this.getCart())
-      .catch(error => console.error(error))
   }
 
   updateCartProduct = cartProduct => {
