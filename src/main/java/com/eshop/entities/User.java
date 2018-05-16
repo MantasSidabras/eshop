@@ -2,6 +2,8 @@ package com.eshop.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -40,9 +42,11 @@ public class User {
 
 
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "user")
     private List<CartProduct> cartProductList = new ArrayList<>();
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "user")
     private List<Order> orderList = new ArrayList<>();
 

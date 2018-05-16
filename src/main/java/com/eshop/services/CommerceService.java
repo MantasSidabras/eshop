@@ -120,12 +120,15 @@ public class CommerceService {
             throw new ProductCartEmptyException();
         }
         else {
+
             Order newOrder = new Order(user);
+            orderDAO.save(newOrder);
             for (CartProduct cp : user.getCartProductList()) {
                 Product cartProductProduct = cp.getProduct();
 
                 //Creating order products for order
-                newOrder.getOrderProductList().add(orderProductDAO.save(new OrderProduct(newOrder, cartProductProduct, cp.getQuantity())));
+                OrderProduct newOrderProduct = orderProductDAO.save(new OrderProduct(newOrder, cartProductProduct, cp.getQuantity()));
+                newOrder.getOrderProductList().add(newOrderProduct);
 
                 //Total price calculation
                 newOrder.setPrice(newOrder.getPrice().add(cartProductProduct.getPrice().multiply(new BigDecimal(cp.getQuantity()))));

@@ -38,8 +38,10 @@ public class CommerceServiceTest extends BaseServiceTest {
         //Act
         try {
             Order order = service.createOrderForUser(user);
+
+            //Assert
             assertEquals(price.multiply(new BigDecimal(quantity)), order.getPrice());
-            assertEquals(1, user.getCartProductList().size());
+            assertEquals(1, user.getOrderList().size());
         }
         catch (Exception ex) {
             fail("createOrderForUser has thrown an exception: " + ex.getMessage());

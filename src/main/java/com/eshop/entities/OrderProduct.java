@@ -24,7 +24,6 @@ public class OrderProduct {
     @ManyToOne
     private Product product;
 
-    @Size(min = 0)
     private Integer quantity;
 
     private BigDecimal price;
