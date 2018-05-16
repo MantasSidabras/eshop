@@ -21,7 +21,6 @@ class UserStore {
       return Promise.resolve();
     }
     
-    console.log(token.id);
     return Promise.all([
       UserApi.getById(token.id).then(user => this.user = user),
       CartStore.getCart()
@@ -41,11 +40,7 @@ class UserStore {
     return this.user && this.user.admin;
   }
 
-  // TODO: complete login
   login = user => {
-    // { id: 1, exp: 2526034923 }
-    // AuthApi.setToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJleHAiOiIyNTI2MDM0OTIzIn0.at9alWgKvNrNHSncYW8yfEqzm0GVIlWS5AML5-7YW74');
-    // this.fetchUser();
     UserApi.login(user)
       .then(res => {
         AuthApi.setToken(res.token);
