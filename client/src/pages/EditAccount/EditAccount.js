@@ -125,7 +125,7 @@ class EditAccount extends Component {
     
     const { password, password2 } = this.state;
 
-    if (password.length > 0 && password2.length > 0 && password !== password2) {
+    if ((password.length > 0 || password2.length > 0) && password !== password2) {
       this.setState({ showMessage: true, error: true })
       setTimeout(() => this.setState({ showMessage: false }), 2000)
       return;
