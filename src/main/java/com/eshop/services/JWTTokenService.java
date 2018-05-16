@@ -26,7 +26,7 @@ public class JWTTokenService {
 
    // @Value("${jwt.secret}")
     private String secret = "pskmilijonas";
-    private long expirationTimeInMillis = 30000;
+    private long expirationTimeInMillis = 3000000;
     /**
      * Tries to parse specified String as a JWT token. If successful, returns User object with username, id and role prefilled (extracted from token).
      * If unsuccessful (token is invalid or not containing all required user properties), simply returns null.
