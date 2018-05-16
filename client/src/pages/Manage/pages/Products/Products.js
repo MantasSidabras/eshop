@@ -50,7 +50,7 @@ const Button = styled.button`
   outline: none;
   cursor: pointer;
   transition: 0.2s ease-in-out;
-  
+
   ${props => props.active && 'background: hsl(210, 50%, 45%);'}
   ${props => props.active && 'box-shadow: inset 0 2px 4px hsla(0, 0%, 0%, 0.2);'}
 

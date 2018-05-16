@@ -3,8 +3,7 @@ package com.eshop.controllers;
 import com.eshop.entities.CartProduct;
 import com.eshop.entities.Order;
 import com.eshop.entities.User;
-import com.eshop.exceptions.ProductCartEmptyException;
-import com.eshop.exceptions.UserNotFoundException;
+import com.eshop.exceptions.*;
 import com.eshop.services.CommerceService;
 import com.eshop.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +31,13 @@ public class UserController {
     @PostMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public User createUser(@RequestBody User user){
-        user.setDateCreated(LocalDateTime.now());
-        return userService.create(user);
+    public ResponseEntity<User> createUser(@RequestBody User user){
+        try {
+            user.setDateCreated(LocalDateTime.now());
+            return ResponseEntity.ok(userService.create(user));
+        } catch(UserNotCreatedException ex){
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
+        }
     }
 
     @GetMapping
@@ -81,5 +84,4 @@ public class UserController {
         res.put("message", "success");
         return res;
     }
-
 }

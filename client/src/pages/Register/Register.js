@@ -68,6 +68,14 @@ const Wrapper = styled.div`
     }
   }
 
+  span{
+    font-family: 'Roboto', sans-serif;
+    background: hsl(60, 100%, 70%);
+    padding: 15px;
+    margin: 25px 0;
+    border-radius: 5px;
+  }
+
 
   `
 
@@ -80,6 +88,7 @@ class Register extends Component {
     lastname: '',
     email: '',
     adress: '',
+    zipCode: '',
     password: '',
     password2: '',
     err: null,
@@ -94,7 +103,7 @@ class Register extends Component {
   register = (e) => {
     e.preventDefault();
     if(this.state.password !== this.state.password2) {
-      this.setState({ err: true, errMsg: 'Nesutampa pass'});
+      this.setState({ err: true, errMsg: 'Passwords does not match'});
       return;
     }
     console.log(this.state);

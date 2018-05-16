@@ -50,6 +50,7 @@ const LoginNav = styled.ul`
 display: flex;
 align-items: flex-end;
 margin: 0;
+margin-right: 20px;
 font-size: 1.2rem;
 border-radius: 5px;
 list-style: none;
@@ -94,7 +95,7 @@ list-style: none;
 `
 const RegisterLink = styled(Link)`
   text-decoration: none;
-  padding: 7px 20px;
+  padding: 6px 20px;
   font-family: 'Roboto', sans-serif;
   font-size: 0.9rem;
   color: hsl(0, 0%, 100%);
@@ -105,18 +106,9 @@ const RegisterLink = styled(Link)`
   transition: 0.2s ease-in-out;
   text-align: center;
 
-${'' /*
-  ${props => props.active && 'background: hsl(210, 50%, 45%);'}
-  ${props => props.active && 'box-shadow: inset 0 2px 4px hsla(0, 0%, 0%, 0.2);'} */}
-
-
   &:hover {
     background: hsl(210, 50%, 50%);
   }
-
-  ${'' /* &:focus {
-    box-shadow: 0 0 0 1px #4D90FE;
-  } */}
 
   &:first-child {
     border-top-left-radius: 5px;
@@ -144,7 +136,7 @@ const MyAccountLink = styled.button`
   text-decoration: none;
   cursor: pointer;
   outline: none;
-  transition: all 0.2s ease-in-out; 
+  transition: all 0.2s ease-in-out;
 
   &:hover {
     color: hsla(0, 0%, 0%, 0.85);
@@ -168,7 +160,7 @@ const CartLink = styled(NavLink)`
   cursor: pointer;
   outline: none;
   letter-spacing: 1px;
-  transition: all 0.2s ease-in-out; 
+  transition: all 0.2s ease-in-out;
 
   &:hover {
     color: hsla(0, 0%, 0%, 0.85);

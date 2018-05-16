@@ -3,7 +3,7 @@ package com.eshop.services;
 import com.eshop.dao.UserDAO;
 import com.eshop.entities.CartProduct;
 import com.eshop.entities.User;
-import com.eshop.exceptions.UserNotFoundException;
+import com.eshop.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +18,16 @@ public class UserService {
    // @Autowired
     //private BCryptPasswordEncoder passwordEncoder;
 
-    public User create(User user){
+    public User create(User user) throws UserNotCreatedException {
         //user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userDAO.save(user);
+        User newUser = userDAO.save(user);
+        if(newUser == null){
+            throw new UserNotCreatedException();
+        } else {
+            return userDAO.save(newUser);
+        }
     }
-
-
+    
     public User create(String email, String password, String address, String zipCode, String firstName, String lastName, Boolean isAdmin, Boolean isBlocked){
         return userDAO.save(new User(email, password, address, zipCode, firstName, lastName,isAdmin, isBlocked));
     }

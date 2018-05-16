@@ -1,6 +1,7 @@
 package com.eshop.services;
 
 import com.eshop.entities.User;
+import com.eshop.exceptions.UserNotCreatedException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class UserServiceTest {
    // private BCryptPasswordEncoder passwordEncoder;
 
     @Test
-    public void createUser_NormalParameters_CreatesUser() {
+    public void createUser_NormalParameters_CreatesUser() throws UserNotCreatedException {
         //Act
         String email = "vardeniss@domain.lt";
         String password = "senkuks";
