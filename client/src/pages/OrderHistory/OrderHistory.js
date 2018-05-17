@@ -39,6 +39,7 @@ class OrderHistory extends Component {
         <Wrapper>
           <Title>Order History</Title>
           {userStore.user.orderList.reverse().map(order => <OrderItem key={order.id} {...order}/>)}
+          {userStore.user.orderList.length === 0 && <div style={{ color: 'hsla(0, 0%, 0%, 0.6)'}}>No orders</div>}
         </Wrapper>
       )
     } else {
