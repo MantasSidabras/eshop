@@ -36,6 +36,14 @@ const User = styled.div`
   }
 `
 
+const Id = styled.div`
+  display: flex;
+  align-items: center;
+  width: 25px;
+  margin-right: 10px;
+  font-weight:bold;
+`
+
 const Email = styled.div`
   display: flex;
   align-items: center;
@@ -79,7 +87,7 @@ class UserItem extends Component {
   }
 
   render() {
-    const { email, blocked, admin } = this.props;
+    const { id, email, blocked, admin } = this.props;
     const { showIcons } = this.state;
     return ( 
       <Wrapper>
@@ -89,6 +97,7 @@ class UserItem extends Component {
           blocked={blocked}
           admin={admin}
         >
+          <Id>{id}</Id>
           <Email>{email}</Email>
           {admin && <Label admin>ADMIN</Label>}
           {blocked && <Label blocked>BLOCKED</Label>}
