@@ -27,7 +27,7 @@ public class DataFillerTest {
     public void createTestData() throws UserNotCreatedException {
 
         //Create users
-        userService.create(new User("Mantas@mantas.com", "slaptikas", "daumantu g. 3", "11111111", "Mantas", "Mantvydas", false, true));
+        userService.create(new User("Mantas@mantas.com", "slaptikas", "daumantu g. 3", "11111111", "Mantas", "Mantvydas", true, false));
         userService.create(new User("Benas@Benas.com", "miau", "daumantu majonezo g. 69", "2222222", "Benas", "Bentvydas", false, false));
         userService.create(new User("Paulius@Paulius.com", "swa", "heimans ketchup g. 69", "3333333", "Paulius", "Pauliavicius", false, false));
         userService.create(new User("Domas@Domas.com", "domas123", "domo g. 3-13", "444444444", "Domas", "Domas", false, true));

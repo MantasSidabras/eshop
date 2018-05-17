@@ -26,7 +26,7 @@ class CartStore {
   addCartProductByProductId = productId => {
     if (!UserStore.isLoggedIn) {
       // TODO: somehow add product when not logged in
-      return console.error(new Error('Please login again'));
+      return Promise.reject(new Error('Please login again'));
     }
 
     const token = AuthApi.getDecodedToken();

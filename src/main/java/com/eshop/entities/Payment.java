@@ -9,6 +9,25 @@ public class Payment {
     private int expMonth;
     private String cvv;
 
+    private String address;
+    private String zipCode;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
 
     public int getAmount() {
         return amount;

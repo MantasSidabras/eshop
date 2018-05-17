@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Redirect, Link } from 'react-router-dom';
-import { inject } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 
-import PaymentApi from 'api/PaymentApi';
+import OrderApi from 'api/OrderApi';
 
 
 const Wrapper = styled.div`
@@ -150,7 +150,7 @@ class Purchase extends Component {
       number: '',
       expYear: '',
       expMonth: '',
-      ccv: '',
+      cvv: '',
       err: false
     }
   }
@@ -171,7 +171,7 @@ class Purchase extends Component {
     if (name === 'expMonth' && !(new RegExp(/^\d{0,2}$/).test(value))) {
       return;
     }
-    if (name === 'ccv' && !(new RegExp(/^\d{0,3}$/).test(value))) {
+    if (name === 'cvv' && !(new RegExp(/^\d{0,3}$/).test(value))) {
       return;
     }
 
@@ -182,19 +182,22 @@ class Purchase extends Component {
     e.preventDefault();
     this.setState({ err: false });
 
-    // TODO: in prod
-    // if (!isValidCreditCard(this.state.number)) {
-    //   return this.setState({ err: true });
-    // }
+    if (!isValidCreditCard(this.state.number)) {
+      return this.setState({ err: true });
+    }
 
-    PaymentApi.pay(this.state)
-      .then(res => console.log('bought'))
+    OrderApi.create(this.state)
+      .then(res => {
+        console.log(res);
+        this.props.userStore.fetchUser();
+        this.props.cartStore.getCart();
+      })
       .catch(error => console.error(error))
   }
 
   render() {
     const { cartProductList, sum } = this.props.cartStore;
-    const { holder, address, zipCode, number, expYear, expMonth, ccv, err } = this.state;
+    const { holder, address, zipCode, number, expYear, expMonth, cvv, err } = this.state;
 
     if (this.props.userStore.isLoggedIn && cartProductList.length > 0) {
       return ( 
@@ -230,8 +233,8 @@ class Purchase extends Component {
                 </div>
 
                 <div style={{ width: 50 }}>
-                  <label htmlFor='ccv'>CCV</label>
-                  <input type="text" id='ccv' name='ccv' required value={ccv} onChange={this.handleChange}/>
+                  <label htmlFor='cvv'>CVV</label>
+                  <input type="text" id='cvv' name='cvv' required value={cvv} onChange={this.handleChange}/>
                 </div>
               </FormContainer>
   
@@ -256,4 +259,4 @@ class Purchase extends Component {
   }
 }
  
-export default inject('cartStore', 'userStore')(Purchase);
+export default inject('cartStore', 'userStore')(observer(Purchase));

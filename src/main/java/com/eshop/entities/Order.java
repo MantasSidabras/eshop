@@ -35,7 +35,10 @@ public class Order {
     @Size(min = 1, max = 256)
     private String address;
 
-    @JsonIgnore
+    private String fullName;
+
+    private String zipCode;
+
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "order")
     private List<OrderProduct> orderProductList = new ArrayList<>();
@@ -113,5 +116,21 @@ public class Order {
 
     public void setOrderProductList(List<OrderProduct> orderProductList) {
         this.orderProductList = orderProductList;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
     }
 }

@@ -26,7 +26,7 @@ class PaymentServiceTest {
         payment.setExpMonth(11);
         payment.setCvv("147");
 
-        paymentService.sendPayment(payment);
+        //paymentService.sendPayment(payment);
 //        payment = {}
     }
 }
