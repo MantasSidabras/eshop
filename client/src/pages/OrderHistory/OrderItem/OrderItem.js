@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   cursor: pointer;
 
   &:last-child {
-    border-bottom: 1px solid hsl(0, 0%, 85%);
+    ${props => !props.showProducts && 'border-bottom: 1px solid hsl(0, 0%, 85%);'}
   }
 `
 
@@ -105,7 +105,7 @@ class OrderItem extends Component {
     const { dateCreated, dateCompleted, price, state, orderProductList } = this.props;
     const { showProducts } = this.state;
     return ( 
-      <Wrapper onClick={this.toggleShowProducts}>
+      <Wrapper showProducts={showProducts} onClick={this.toggleShowProducts}>
         <Order showProducts={showProducts}>
           <DateCreated>{format(dateCreated, 'YYYY-MM-DD, HH:mm')}</DateCreated>
           <div>{dateCompleted}</div>
