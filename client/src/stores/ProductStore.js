@@ -4,17 +4,25 @@ import ProductApi from '../api/ProductApi';
 
 class ProductStore {
   products = [];
+  product = {};
 
   getAll = () => {
     return ProductApi.getAll()
       .then(products => this.products = products)
       .catch(error => console.error(error))
   }
+
+  getOne = id => {
+    return ProductApi.getOne(id)
+    .then(product => this.product = product);
+  }
 }
 
 decorate(ProductStore, {
   products: observable,
-  getAll: action
+  product: observable,
+  getAll: action,
+  getOne: action
 })
 
 export default new ProductStore();
