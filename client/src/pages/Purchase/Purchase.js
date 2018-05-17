@@ -242,7 +242,7 @@ class Purchase extends Component {
     const { cartProductList, sum } = this.props.cartStore;
     const { holder, address, zipCode, number, expYear, expMonth, cvv, err, showMessage, isError, message } = this.state;
 
-    if (showMessage || this.props.userStore.isLoggedIn && cartProductList.length > 0) {
+    if (showMessage || (this.props.userStore.isLoggedIn && cartProductList.length > 0)) {
       return ( 
         <Wrapper>
           <Title>Purchase</Title>

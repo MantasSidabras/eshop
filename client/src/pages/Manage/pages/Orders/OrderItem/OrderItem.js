@@ -5,9 +5,11 @@ import format from 'date-fns/format';
 
 import OrderApi from 'api/OrderApi';
 import FadeIn from 'animations/FadeIn';
+import SlideDown from 'animations/SlideDown';
 
 const Wrapper = styled.div`
   width: 100%;
+  cursor: pointer;
 
   &:last-child {
     border-bottom: 1px solid hsl(0, 0%, 85%);
@@ -46,12 +48,12 @@ const DateCreated = styled.div`
   margin-right: 10px;
 `;
 
-const Name = styled.div`
+const UserName = styled.div`
   display: flex;
   align-items: center;
 `;
 
-const Price = styled.div`
+const OrderPrice = styled.div`
   display: flex;
   align-items: center;
   margin-left: auto;
@@ -72,9 +74,48 @@ const Label = styled.div`
   border-radius: 3px;
 `
 
+const ProductListWrapper = styled.div`
+  border: 1px solid hsl(0, 0%, 75%);
+`
+
+const ProductWrapper = styled.div`
+  display: flex;
+  padding: 0px 10px 5px 10px;
+
+`
+
+const Name = styled.div`
+  display: flex;
+  align-items: center; 
+  flex-grow: 1;
+  min-width: 80px;
+`
+
+const Price = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 110px;
+  text-align: center;
+`
+const Quantity = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70px;
+  text-align: center;
+`
+
 class OrderItem extends Component {
   state = {
-    showIcon: false
+    showIcon: false,
+    showProducts: false
+  }
+
+  toggleShowProducts = e => {
+    e.stopPropagation();
+    this.setState({ showProducts: !this.state.showProducts });
   }
 
   showIcon = () => {
@@ -85,7 +126,9 @@ class OrderItem extends Component {
   
   hideIcon = () => this.setState({ showIcon: false });
 
-  handleSent = () => {
+  handleSent = e => {
+    e.stopPropagation();
+
     const { ...order} = this.props;
     
     order.state = true;
@@ -96,18 +139,18 @@ class OrderItem extends Component {
   }
 
   render() {
-    const { id, dateCreated, dateCompleted, fullName, price, state } = this.props;
-    const { showIcon } = this.state;
+    const { id, dateCreated, dateCompleted, fullName, price, state, orderProductList } = this.props;
+    const { showIcon, showProducts } = this.state;
     return ( 
-      <Wrapper>
+      <Wrapper onClick={this.toggleShowProducts}>
         <Order 
           onMouseOver={this.showIcon} 
           onMouseLeave={this.hideIcon}
         >
           <Id>{id}</Id>
           <DateCreated>{format(dateCreated, 'YYYY-MM-DD, HH:mm')}</DateCreated>
-          <Name>{fullName}</Name>
-          <Price>{price.toFixed(2)}€</Price>       
+          <UserName>{fullName}</UserName>
+          <OrderPrice>{price.toFixed(2)}€</OrderPrice>       
           {state 
             ? <Label sent>Sent</Label>
             : <Label pending>Pending</Label>
@@ -120,6 +163,25 @@ class OrderItem extends Component {
             }
           </div>
         </Order>
+
+        <SlideDown in={showProducts}>
+          <ProductListWrapper>
+            <div style={{ display: 'flex', padding: '5px 10px 5px 10px',  fontWeight: 'bold'}}>
+              <div style={{ flexGrow: 1, textAlign: 'center' }}>Item</div>
+              <div style={{ width: 110,  textAlign: 'center' }}>Unit Price</div>
+              <div style={{ width: 70,  textAlign: 'center' }}>Units</div>
+              <div style={{ width: 110,  textAlign: 'center'}}>Total Price</div>
+            </div>
+            {orderProductList.map(op => 
+              <ProductWrapper key={op.id}>
+                <Name>{op.product.name}</Name>
+                <Price>{op.product.price.toFixed(2)}€</Price>
+                <Quantity>{op.quantity}</Quantity>
+                <Price>{(op.product.price * op.quantity).toFixed(2)}€</Price>
+              </ProductWrapper>
+            )}
+          </ProductListWrapper>
+        </SlideDown>
       </Wrapper> 
     )
   }
