@@ -29,6 +29,9 @@ public class PaymentService {
 
     public String sendPayment(Payment payment){
         try {
+            if(!validatePayment(payment)){
+                return failedPayment;
+            }
             String encoding = Base64.getEncoder().encodeToString((userAuth).getBytes("UTF-8"));
             HttpPost request = new HttpPost(url);
             request.setHeader("Authorization", "Basic " + encoding);
@@ -73,6 +76,19 @@ public class PaymentService {
             return failedPayment;
         }
         return failedPayment;
+    }
+
+    private boolean validatePayment(Payment payment) {
+        boolean isValid = true;
+
+        isValid = payment.getAmount() > 0 ? true : false;
+        isValid = payment.getNumber().length() == 16 ? true : false;
+        isValid = payment.getHolder().length() >= 2 && payment.getHolder().length() <= 32 ? true : false;
+        isValid = payment.getExpYear() >= 1970 ? true : false;
+        isValid = payment.getExpMonth() >= 1 && payment.getExpMonth() <= 12 ? true : false;
+        isValid = payment.getCvv().length() == 3 ? true : false;
+
+        return isValid;
     }
 
 

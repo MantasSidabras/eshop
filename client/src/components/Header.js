@@ -4,6 +4,7 @@ import { NavLink, Link, withRouter } from 'react-router-dom';
 import { inject, observer } from 'mobx-react';
 
 import MyAccount from './MyAccount';
+import FadeIn from '../animations/FadeIn';
 
 const Wrapper = styled.header`
   display: flex;
@@ -193,11 +194,12 @@ class Header extends Component {
     showMyAccount: false
   }
 
-  handleHideEdit = () => this.setState({ showMyAccount: false });
+  handleHideMyAccount = () => this.setState({ showMyAccount: false });
 
   render() {
     const { isLoggedIn, isAdmin } = this.props.userStore;
     const { cartProductList, sum } = this.props.cartStore;
+    const { showMyAccount } = this.state;
     return (
       <Wrapper>
         <Title>{this.props.children}</Title>
@@ -214,9 +216,11 @@ class Header extends Component {
         }
 
         {isLoggedIn && 
-          <MyAccountLink onClick={() => this.setState({ showMyAccount: !this.state.showMyAccount })}>
+          <MyAccountLink onClick={() => this.setState({ showMyAccount: !showMyAccount })}>
             My Account
-            {this.state.showMyAccount && <MyAccount hide={this.handleHideEdit}/>}
+            <FadeIn in={showMyAccount} enterDuration={200} exitDuration={100}>
+              <MyAccount hide={this.handleHideMyAccount}/>
+            </FadeIn>
           </MyAccountLink>
         }
 

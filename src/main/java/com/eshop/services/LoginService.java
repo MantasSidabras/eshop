@@ -17,7 +17,8 @@ public class LoginService {
 
         try{
             User foundUser = userService.findByEmail(user.getEmail());
-            if(foundUser.getPassword() == user.getPassword() && !foundUser.isBlocked()){
+            if(foundUser.getPassword().equals(user.getPassword()) && !foundUser.isBlocked()){
+
                 return foundUser;
             }
             throw new InvalidUserCredentials();

@@ -23,6 +23,7 @@ public class PaymentController {
     public String pay(@RequestBody Payment payment) {
         try {
             return paymentService.sendPayment(payment);
+            
         } catch (Exception ex){
             return "Error while sending payment.";
         }

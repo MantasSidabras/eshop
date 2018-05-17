@@ -106,7 +106,7 @@ class AddProduct extends Component {
           .then(res => {
             this.props.productStore.getAll();
             this.setState({ showMessage: true });
-            setTimeout(() => this.setState({ showMessage: false }), 1200)
+            this.timeout = setTimeout(() => this.setState({ showMessage: false }), 1200)
           })
       ))
       .catch(error => console.error(error));
@@ -114,6 +114,11 @@ class AddProduct extends Component {
    
   handleImageClick = name => this.setState({ images: this.state.images.filter(i => i.name !== name )});
   
+  handleClose = () => {
+    clearTimeout(this.timeout);
+    this.setState({ showMessage: false });
+  }
+
   render() { 
     const { images, showMessage } = this.state;
     return ( 
@@ -130,7 +135,7 @@ class AddProduct extends Component {
         <Add>Add product</Add>
 
         <FadeIn in={showMessage}>
-          <Message>
+          <Message onClick={this.handleClose}>
             <ScaleUp>
               <div>Added successfully!</div>
             </ScaleUp>

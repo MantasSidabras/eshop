@@ -148,8 +148,8 @@ class Purchase extends Component {
       address: props.userStore.user.address,
       zipCode: props.userStore.user.zipCode,
       number: '',
-      exp_year: '',
-      exp_month: '',
+      expYear: '',
+      expMonth: '',
       ccv: '',
       err: false
     }
@@ -165,10 +165,10 @@ class Purchase extends Component {
     if (name === 'number' && !(new RegExp(/^\d{0,16}$/).test(value))) {
       return;
     } 
-    if (name === 'exp_year' && !(new RegExp(/^\d{0,4}$/).test(value))) {
+    if (name === 'expYear' && !(new RegExp(/^\d{0,4}$/).test(value))) {
       return;
     }
-    if (name === 'exp_month' && !(new RegExp(/^\d{0,2}$/).test(value))) {
+    if (name === 'expMonth' && !(new RegExp(/^\d{0,2}$/).test(value))) {
       return;
     }
     if (name === 'ccv' && !(new RegExp(/^\d{0,3}$/).test(value))) {
@@ -194,7 +194,7 @@ class Purchase extends Component {
 
   render() {
     const { cartProductList, sum } = this.props.cartStore;
-    const { holder, address, zipCode, number, exp_year, exp_month, ccv, err } = this.state;
+    const { holder, address, zipCode, number, expYear, expMonth, ccv, err } = this.state;
 
     if (this.props.userStore.isLoggedIn && cartProductList.length > 0) {
       return ( 
@@ -203,9 +203,7 @@ class Purchase extends Component {
           <Form onSubmit={this.handleSubmit}>
             <div style={{ textAlign: 'right', marginBottom: 5, color: 'hsla(0, 0%, 0%, 0.85)' }}>Step 2/2</div>
             <BorderWrapper>
-
               <FormContainer>
-                <div style={{ marginBottom: 3, fontSize: '1.1rem', color: 'hsla(0, 0%, 0%, 0.6)' }}>Delivery info</div>
                 <label htmlFor='holder'>Full name</label>
                 <input type="text" id='holder' name='holder' required value={holder} onChange={this.handleChange}/>
 
@@ -215,20 +213,19 @@ class Purchase extends Component {
                 <label htmlFor='zipCode'>Zip Code</label>
                 <input type="text" id='zipCode' name='zipCode' value={zipCode} onChange={this.handleChange} required />
 
-                <div style={{ marginTop: 10, marginBottom: 3, fontSize: '1.1rem', color: 'hsla(0, 0%, 0%, 0.6)'}}>Card info</div>
-                <label htmlFor='number'>Card number</label>
+                <label style={{ marginTop: 10 }} htmlFor='number'>Card number</label>
                 <input type="text" id='number' name='number' required value={number} onChange={this.handleChange}/>
                 {err && <div style={{ marginTop: -13, marginBottom: 5, fontSize: '0.8rem', color: 'hsla(0, 90%, 40%, 0.85)'}}>Invalid credit card number</div>}
 
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between'}}>
                   <div style={{ width: '45%' }}>
-                    <label htmlFor='exp_year'>Exp. year</label>
-                    <input type="text" id='exp_year' name='exp_year' required value={exp_year} onChange={this.handleChange}/>
+                    <label htmlFor='expYear'>Exp. year</label>
+                    <input type="text" id='expYear' name='expYear' required value={expYear} onChange={this.handleChange}/>
                   </div>
 
                   <div style={{ width: '45%' }}>
-                    <label htmlFor='exp_month'>Exp. month</label>
-                    <input type="text" id='exp_month' name='exp_month' required value={exp_month} onChange={this.handleChange}/>
+                    <label htmlFor='expMonth'>Exp. month</label>
+                    <input type="text" id='expMonth' name='expMonth' required value={expMonth} onChange={this.handleChange}/>
                   </div>
                 </div>
 

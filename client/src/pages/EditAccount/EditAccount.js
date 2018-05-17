@@ -127,7 +127,7 @@ class EditAccount extends Component {
 
     if ((password.length > 0 || password2.length > 0) && password !== password2) {
       this.setState({ showMessage: true, error: true })
-      setTimeout(() => this.setState({ showMessage: false }), 2000)
+      this.timeout = setTimeout(() => this.setState({ showMessage: false }), 1500)
       return;
     }
 
@@ -137,9 +137,14 @@ class EditAccount extends Component {
       .then(res => {
         this.props.userStore.fetchUser();
         this.setState({ showMessage: true, error: false, password: '', password2: '' });
-        setTimeout(() => this.setState({ showMessage: false }), 1200)
+        this.timeout = setTimeout(() => this.setState({ showMessage: false }), 1200)
       })
       .catch(error => console.error(error))
+  }
+
+  handleClose = () => {
+    clearTimeout(this.timeout);
+    this.setState({ showMessage: false });
   }
 
   render() {
@@ -167,13 +172,13 @@ class EditAccount extends Component {
             <label htmlFor='password'>New password</label>
             <input type="password" id='password' name='password' value={password} onChange={this.handleChange} />
 
-            <label htmlFor='password2'>Enter new passowrd again</label>
+            <label htmlFor='password2'>Enter new password again</label>
             <input type="password" id='password2' name='password2' value={password2} onChange={this.handleChange} />
 
             <Save>Save</Save>
           </Form>
           <FadeIn in={showMessage}>
-            <Message error={error}>
+            <Message error={error} onClick={this.handleClose}>
               <ScaleUp>
                 {error 
                   ? <div>Passwords don't match</div>

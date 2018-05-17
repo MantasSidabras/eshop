@@ -45,7 +45,6 @@ const MyHistory = styled.div`
 `
 
 const Logout = styled.div`
-  margin-top: 5px;
   background: hsl(0, 75%, 60%);
   color: hsla(0, 0%, 100%, 0.95);
   transition: 0.2s ease-in-out;
@@ -56,15 +55,30 @@ const Logout = styled.div`
 `
 
 class MyAccount extends Component {
+  ref = React.createRef();
+
+  componentDidMount() {
+    document.addEventListener('click', this.handleClickOutside);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleClickOutside);
+  }
+
+  handleClickOutside = e => {
+    if (![...this.ref.current.children].includes(e.target)) {
+      this.props.hide();
+    }
+  }
+
   handleLogout = () => {
     this.props.userStore.logout()
-    this.props.hide();
   }
 
   render() { 
     return ( 
-      <Wrapper onClick={e => e.stopPropagation()}>
-        <StyledLink onClick={() => this.props.hide()} to='/editAccount'>Edit Account</StyledLink>
+      <Wrapper innerRef={this.ref} >
+        <StyledLink to='/editAccount'>Edit Account</StyledLink>
         <MyHistory>My history</MyHistory>
         <Logout onClick={this.handleLogout}>Logout</Logout>
       </Wrapper>

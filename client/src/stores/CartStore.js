@@ -10,7 +10,7 @@ class CartStore {
 
   getCart = () => {
     const token = AuthApi.getDecodedToken();
-    if (!token) return;
+    if (!token || !AuthApi.isTokenValid()) return;
     
     return fetch(`http://localhost:8080/api/user/${token.id}/cartProduct`)
       .then(res => res.json())
