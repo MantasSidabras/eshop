@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -29,6 +30,12 @@ public class OrderController {
 
     @Autowired
     AuthService authService;
+
+    @GetMapping
+    @ResponseBody
+    public List<Order> getAll() {
+        return this.commerceService.getAllOrders();
+    }
 
     @PostMapping
     @ResponseBody
@@ -57,6 +64,18 @@ public class OrderController {
             e.printStackTrace();
             res.put("message", "Payment failed");
             return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body(res);
+        }
+    }
+
+    @PutMapping
+    @ResponseBody
+    public ResponseEntity<Order> updateOrder(@RequestBody Order order){
+        Order updated = commerceService.updateOrder(order);
+
+        if (updated == null) {
+            return ResponseEntity.status(400).body(null);
+        } else {
+            return ResponseEntity.ok(updated);
         }
     }
 }

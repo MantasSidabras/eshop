@@ -22,10 +22,7 @@ class UserStore {
     }
     
     return Promise.all([
-      UserApi.getById(token.id).then(user => {
-        console.log(user);
-        this.user = user;
-      }),
+      UserApi.getById(token.id).then(user => this.user = user),
       CartStore.getCart()
     ])
       .catch(error => console.error(error))

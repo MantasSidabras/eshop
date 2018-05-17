@@ -11,6 +11,7 @@ import Login from './pages/Login/Login';
 import Cart from './pages/Cart/Cart';
 import EditAccount from './pages/EditAccount/EditAccount';
 import Purchase from './pages/Purchase/Purchase';
+import OrderHistory from './pages/OrderHistory/OrderHistory';
 
 const ContentWrapper = styled.div`
   display: flex;
@@ -59,6 +60,7 @@ class App extends Component {
                 <Route path='/cart' component={Cart}/>
                 <Route path='/purchase' component={Purchase}/>
                 <Route path='/editAccount' component={EditAccount}/>
+                <Route path='/orderHistory' component={OrderHistory}/>
                 <Redirect to='/'/>
               </Switch>
             </ContentWrapper>

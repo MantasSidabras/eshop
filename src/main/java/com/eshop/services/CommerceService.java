@@ -147,6 +147,31 @@ public class CommerceService {
         return savedOrder;
     }
 
+    public List<Order> getAllOrders() {
+        return this.orderDAO.findAll();
+    }
+
+    public Order findOrderById(Integer id) throws Exception {
+        Order orderFound = this.orderDAO.findById(id).orElse(null);
+        if(orderFound == null){
+            throw new Exception();
+        }
+        else{
+            return orderFound;
+        }
+    }
+
+    public Order updateOrder(Order updated) {
+        try {
+            Order existing = this.findOrderById(updated.getId());
+            updated.setUser(existing.getUser());
+            return this.orderDAO.save(updated);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public Order createOrderForUser(User user) throws ProductCartEmptyException {
 
         if(user.getCartProductList().size() == 0){

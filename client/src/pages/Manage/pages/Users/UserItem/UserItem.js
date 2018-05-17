@@ -18,7 +18,7 @@ const User = styled.div`
   display: flex;
   width: 100%;
   padding: 8px;
-  height: 40px;
+  ${'' /* height: 40px; */}
   background: hsl(0, 0%, 99%);
   border-top: 1px solid hsl(0, 0%, 85%);
   border-right: 1px solid hsl(0, 0%, 85%);
@@ -50,9 +50,8 @@ const Label = styled.div`
   color: hsla(0, 0%, 100%, 0.95);
   font-size: 0.75rem;
   text-align: center;
-  ${props => props.admin && 'border: 1px solid hsl(210, 30%, 50%);'}
-  ${props => props.blocked && 'background: hsl(0, 70%, 60%);'}
-  border: 1px solid hsl(210, 30%, 50%);
+  ${props => props.admin && 'border: 1px solid hsl(210, 40%, 50%);'}
+  ${props => props.blocked && 'border: 1px solid hsl(0, 40%, 50%);'}
   border-radius: 3px;
 `
 
