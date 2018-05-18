@@ -67,7 +67,7 @@ class UserApi {
         if (res.status === 400) {
           throw new Error('Bad request')
         } else if(res.status === 401){
-          throw new Error('Unautheried access')
+          throw new Error('Unautherized access')
     } else {
           return res;
         }
@@ -90,10 +90,17 @@ class UserApi {
     return fetch(`http://localhost:8080/api/user/${id}/cartProduct`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization' : 'Bearer ' + AuthApi.getToken()
       }
     })
-      .then(res => res.json())
+      .then(res => {
+        if(res.status === 401){
+          throw new Error('Unautherized cart delete access')
+        }else{
+          return res;
+        }
+      }).then(res => res.json())
   }
 }
 

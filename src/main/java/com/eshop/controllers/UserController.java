@@ -110,10 +110,21 @@ public class UserController {
 
     @DeleteMapping("/{id}/cartProduct")
     @ResponseBody
-    public Map<String, String> deleteAllCartProducts(@PathVariable Integer id) {
-        Map<String, String> res = new HashMap<>();
-        this.commerceService.removeAllFromCartByUserId(id);
-        res.put("message", "success");
-        return res;
+    public ResponseEntity<Map<String, String>> deleteAllCartProducts(@RequestHeader("Authorization") String authHead, @PathVariable Integer id) {
+
+        try{
+            User tokenUser = authService.getUserFromHeader(authHead);
+            authService.authorizeResource(tokenUser, id);
+
+            Map<String, String> res = new HashMap<>();
+            this.commerceService.removeAllFromCartByUserId(id);
+
+            //Returning map to parse as json
+            res.put("message", "success");
+            return ResponseEntity.ok(res);
+        }
+        catch(UnauthorizedException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
     }
 }
