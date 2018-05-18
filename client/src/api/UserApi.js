@@ -22,7 +22,7 @@ class UserApi {
   getAll = () => {
     return fetch('http://localhost:8080/api/user', {
       method: 'GET',
-        headers : {
+        headers: {
             'Authorization' : 'Bearer ' + AuthApi.getToken()
         }
     })
@@ -38,8 +38,20 @@ class UserApi {
   }
 
   getById = id => {
-    return fetch(`http://localhost:8080/api/user/${id}`)
-      .then(res => res.json())
+    return fetch(`http://localhost:8080/api/user/${id}`, {
+        method: 'GET',
+        headers: {
+            'Authorization' : 'Bearer ' + AuthApi.getToken()
+        }
+    })
+        .then(res => {
+        if(res.status !== 200){
+        throw new Error('failed to get user');
+        } else {
+        return res;
+     }
+    })
+    .then(res => res.json())
   }
 
   update = user => {
