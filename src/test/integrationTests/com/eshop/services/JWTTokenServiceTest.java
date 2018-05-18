@@ -8,6 +8,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ public class JWTTokenServiceTest {
             jwtTokenService.parseToken(jwtTokenService.generateToken(userService.findById(1)));
         }
         catch(Exception e){
-            System.out.println("ERROR PARSINg token in test");
+            Assert.fail("ERROR parsingg token in test");
         }
     }
 
@@ -67,7 +68,7 @@ public class JWTTokenServiceTest {
             token = jwtTokenService.generateToken(userService.findById(1));
         }
         catch(Exception e){
-            System.out.println("ERROR CRETING TOKEN");
+            Assert.fail("ERROR CREATING TOKEN");
 
         }
     }

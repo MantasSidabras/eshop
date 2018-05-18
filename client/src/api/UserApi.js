@@ -1,3 +1,5 @@
+import AuthApi from './AuthApi';
+
 class UserApi {
   login = user => {
     return fetch('http://localhost:8080/api/login', {
@@ -18,27 +20,55 @@ class UserApi {
   }
 
   getAll = () => {
-    return fetch('http://localhost:8080/api/user')
-      .then(res => res.json())
+    return fetch('http://localhost:8080/api/user', {
+      method: 'GET',
+        headers: {
+            'Authorization' : 'Bearer ' + AuthApi.getToken()
+        }
+    })
+      .then(res => {
+        if(res.status !== 200){
+          throw new Error('failed to get users');
+         } else {
+          return res;
+        }
+
+    })
+    .then(res => res.json())
   }
 
   getById = id => {
-    return fetch(`http://localhost:8080/api/user/${id}`)
-      .then(res => res.json())
+    return fetch(`http://localhost:8080/api/user/${id}`, {
+        method: 'GET',
+        headers: {
+            'Authorization' : 'Bearer ' + AuthApi.getToken()
+        }
+    })
+        .then(res => {
+        if(res.status !== 200){
+        throw new Error('failed to get user');
+        } else {
+        return res;
+     }
+    })
+    .then(res => res.json())
   }
 
   update = user => {
     return fetch('http://localhost:8080/api/user', {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization' : 'Bearer ' + AuthApi.getToken()
       },
       body: JSON.stringify(user)
     })
       .then(res => {
         if (res.status === 400) {
           throw new Error('Bad request')
-        } else {
+        } else if(res.status === 401){
+          throw new Error('Unautherized access')
+    } else {
           return res;
         }
       })
@@ -60,10 +90,17 @@ class UserApi {
     return fetch(`http://localhost:8080/api/user/${id}/cartProduct`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization' : 'Bearer ' + AuthApi.getToken()
       }
     })
-      .then(res => res.json())
+      .then(res => {
+        if(res.status === 401){
+          throw new Error('Unautherized cart delete access')
+        }else{
+          return res;
+        }
+      }).then(res => res.json())
   }
 }
 
