@@ -33,7 +33,8 @@ class OrderApi {
       .then(async res => {
         if (res.status >= 400) {
           const err = await res.json();
-          throw new Error(err.message);
+          err.status = res.status;
+          throw err;
         } else {
           return res;
         }

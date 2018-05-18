@@ -3,9 +3,7 @@ package com.eshop.controllers;
 import com.eshop.entities.Order;
 import com.eshop.entities.Payment;
 import com.eshop.entities.User;
-import com.eshop.exceptions.PaymentException;
-import com.eshop.exceptions.ProductCartEmptyException;
-import com.eshop.exceptions.UnauthorizedException;
+import com.eshop.exceptions.*;
 import com.eshop.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,6 +43,8 @@ public class OrderController {
         try {
             User user = authService.getUserFromHeader(authHeader);
 
+            commerceService.checkIntegrity(user);
+
             payment.setAmount(paymentService.calcAmountInCents(user.getCartProductList()));
             paymentService.sendPayment(payment);
             commerceService.createOrder(user, payment);
@@ -56,6 +56,10 @@ public class OrderController {
             e.printStackTrace();
             res.put("message", "Unauthorized");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
+        } catch(InvalidProductQuantityException e) {
+            e.printStackTrace();
+            res.put("message", "Not enough items, please update your cart");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(res);
         } catch(PaymentException e) {
             e.printStackTrace();
             res.put("message", e.getMessage());

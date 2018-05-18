@@ -121,6 +121,23 @@ class UserApi {
         }
       }).then(res => res.json())
   }
+
+  checkCartIntegrity = id => {
+    return fetch(`http://localhost:8080/api/user/${id}/cart`, {
+      method: 'GET',
+      headers: {
+          'Authorization' : 'Bearer ' + AuthApi.getToken()
+      }
+    })
+      .then(res => {
+        if (res.status === 409) {
+          throw new Error('Not enough items, please update your cart');
+        } else {
+          return res;
+        }
+      })
+      .then(res => res.json())
+  }
 }
 
 export default new UserApi();

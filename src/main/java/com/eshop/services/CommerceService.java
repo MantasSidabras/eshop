@@ -67,9 +67,9 @@ public class CommerceService {
         CartProduct existing = cartProductDAO.findByProductIdAndUserId(cartProductRequest.getProductId(), cartProductRequest.getUserId());
 
         if (existing != null) {
-            if (existing.getQuantity().equals(existing.getProduct().getQuantity())) {
-                throw new InvalidProductQuantityException();
-            }
+//            if (existing.getQuantity().equals(existing.getProduct().getQuantity())) {
+//                throw new InvalidProductQuantityException();
+//            }
             existing.setQuantity(existing.getQuantity() + 1);
             return cartProductDAO.save(existing);
         }
@@ -101,7 +101,7 @@ public class CommerceService {
     public CartProduct updateCartProduct(CartProduct cartProduct) throws InvalidProductQuantityException {
         CartProduct oldCartProduct = this.getCartProductById(cartProduct.getId());
 
-        if (cartProduct.getQuantity() > oldCartProduct.getProduct().getQuantity()) {
+        if (cartProduct.getQuantity().equals(0)) {
             throw new InvalidProductQuantityException();
         }
 
@@ -118,6 +118,14 @@ public class CommerceService {
     @Transactional
     public void removeAllFromCartByUserId(Integer id){
         cartProductDAO.deleteAllByUserId(id);
+    }
+
+    public void checkIntegrity(User user) throws InvalidProductQuantityException {
+        for (CartProduct cp: user.getCartProductList()) {
+            if (cp.getQuantity() > cp.getProduct().getQuantity()) {
+                throw new InvalidProductQuantityException();
+            }
+        }
     }
 
     @Transactional
