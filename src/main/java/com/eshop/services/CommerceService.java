@@ -58,6 +58,12 @@ public class CommerceService {
     }
 
     public CartProduct createCartProduct(CartProductRequest cartProductRequest) throws InvalidProductQuantityException {
+        Product product = productService.findById(cartProductRequest.getProductId());
+
+        if (product.getQuantity().equals(0)) {
+            throw new InvalidProductQuantityException();
+        }
+
         CartProduct existing = cartProductDAO.findByProductIdAndUserId(cartProductRequest.getProductId(), cartProductRequest.getUserId());
 
         if (existing != null) {
@@ -69,7 +75,6 @@ public class CommerceService {
         }
 
         CartProduct cp = new CartProduct();
-        Product product = productService.findById(cartProductRequest.getProductId());
         User user;
 
         cp.setQuantity(1);
@@ -139,6 +144,9 @@ public class CommerceService {
             op.setOrder(savedOrder);
             op.setProduct(cp.getProduct());
             op.setQuantity(cp.getQuantity());
+
+            op.getProduct().setQuantity(op.getProduct().getQuantity() - op.getQuantity());
+
             orderProductDAO.save(op);
         }
 

@@ -80,14 +80,16 @@ const Button = styled.button`
   cursor: pointer;
   transition: 0.2s ease-in-out;
 
-  &:hover {
-    background: hsl(110, 50%, 72%);
-  }
+  ${props => props.disabled ? `cursor: not-allowed;` : ` 
+    &:hover {
+      background: hsl(110, 50%, 72%);
+    }
 
-  &:active {
-    background: hsl(110, 45%, 67%);
-    transform: scale(0.98);
-  }
+    &:active {
+      background: hsl(110, 45%, 67%);
+      transform: scale(0.98);
+    }
+  `}
 `
 
 
@@ -123,7 +125,7 @@ class ProductInfo extends Component {
           <p>
             {product.description}
           </p>
-          <Button onClick={this.handleAdd}>Add to cart</Button>
+          <Button disabled={product.quantity === 0} onClick={this.handleAdd}>Add to cart</Button>
         </div>
       </Wrapper>
     )
