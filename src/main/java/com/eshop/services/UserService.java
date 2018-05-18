@@ -58,9 +58,9 @@ public class UserService {
         return userDAO.save(updated);
     }
 
-    public User update(Integer senderId, User updated) {
+    public User update(User sender, User updated) throws UserNotFoundException, IllegalAccessException{
         try {
-            User sender = this.findById(senderId);
+            //User sender = this.findById(senderId);
             User existing = this.findById(updated.getId());
 
             // jei admin
@@ -71,7 +71,7 @@ public class UserService {
                 } else {
                     // jei bando editint kita admin
                     if (existing.isAdmin()) {
-                        return null;
+                        throw new IllegalAccessException();
                     // jei bando editint user
                     } else {
                         existing.setBlocked(updated.isBlocked());
@@ -83,8 +83,7 @@ public class UserService {
                 return processEditAccount(existing, updated);
             }
         } catch (UserNotFoundException e) {
-            e.printStackTrace();
-            return null;
+            throw e;
         }
     }
 
