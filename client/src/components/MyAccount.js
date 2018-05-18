@@ -35,15 +35,6 @@ const StyledLink = styled(Link)`
   }
 `
 
-const MyHistory = styled.div`
-  transition: 0.2s ease-in-out;
-
-  &:hover {
-    color: hsla(0, 0%, 0%, 0.85);
-    background: hsl(0, 0%, 96%);
-  }
-`
-
 const Logout = styled.div`
   background: hsl(0, 75%, 60%);
   color: hsla(0, 0%, 100%, 0.95);
@@ -79,7 +70,7 @@ class MyAccount extends Component {
     return ( 
       <Wrapper innerRef={this.ref} >
         <StyledLink to='/editAccount'>Edit Account</StyledLink>
-        <MyHistory>My history</MyHistory>
+        <StyledLink to='/orderHistory'>Order History</StyledLink>
         <Logout onClick={this.handleLogout}>Logout</Logout>
       </Wrapper>
     )

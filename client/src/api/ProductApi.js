@@ -4,6 +4,11 @@ class ProductApi {
       .then(res => res.json())
   }
 
+  getOne = id => {
+    return fetch(`http://localhost:8080/api/product/${id}`)
+      .then(res => res.json())
+  }
+
   create = product => {
     return fetch('http://localhost:8080/api/product', {
       method: 'POST',

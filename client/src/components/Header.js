@@ -208,14 +208,14 @@ class Header extends Component {
           {isLoggedIn && isAdmin && <li><NavLink to='/manage'>Manage</NavLink></li>}
         </Nav>
 
-        {!isLoggedIn && 
+        {!isLoggedIn &&
           <LoginNav>
             <RegisterLink to="/register">Register</RegisterLink>
             <RegisterLink to="/login">Login</RegisterLink>
           </LoginNav>
         }
 
-        {isLoggedIn && 
+        {isLoggedIn &&
           <MyAccountLink onClick={() => this.setState({ showMyAccount: !showMyAccount })}>
             My Account
             <FadeIn in={showMyAccount} enterDuration={200} exitDuration={100}>
@@ -227,7 +227,7 @@ class Header extends Component {
         <CartLink to='/cart'>
           <i style={{ position: 'relative', marginRight: 2}} className="fas fa-shopping-cart fa-lg">
             <CartCount>{cartProductList.length}</CartCount>
-          </i> 
+          </i>
           <span style={{ marginRight: 5 }}>CART</span>
           {cartProductList.length > 0 && <span style={{ fontWeight: 'bold'}} >{sum}€</span>}
         </CartLink>

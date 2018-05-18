@@ -20,13 +20,10 @@ public class OrderProduct {
     @ManyToOne
     private Order order;
 
-    @JsonIgnore
     @ManyToOne
     private Product product;
 
     private Integer quantity;
-
-    private BigDecimal price;
 
     public OrderProduct(){}
 
@@ -34,7 +31,6 @@ public class OrderProduct {
         this.order = order;
         this.product = product;
         this.quantity = quantity;
-        this.price = product.getPrice();
     }
 
     public Integer getId() {

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -112,6 +113,63 @@ public class CommerceService {
     @Transactional
     public void removeAllFromCartByUserId(Integer id){
         cartProductDAO.deleteAllByUserId(id);
+    }
+
+    @Transactional
+    public Order createOrder(User user, Payment payment) {
+        BigDecimal amount = BigDecimal.ZERO;
+
+        for (CartProduct cp: user.getCartProductList()) {
+            amount = amount.add(cp.getProduct().getPrice().multiply(BigDecimal.valueOf(cp.getQuantity())));
+        }
+
+        Order order = new Order();
+
+        order.setFullName(payment.getHolder());
+        order.setAddress(payment.getAddress());
+        order.setZipCode(payment.getZipCode());
+        order.setDateCreated(LocalDateTime.now());
+        order.setPrice(amount);
+        order.setUser(user);
+
+        Order savedOrder = orderDAO.save(order);
+
+        for (CartProduct cp: user.getCartProductList()) {
+            OrderProduct op = new OrderProduct();
+            op.setOrder(savedOrder);
+            op.setProduct(cp.getProduct());
+            op.setQuantity(cp.getQuantity());
+            orderProductDAO.save(op);
+        }
+
+        this.removeAllFromCartByUserId(user.getId());
+
+        return savedOrder;
+    }
+
+    public List<Order> getAllOrders() {
+        return this.orderDAO.findAll();
+    }
+
+    public Order findOrderById(Integer id) throws Exception {
+        Order orderFound = this.orderDAO.findById(id).orElse(null);
+        if(orderFound == null){
+            throw new Exception();
+        }
+        else{
+            return orderFound;
+        }
+    }
+
+    public Order updateOrder(Order updated) {
+        try {
+            Order existing = this.findOrderById(updated.getId());
+            updated.setUser(existing.getUser());
+            return this.orderDAO.save(updated);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public Order createOrderForUser(User user) throws ProductCartEmptyException {

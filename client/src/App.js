@@ -11,6 +11,9 @@ import Login from './pages/Login/Login';
 import Cart from './pages/Cart/Cart';
 import EditAccount from './pages/EditAccount/EditAccount';
 import Purchase from './pages/Purchase/Purchase';
+import OrderHistory from './pages/OrderHistory/OrderHistory';
+import ProductInfo from './pages/ProductInfo/ProductInfo';
+
 
 const ContentWrapper = styled.div`
   display: flex;
@@ -40,7 +43,7 @@ class App extends Component {
   componentDidMount() {
     this.props.productStore.getAll();
     this.props.userStore.fetchUser()
-      .then(() => this.setState({ loaded: true })) 
+      .then(() => this.setState({ loaded: true }))
   }
 
   render() {
@@ -59,6 +62,8 @@ class App extends Component {
                 <Route path='/cart' component={Cart}/>
                 <Route path='/purchase' component={Purchase}/>
                 <Route path='/editAccount' component={EditAccount}/>
+                <Route path='/orderHistory' component={OrderHistory}/>
+                <Route path='/product/:id' component={ProductInfo}/>
                 <Redirect to='/'/>
               </Switch>
             </ContentWrapper>

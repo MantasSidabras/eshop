@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Redirect, Link } from 'react-router-dom';
-import { inject } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 
-import PaymentApi from 'api/PaymentApi';
-
+import OrderApi from 'api/OrderApi';
+import FadeIn from 'animations/FadeIn';
+import ScaleUp from 'animations/ScaleUp';
 
 const Wrapper = styled.div`
   display: flex;
@@ -140,6 +141,33 @@ const isValidCreditCard = value => {
 	return (nCheck % 10) === 0;
 }
 
+const Message = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: hsla(0, 0%, 0%, 0.6);
+  z-index: 999;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    ${props => props.error ? 'background: hsl(0, 50%, 90%);' : 'background: hsl(110, 50%, 85%);'}
+    border-radius: 3px;
+
+    @media (min-width: 700px) {
+      margin-top: -20vh;
+    }
+  }
+`
+
 class Purchase extends Component {
   constructor(props) {
     super(props);
@@ -150,8 +178,11 @@ class Purchase extends Component {
       number: '',
       expYear: '',
       expMonth: '',
-      ccv: '',
-      err: false
+      cvv: '',
+      err: false,
+      showMessage: false,
+      isError: false,
+      message: ''
     }
   }
 
@@ -171,7 +202,7 @@ class Purchase extends Component {
     if (name === 'expMonth' && !(new RegExp(/^\d{0,2}$/).test(value))) {
       return;
     }
-    if (name === 'ccv' && !(new RegExp(/^\d{0,3}$/).test(value))) {
+    if (name === 'cvv' && !(new RegExp(/^\d{0,3}$/).test(value))) {
       return;
     }
 
@@ -180,23 +211,38 @@ class Purchase extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.setState({ err: false });
+    this.setState({ err: false, showMessage: false });
 
-    // TODO: in prod
-    // if (!isValidCreditCard(this.state.number)) {
-    //   return this.setState({ err: true });
-    // }
+    if (!isValidCreditCard(this.state.number)) {
+      return this.setState({ err: true });
+    }
 
-    PaymentApi.pay(this.state)
-      .then(res => console.log('bought'))
-      .catch(error => console.error(error))
+    OrderApi.create(this.state)
+      .then(res => {
+        console.log(res);
+        this.setState({ showMessage: true, isError: false, message: res.message });
+        this.timeout = setTimeout(() => this.setState({ showMessage: false }), 1200);
+
+        this.props.userStore.fetchUser();
+        this.props.cartStore.getCart();
+      })
+      .catch(error => {
+        console.error(error);
+        this.setState({ showMessage: true, isError: true, message: error.message });
+        this.timeout = setTimeout(() => this.setState({ showMessage: false }), 1500);
+      })
+  }
+
+  handleClose = () => {
+    clearTimeout(this.timeout);
+    this.setState({ showMessage: false });
   }
 
   render() {
     const { cartProductList, sum } = this.props.cartStore;
-    const { holder, address, zipCode, number, expYear, expMonth, ccv, err } = this.state;
+    const { holder, address, zipCode, number, expYear, expMonth, cvv, err, showMessage, isError, message } = this.state;
 
-    if (this.props.userStore.isLoggedIn && cartProductList.length > 0) {
+    if (showMessage || (this.props.userStore.isLoggedIn && cartProductList.length > 0)) {
       return ( 
         <Wrapper>
           <Title>Purchase</Title>
@@ -230,8 +276,8 @@ class Purchase extends Component {
                 </div>
 
                 <div style={{ width: 50 }}>
-                  <label htmlFor='ccv'>CCV</label>
-                  <input type="text" id='ccv' name='ccv' required value={ccv} onChange={this.handleChange}/>
+                  <label htmlFor='cvv'>CVV</label>
+                  <input type="text" id='cvv' name='cvv' required value={cvv} onChange={this.handleChange}/>
                 </div>
               </FormContainer>
   
@@ -248,6 +294,15 @@ class Purchase extends Component {
               <PurchaseButton>Purchase</PurchaseButton>
             </ButtonWrapper>
           </Form>
+
+          <FadeIn in={showMessage}>
+            <Message error={isError} onClick={this.handleClose}>
+              <ScaleUp>
+                <div>{message}</div>
+              </ScaleUp>
+            </Message>
+          </FadeIn>
+
         </Wrapper>
       )
     } else {
@@ -256,4 +311,4 @@ class Purchase extends Component {
   }
 }
  
-export default inject('cartStore', 'userStore')(Purchase);
+export default inject('cartStore', 'userStore')(observer(Purchase));

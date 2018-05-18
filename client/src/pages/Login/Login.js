@@ -46,7 +46,7 @@ const Wrapper = styled.div`
     border-radius: 5px;
     width: 100%;
     margin-top: 10px;
-    padding: 5px;
+    padding: 7px;
     font-family: 'Roboto', sans-serif;
     font-size: 0.9rem;
     color: hsl(0, 0%, 100%);

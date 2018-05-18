@@ -75,16 +75,22 @@ const Add = styled.button`
 
 class Product extends Component {
   handleAdd = () => {
-    this.props.cartStore.addCartProductByProductId(this.props.id)
-      .catch(error => console.error(error));
+    this.props.cartStore.addCartProductByProductId(this.props.id);
+      // .catch(error => console.error(error));
+  }
+
+  navigateToProduct = () => {
+    this.props.history.push('/product/' + this.props.id);
   }
 
   render() {
     const { name, price, productImages } = this.props;
     return (
       <Wrapper>
-        <Name>{name}</Name>
-        {productImages.length > 0 ? <Image src={ProductImageApi.get(productImages[0].id)} /> : <Placeholder>No image</Placeholder>}
+        <div onClick={this.navigateToProduct}>
+          <Name>{name}</Name>
+          {productImages.length > 0 ? <Image src={ProductImageApi.get(productImages[0].id)} /> : <Placeholder>No image</Placeholder>}
+        </div>
         <div style={{ width: '100%'}}>
           <Price>{price.toFixed(2)}€</Price>
           <Add onClick={this.handleAdd}>Add to cart</Add>

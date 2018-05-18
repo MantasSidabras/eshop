@@ -29,7 +29,7 @@ class UserStore {
   }
 
   get fullName() {
-    return `${this.user.firstName} ${this.user.lastName}`;
+    return this.user && `${this.user.firstName} ${this.user.lastName}`;
   }
   
   get isLoggedIn() {

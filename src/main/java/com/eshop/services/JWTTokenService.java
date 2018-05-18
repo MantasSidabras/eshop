@@ -2,12 +2,10 @@ package com.eshop.services;
 
 import com.eshop.entities.User;
 import com.eshop.exceptions.TokenParseException;
+import com.eshop.exceptions.UnauthorizedException;
 import com.eshop.exceptions.UserNotCreatedException;
 import com.eshop.exceptions.UserNotFoundException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,8 +19,8 @@ import java.util.Date;
 public class JWTTokenService {
 
 
-    @Autowired
-    private UserService userService;
+//    @Autowired
+//    private UserService userService;
 
    // @Value("${jwt.secret}")
     private String secret = "pskmilijonas";
@@ -34,22 +32,18 @@ public class JWTTokenService {
      * @param token the JWT token to parse
      * @return the User object extracted from specified token or null if a token is invalid.
      */
-    public User parseToken(String token) throws UserNotFoundException, TokenParseException{
+    public Integer parseToken(String token) throws TokenParseException {
         try {
             Claims body = Jwts.parser()
                     .setSigningKey(secret)
                     .parseClaimsJws(token)
                     .getBody();
 
-            Integer id = (Integer) body.get("id");
-            Long exptime = Long.parseLong (body.get("exp").toString());
-            String subject = (String) body.get("sub");
+            //Integer id = (Integer) body.get("id");
+            //Long exptime = Long.parseLong (body.get("exp").toString());
+            //String subject = (String) body.get("sub");
 
-            try{
-                return userService.findById(id);
-            }catch (UserNotFoundException e){
-                throw e;
-            }
+            return (Integer) body.get("id");
         } catch (JwtException | ClassCastException e) {
             throw new TokenParseException();
         }

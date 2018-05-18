@@ -17,7 +17,7 @@ const Wrapper = styled.div`
 `
 
 const Search = styled.input.attrs({
-  type: "text", 
+  type: "text",
   placeholder: "Search..."
 })`
   width: 100%;
@@ -51,7 +51,7 @@ class Home extends Component {
   }
 
   handleSearch = e => this.setState({ searchQuery: e.target.value});
-  
+
   filterProducts = product => product.name.toLowerCase().includes(this.state.searchQuery.toLowerCase());
 
   render() {
@@ -59,7 +59,7 @@ class Home extends Component {
       <Wrapper>
         <Search onChange={this.handleSearch} />
         <Products>
-          {this.props.productStore.products.filter(this.filterProducts).map(product => <Product key={product.id} {...product} />)}
+          {this.props.productStore.products.filter(this.filterProducts).map(product => <Product history={this.props.history} key={product.id} {...product} />)}
         </Products>
       </Wrapper>
     );
