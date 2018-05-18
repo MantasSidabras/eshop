@@ -156,8 +156,8 @@ class Register extends Component {
               <label htmlFor='adress'>Adress</label>
               <input type="text" id='adress' name='adress' onChange={this.onChange} required />
               <label htmlFor='password'>Password</label>
-              {this.state.err && <span>{this.state.errMsg}</span>}
               <input type="password" id='password' name='password' minLength='8' onChange={this.onChange} required />
+              {this.state.err && <div style={{ marginTop: -13, marginBottom: 5, fontSize: '0.8rem', color: 'hsla(0, 90%, 40%, 0.85)'}}>Passwords does not match</div>}
               <label htmlFor='password2'>Repeat password</label>
               <input type="password" id='password2' name='password2' onChange={this.onChange} required />
               <button type="submit">Register</button>
