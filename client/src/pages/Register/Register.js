@@ -98,7 +98,7 @@ const Message = styled.div`
     flex-direction: column;
     align-items: center;
     padding: 1.5rem 3rem;
-    background: hsl(110, 50%, 85%);
+    ${props => props.error ? 'background: hsl(0, 50%, 85%);' : 'background: hsl(110, 50%, 85%);'};
     border-radius: 3px;
 
     @media (min-width: 700px) {
@@ -117,9 +117,14 @@ class Register extends Component {
     password: '',
     password2: '',
     err: null,
+    loginErr: null,
     displayPopup: null,
     errMsg: ''
   };
+
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
+  }
 
   onChange = (e) => {
     const{name, value} = e.target;
@@ -132,10 +137,20 @@ class Register extends Component {
       this.setState({ err: true, errMsg: 'Passwords does not match'});
       return;
     }
-    this.setState({ displayPopup: true });
-    setTimeout(() => this.setState({ displayPopup: false }), 2000);
-    UserApi.create(this.state).then(() => this.props.history.push('/login'));
-    console.log(this.state);
+    UserApi.create(this.state)
+    .then(() => {
+      this.setState({ displayPopup: true,  loginErr: false})
+      this.timeout = setTimeout(() => {
+        this.props.history.push('/login');
+      }, 2000);
+    })
+    .catch(err => {
+      this.setState({displayPopup: true, loginErr: true});
+      this.timeout = setTimeout(() => {
+        this.setState({displayPopup: false});
+      }, 2000);
+    })
+
   }
 
   render() {
@@ -163,9 +178,9 @@ class Register extends Component {
               <button type="submit">Register</button>
             </form>
             <FadeIn in={this.state.displayPopup}>
-              <Message>
+              <Message error={this.state.loginErr}>
                 <ScaleUp>
-                  <div>Registration successful!</div>
+                  {this.state.loginErr ? <div>Failed to login</div> : <div>Registration successful!</div>}
                 </ScaleUp>
               </Message>
             </FadeIn>
