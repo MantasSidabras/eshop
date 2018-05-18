@@ -98,7 +98,7 @@ const Message = styled.div`
     flex-direction: column;
     align-items: center;
     padding: 1.5rem 3rem;
-    background: hsl(110, 50%, 85%);
+    ${props => props.error ? 'background: hsl(0, 50%, 85%);' : 'background: hsl(110, 50%, 85%);'};
     border-radius: 3px;
 
     @media (min-width: 700px) {
@@ -117,9 +117,14 @@ class Register extends Component {
     password: '',
     password2: '',
     err: null,
+    loginErr: null,
     displayPopup: null,
     errMsg: ''
   };
+
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
+  }
 
   onChange = (e) => {
     const{name, value} = e.target;
@@ -132,10 +137,20 @@ class Register extends Component {
       this.setState({ err: true, errMsg: 'Passwords does not match'});
       return;
     }
-    this.setState({ displayPopup: true });
-    setTimeout(() => this.setState({ displayPopup: false }), 2000);
-    UserApi.create(this.state).then(() => this.props.history.push('/login'));
-    console.log(this.state);
+    UserApi.create(this.state)
+    .then(() => {
+      this.setState({ displayPopup: true,  loginErr: false})
+      this.timeout = setTimeout(() => {
+        this.props.history.push('/login');
+      }, 2000);
+    })
+    .catch(err => {
+      this.setState({displayPopup: true, loginErr: true});
+      this.timeout = setTimeout(() => {
+        this.setState({displayPopup: false});
+      }, 2000);
+    })
+
   }
 
   render() {
@@ -156,16 +171,16 @@ class Register extends Component {
               <label htmlFor='adress'>Adress</label>
               <input type="text" id='adress' name='adress' onChange={this.onChange} required />
               <label htmlFor='password'>Password</label>
-              {this.state.err && <span>{this.state.errMsg}</span>}
               <input type="password" id='password' name='password' minLength='8' onChange={this.onChange} required />
+              {this.state.err && <div style={{ marginTop: -13, marginBottom: 5, fontSize: '0.8rem', color: 'hsla(0, 90%, 40%, 0.85)'}}>Passwords does not match</div>}
               <label htmlFor='password2'>Repeat password</label>
               <input type="password" id='password2' name='password2' onChange={this.onChange} required />
               <button type="submit">Register</button>
             </form>
             <FadeIn in={this.state.displayPopup}>
-              <Message>
+              <Message error={this.state.loginErr}>
                 <ScaleUp>
-                  <div>Registration successful!</div>
+                  {this.state.loginErr ? <div>Failed to login</div> : <div>Registration successful!</div>}
                 </ScaleUp>
               </Message>
             </FadeIn>
