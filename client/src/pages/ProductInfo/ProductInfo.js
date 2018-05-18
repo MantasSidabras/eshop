@@ -97,7 +97,8 @@ class ProductInfo extends Component {
   }
 
   handleAdd = () => {
-     this.props.cartStore.addCartProductByProductId(this.props.match.params.id);
+     this.props.cartStore.addCartProductByProductId(this.props.match.params.id)
+      .catch(error => console.error(error));
   }
 
   render(){
@@ -118,7 +119,7 @@ class ProductInfo extends Component {
         <div className="info">
           <h1>Info</h1>
           <h3>Price: {product.price} Eur</h3>
-          {/* <strong>Units left: {product.amount}</strong> */}
+          <strong>Units left: {product.quantity}</strong>
           <p>
             {product.description}
           </p>
