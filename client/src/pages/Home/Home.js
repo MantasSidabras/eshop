@@ -38,7 +38,6 @@ const Search = styled.input.attrs({
     box-shadow: 0 0 0 1px #4D90FE;
   }
 `
-
 const Products = styled.div`
   display: flex;
   flex-wrap: wrap;

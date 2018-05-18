@@ -23,11 +23,9 @@ const Wrapper = styled.div`
     font-size: 0.8rem;
     margin: 0 10px;
     max-width: 500px;
-    background: hsl(0,0%,95%);
     border-radius: 10px;
     padding: 20px;
-    border: 1px solid hsl(0, 0%, 90%);
-    box-shadow: 0 1px 1px hsla(0,0%,0%, 0.2);
+
   }
 
   .main{
@@ -36,7 +34,8 @@ const Wrapper = styled.div`
 
   .info {
     width: 20%;
-    ${'' /* min-width: 300px; */}
+    border: 1px solid hsl(0, 0%, 90%);
+    box-shadow: 0 1px 1px hsla(0,0%,0%, 0.2);
   }
   h1 {
     text-align: center;
@@ -80,7 +79,7 @@ const Button = styled.button`
   cursor: pointer;
   transition: 0.2s ease-in-out;
 
-  ${props => props.disabled ? `cursor: not-allowed;` : ` 
+  ${props => props.disabled ? `cursor: not-allowed;` : `
     &:hover {
       background: hsl(110, 50%, 72%);
     }
@@ -91,6 +90,34 @@ const Button = styled.button`
     }
   `}
 `
+
+const Message = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: hsla(0, 0%, 0%, 0.6);
+  z-index: 999;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    ${props => props.error ? 'background: hsl(0, 50%, 85%);' : 'background: hsl(110, 50%, 85%);'};
+    border-radius: 3px;
+
+    @media (min-width: 700px) {
+      margin-top: -20vh;
+    }
+  }
+`
+
 
 
 class ProductInfo extends Component {
@@ -121,7 +148,7 @@ class ProductInfo extends Component {
         <div className="info">
           <h1>Info</h1>
           <h3>Price: {product.price} Eur</h3>
-          <strong>Units left: {product.quantity}</strong>
+          {product.quantity > 0 ? <strong>In stock: {product.quantity}</strong> : <strong>Out of stock</strong>}
           <p>
             {product.description}
           </p>

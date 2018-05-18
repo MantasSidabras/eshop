@@ -10,6 +10,25 @@ class UserApi {
       body: JSON.stringify(user)
     })
       .then(res => {
+        switch(res.status) {
+          case 401 : {
+            throw new Error('Incorrect username or password');
+          }
+          case 403 : {
+            throw new Error('User is blocked');
+          }
+          case 404 : {
+            throw new Error('User was not found');
+          }
+          case 200 : {
+            return  res;
+          }
+          default : {
+            throw new Error('Something went wrong. Cannot login');
+          }
+        }
+
+
         if (res.status !== 200) {
           throw new Error('rethink life');
         } else {
