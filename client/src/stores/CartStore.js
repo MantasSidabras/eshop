@@ -12,7 +12,19 @@ class CartStore {
     const token = AuthApi.getDecodedToken();
     if (!token || !AuthApi.isTokenValid()) return;
     
-    return fetch(`http://localhost:8080/api/user/${token.id}/cartProduct`)
+    return fetch(`http://localhost:8080/api/user/${token.id}/cartProduct`, {
+      method: 'GET',
+      headers: {
+        'Authorization' : 'Bearer ' + AuthApi.getToken()
+      }
+    })
+      .then(res => {
+        if(res.status === 401){
+          throw new Error('failed to authenticate user');
+        } else{
+          return res;
+        }
+      })
       .then(res => res.json())
       .then(cart => this.cartProductList = cart)
   }

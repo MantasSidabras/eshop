@@ -60,11 +60,19 @@ public class UserController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<User> getUserById(@PathVariable("id") Integer id){
+    public ResponseEntity<User> getUserById(@RequestHeader("Authorization") String authHead, @PathVariable("id") Integer id){
         try{
+            User tokenUser = authService.getUserFromHeader(authHead);
+
+            // Check if trying to get self
+            authService.authorizeResource(tokenUser, id);
             return ResponseEntity.ok(userService.findById(id));
+
         }catch(UserNotFoundException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        catch (UnauthorizedException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
 
@@ -86,8 +94,18 @@ public class UserController {
 
     @GetMapping("/{id}/cartProduct")
     @ResponseBody
-    public List<CartProduct> getCartByUserId(@PathVariable("id") Integer id){
-        return commerceService.getCartProductsByUserId(id);
+    public ResponseEntity<List<CartProduct>> getCartByUserId(@RequestHeader("Authorization") String authHead, @PathVariable("id") Integer id){
+
+        try{
+            User tokenUser = authService.getUserFromHeader(authHead);
+            authService.authorizeResource(tokenUser, id);
+
+            //User trying to retrieve self cart
+            return ResponseEntity.ok(commerceService.getCartProductsByUserId(id));
+        }
+        catch(UnauthorizedException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
     }
 
     @DeleteMapping("/{id}/cartProduct")
