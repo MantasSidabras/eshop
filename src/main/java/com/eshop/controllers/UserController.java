@@ -4,6 +4,7 @@ import com.eshop.entities.CartProduct;
 import com.eshop.entities.Order;
 import com.eshop.entities.User;
 import com.eshop.exceptions.*;
+import com.eshop.services.AuthService;
 import com.eshop.services.CommerceService;
 import com.eshop.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class UserController {
     private UserService userService;
 
     @Autowired
+    private AuthService authService;
+
+    @Autowired
     private CommerceService commerceService;
 
     @PostMapping
@@ -42,8 +46,16 @@ public class UserController {
 
     @GetMapping
     @ResponseBody
-    public List<User> getAllUsers(){
-        return userService.findAll();
+    public ResponseEntity<List<User>> getAllUsers(@RequestHeader("Authorization") String authHead){
+        try{
+            User tokenUser = authService.getUserFromHeader(authHead);
+            authService.authorizeAdmin(tokenUser);
+
+            return ResponseEntity.ok(userService.findAll());
+        }
+        catch(UnauthorizedException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
     }
 
     @GetMapping("/{id}")
@@ -58,17 +70,19 @@ public class UserController {
 
     @PutMapping
     @ResponseBody
-    public ResponseEntity<User> updateUser(@RequestBody User user){
-        // TODO: pass in id from token
-        User updated = userService.update(1, user);
-
-        if (updated == null) {
-            return ResponseEntity.status(400).body(null);
-        } else {
-            return ResponseEntity.ok(updated);
+    public ResponseEntity<User> updateUser(@RequestHeader("Authorization") String authHeader, @RequestBody User user){
+        try {
+            User tokenUser = authService.getUserFromHeader(authHeader);
+            User updatedUser = userService.update(tokenUser, user);
+            return ResponseEntity.ok(updatedUser);
+        }
+        catch(UnauthorizedException | IllegalAccessException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        catch(UserNotFoundException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
-
 
     @GetMapping("/{id}/cartProduct")
     @ResponseBody
