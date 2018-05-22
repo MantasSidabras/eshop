@@ -1,16 +1,18 @@
+import Config from './Config';
+
 class ProductApi {
   getAll = () => {
-    return fetch('http://localhost:8080/api/product')
+    return fetch(Config.url + '/product')
       .then(res => res.json())
   }
 
   getOne = id => {
-    return fetch(`http://localhost:8080/api/product/${id}`)
+    return fetch(Config.url + `/product/${id}`)
       .then(res => res.json())
   }
 
   create = product => {
-    return fetch('http://localhost:8080/api/product', {
+    return fetch(Config.url +'/product', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -21,7 +23,7 @@ class ProductApi {
   }
 
   update = product => {
-    return fetch('http://localhost:8080/api/product', {
+    return fetch(Config.url + '/product', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -32,7 +34,7 @@ class ProductApi {
   }
 
   delete = id => {
-    return fetch(`http://localhost:8080/api/product/${id}`, {
+    return fetch(Config.url + `/product/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
@@ -42,7 +44,7 @@ class ProductApi {
   }
 
   addImages = (id, images) => {
-    return fetch(`http://localhost:8080/api/product/${id}/images`, {
+    return fetch(Config.url + `/product/${id}/images`, {
       method: 'POST',
       body: images
     })

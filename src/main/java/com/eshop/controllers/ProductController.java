@@ -19,7 +19,8 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/api/product")
-@CrossOrigin("http://localhost:3000")
+//@CrossOrigin("http://localhost:3000")
+@CrossOrigin("http://84.32.162.71:3000")
 public class ProductController {
 
     @Autowired

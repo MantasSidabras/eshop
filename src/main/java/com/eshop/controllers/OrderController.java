@@ -10,16 +10,20 @@ import com.eshop.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 @Controller
 @RequestMapping("api/order")
-@CrossOrigin("http://localhost:3000")
+//@CrossOrigin("http://localhost:3000")
+@CrossOrigin("http://84.32.162.71:3000")
 public class OrderController {
 
     @Autowired
@@ -37,11 +41,11 @@ public class OrderController {
         return this.commerceService.getAllOrders();
     }
 
+    @Async
     @PostMapping
     @ResponseBody
-    public ResponseEntity<Map<String, String>> create(@RequestHeader("Authorization") String authHeader, @RequestBody Payment payment) {
+    public Future<ResponseEntity<Map<String, String>>> create(@RequestHeader("Authorization") String authHeader, @RequestBody Payment payment) {
         Map<String, String> res = new HashMap<>();
-
         try {
             User user = authService.getUserFromHeader(authHeader);
 
@@ -50,20 +54,20 @@ public class OrderController {
             commerceService.createOrder(user, payment);
 
             res.put("message", "Payment successful");
-            return ResponseEntity.status(HttpStatus.CREATED).body(res);
+            return new AsyncResult<>(ResponseEntity.status(HttpStatus.CREATED).body(res));
 
         } catch(UnauthorizedException e) {
             e.printStackTrace();
             res.put("message", "Unauthorized");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
+            return new AsyncResult<>(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res));
         } catch(PaymentException e) {
             e.printStackTrace();
             res.put("message", e.getMessage());
-            return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body(res);
+            return new AsyncResult<>(ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body(res));
         } catch(Exception e) {
             e.printStackTrace();
             res.put("message", "Payment failed");
-            return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body(res);
+            return new AsyncResult<>(ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body(res));
         }
     }
 

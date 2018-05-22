@@ -98,7 +98,7 @@ const Message = styled.div`
     flex-direction: column;
     align-items: center;
     padding: 1.5rem 3rem;
-    background: hsl(0, 50%, 85%);
+    ${props => props.error ? 'background: hsl(0, 50%, 95%);' : 'background: hsl(110, 50%, 85%);'};
     border-radius: 3px;
 
     @media (min-width: 700px) {
@@ -180,7 +180,7 @@ class Register extends Component {
             <FadeIn in={this.state.displayPopup}>
               <Message error={this.state.loginErr}>
                 <ScaleUp>
-                  {this.state.loginErr ? <div>Failed to login</div> : <div>Registration successful!</div>}
+                  {this.state.loginErr ? <div>Failed to register</div> : <div>Registration successful!</div>}
                 </ScaleUp>
               </Message>
             </FadeIn>
