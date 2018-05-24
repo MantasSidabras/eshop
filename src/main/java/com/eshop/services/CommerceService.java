@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CommerceService {
@@ -126,6 +128,18 @@ public class CommerceService {
                 throw new InvalidProductQuantityException();
             }
         }
+    }
+
+    public Map<String, String> getMismatchs(User user) {
+        Map<String, String> res = new HashMap<>();
+
+        for (CartProduct cp: user.getCartProductList()) {
+            if (cp.getQuantity() > cp.getProduct().getQuantity()) {
+                res.put(cp.getId().toString(), cp.getProduct().getQuantity().toString());
+            }
+        }
+
+        return res;
     }
 
     @Transactional

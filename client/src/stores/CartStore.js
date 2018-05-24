@@ -4,6 +4,7 @@ import AuthApi from '../api/AuthApi';
 import UserApi from '../api/UserApi';
 import CartProductApi from '../api/CartProductApi';
 import UserStore from '../stores/UserStore';
+import Config from '../api/Config';
 
 class CartStore {
   cartProductList = [];
@@ -11,8 +12,8 @@ class CartStore {
   getCart = () => {
     const token = AuthApi.getDecodedToken();
     if (!token || !AuthApi.isTokenValid()) return;
-    
-    return fetch(`http://localhost:8080/api/user/${token.id}/cartProduct`, {
+
+    return fetch(Config.url + `/user/${token.id}/cartProduct`, {
       method: 'GET',
       headers: {
         'Authorization' : 'Bearer ' + AuthApi.getToken()
@@ -34,6 +35,10 @@ class CartStore {
   get sum() {
     return this.cartProductList.reduce((total, cp) => total += cp.quantity * cp.product.price, 0).toFixed(2);
   }
+
+  get allProductCount() {
+    return this.cartProductList.reduce((total, cp) => total += cp.quantity, 0);
+  }
   
   addCartProductByProductId = productId => {
     if (!UserStore.isLoggedIn) {
@@ -45,7 +50,7 @@ class CartStore {
 
     const cartProduct = {
       productId,
-      userId: token.id 
+      userId: token.id
     }
 
     return CartProductApi.add(cartProduct)
@@ -67,7 +72,7 @@ class CartStore {
   deleteAll = () => {
     const token = AuthApi.getDecodedToken();
     if (!token) return;
-    
+
     return UserApi.deleteAllCartProducts(token.id)
       .then(res => this.getCart())
       .catch(error => console.error(error))
@@ -77,6 +82,7 @@ class CartStore {
 decorate(CartStore, {
   cartProductList: observable,
   sum: computed,
+  allProductCount: computed,
   getCart: action,
   clearCart: action,
   addCartProductByProductId: action,

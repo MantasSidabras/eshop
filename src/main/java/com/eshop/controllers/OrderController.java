@@ -8,12 +8,15 @@ import com.eshop.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 @Controller
 @RequestMapping("api/order")
@@ -35,12 +38,11 @@ public class OrderController {
         return this.commerceService.getAllOrders();
     }
 
-
+    @Async
     @PostMapping
     @ResponseBody
     public ResponseEntity<Map<String, String>> create(@RequestHeader("Authorization") String authHeader, @RequestBody Payment payment) {
         Map<String, String> res = new HashMap<>();
-
         try {
             User user = authService.getUserFromHeader(authHeader);
 

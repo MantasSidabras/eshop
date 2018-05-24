@@ -1,9 +1,10 @@
 import AuthApi from './AuthApi';
+import Config from './Config';
 
 class OrderApi {
 
   getAll = () => {
-    return fetch('http://localhost:8080/api/order', {
+    return fetch(Config.url + '/order', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -22,7 +23,7 @@ class OrderApi {
   }
 
   create = paymentInfo => {
-    return fetch('http://localhost:8080/api/order', {
+    return fetch(Config.url + '/order', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -43,7 +44,7 @@ class OrderApi {
   }
 
   update = order => {
-    return fetch('http://localhost:8080/api/order', {
+    return fetch(Config.url + '/order', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

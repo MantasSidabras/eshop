@@ -132,20 +132,21 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<Map<String, String>> checkCartIntegrity(@RequestHeader("Authorization") String authHead, @PathVariable("id") Integer id){
         Map<String, String> res = new HashMap<>();
+        User tokenUser = null;
         try{
-            User tokenUser = authService.getUserFromHeader(authHead);
+            tokenUser = authService.getUserFromHeader(authHead);
             authService.authorizeResource(tokenUser, id);
-
             commerceService.checkIntegrity(tokenUser);
-
-
             res.put("message", "success");
             return ResponseEntity.ok(res);
         }
         catch(UnauthorizedException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         } catch (InvalidProductQuantityException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+            Map<String, String> productRes = commerceService.getMismatchs(tokenUser);
+            productRes.put("message", "Not enough items, please update your cart");
+
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(productRes);
         }
     }
 }

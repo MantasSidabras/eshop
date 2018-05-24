@@ -182,7 +182,8 @@ const CartCount = styled.div`
   align-items: center;
   width: 20px;
   height: 20px;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
+  ${props => props.count > 99 && 'font-size: 0.6rem;'}
   border-radius: 50%;
   background: hsl(210, 60%, 60%);
   color: hsl(0, 0%, 100%);
@@ -198,8 +199,9 @@ class Header extends Component {
 
   render() {
     const { isLoggedIn, isAdmin } = this.props.userStore;
-    const { cartProductList, sum } = this.props.cartStore;
+    const { cartProductList, sum, allProductCount } = this.props.cartStore;
     const { showMyAccount } = this.state;
+
     return (
       <Wrapper>
         <Title>{this.props.children}</Title>
@@ -226,7 +228,7 @@ class Header extends Component {
 
         <CartLink to='/cart'>
           <i style={{ position: 'relative', marginRight: 2}} className="fas fa-shopping-cart fa-lg">
-            <CartCount>{cartProductList.length}</CartCount>
+            <CartCount count={allProductCount}>{allProductCount}</CartCount>
           </i>
           <span style={{ marginRight: 5 }}>CART</span>
           {cartProductList.length > 0 && <span style={{ fontWeight: 'bold'}} >{sum}€</span>}

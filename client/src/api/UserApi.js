@@ -1,8 +1,9 @@
 import AuthApi from './AuthApi';
+import Config from './Config';
 
 class UserApi {
   login = user => {
-    return fetch('http://localhost:8080/api/login', {
+    return fetch(Config.url + '/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -39,42 +40,41 @@ class UserApi {
   }
 
   getAll = () => {
-    return fetch('http://localhost:8080/api/user', {
+    return fetch(Config.url +'/user', {
       method: 'GET',
         headers: {
             'Authorization' : 'Bearer ' + AuthApi.getToken()
         }
     })
-      .then(res => {
-        if(res.status !== 200){
-          throw new Error('failed to get users');
-         } else {
-          return res;
-        }
-
+    .then(res => {
+      if(res.status !== 200){
+        throw new Error('Failed to get users');
+        } else {
+        return res;
+      }
     })
     .then(res => res.json())
   }
 
   getById = id => {
-    return fetch(`http://localhost:8080/api/user/${id}`, {
+    return fetch(Config.url + `/user/${id}`, {
         method: 'GET',
         headers: {
             'Authorization' : 'Bearer ' + AuthApi.getToken()
         }
     })
-        .then(res => {
-        if(res.status !== 200){
-        throw new Error('failed to get user');
-        } else {
+    .then(res => {
+      if(res.status !== 200){
+        throw new Error('Failed to get user');
+      } else {
         return res;
-     }
+    }
     })
     .then(res => res.json())
   }
 
   update = user => {
-    return fetch('http://localhost:8080/api/user', {
+    return fetch(Config.url + '/user', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ class UserApi {
   }
 
   create = user => {
-    return fetch('http://localhost:8080/api/user', {
+    return fetch(Config.url +'/user', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -106,7 +106,7 @@ class UserApi {
   }
 
   deleteAllCartProducts = id => {
-    return fetch(`http://localhost:8080/api/user/${id}/cartProduct`, {
+    return fetch(Config.url + `/user/${id}/cartProduct`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -129,9 +129,10 @@ class UserApi {
           'Authorization' : 'Bearer ' + AuthApi.getToken()
       }
     })
-      .then(res => {
+      .then(async res => {
         if (res.status === 409) {
-          throw new Error('Not enough items, please update your cart');
+          const err = await res.json();
+          throw err;
         } else {
           return res;
         }

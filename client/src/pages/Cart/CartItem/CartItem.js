@@ -33,7 +33,7 @@ const Quantity = styled.input.attrs({
   type: 'number',
   min: '1'
 })`
-  width: 50px;
+  width: 60px;
   padding: 5px 8px;
   border: 1px solid hsl(0, 0%, 75%);
   border-radius: 3px;
@@ -47,15 +47,16 @@ const RemoveIcon = styled.i`
 
 const ErrorMsg = styled.div`
   position: absolute;
-  top: 30px;
-  width: 150px;
-  padding: 5px;
+  top: 0;
+  right: 0;
+  width: 145px;
+  padding: 3px;
   background: hsl(0, 70%, 90%);
   text-align: center;
   border: 1px solid hsl(0, 40%, 70%);
   border-radius: 3px;
   box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.2);
-  transform: translateX(-30px);
+  transform: translateX(100%);
   z-index: 999;
 `
 
@@ -90,14 +91,14 @@ class CartItem extends Component {
 
   render() {
     const { product: { name, price }, quantity } = this.props;
-    const { error, errorMsg } = this.state;
+    const { error, unitsLeft } = this.props;
     return (
       <Wrapper>
         <Name>{name}</Name>
         <Price>{price.toFixed(2)}€</Price>
         <QuantityWrapper>
           <Quantity onChange={this.handleQuantityChange} value={quantity} />
-          {error && <ErrorMsg>{errorMsg}</ErrorMsg>}
+          {error && <ErrorMsg>Only {unitsLeft} units left</ErrorMsg>}
         </QuantityWrapper>
         <Price>{(price * quantity).toFixed(2)}€</Price>
         <RemoveIcon onClick={this.handleDelete} className="fas fa-times fa-lg" title='Remove item' />

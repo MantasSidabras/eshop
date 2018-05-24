@@ -1,10 +1,14 @@
+<<<<<<< HEAD
 import AuthApi from './AuthApi';
+=======
+import Config from './Config';
+>>>>>>> 66b0791aa33ebe668f161c4ceac47fe707b88cb4
 
 class ProductImageApi {
-  get = id => `http://localhost:8080/api/product-image/${id}`;
+  get = id => Config.url + `/product-image/${id}`;
 
   delete = id => {
-    return fetch(`http://localhost:8080/api/product-image/${id}`, {
+    return fetch(Config.url + `/product-image/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
