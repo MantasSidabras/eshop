@@ -24,7 +24,7 @@ public class CartProductController {
   private CommerceService commerceService;
 
 
-  //check who cart product is being created
+  // All users can do it
   @PostMapping
   @ResponseBody
   @ResponseStatus(HttpStatus.CREATED)
@@ -40,7 +40,7 @@ public class CartProductController {
   }
 
 
-  //check who cart product is being created
+  // All users can do it
   @PutMapping
   @ResponseBody
   public ResponseEntity<CartProduct> updateCartProduct(@RequestBody CartProduct cp) {
@@ -53,7 +53,7 @@ public class CartProductController {
   }
 
 
-  //check who cart product is being deleted
+  // All users can do it?
   @DeleteMapping("/{id}")
   @ResponseBody
   public Map<String, String> deleteCartProduct(@PathVariable Integer id) {

@@ -46,13 +46,16 @@ class OrderApi {
     return fetch('http://localhost:8080/api/order', {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${AuthApi.getToken()}`
       },
       body: JSON.stringify(order)
     })
       .then(res => {
         if (res.status === 400) {
           throw new Error('Bad request')
+        } else if(res.status === 401){
+          throw new Error('Unautherized access')
         } else {
           return res;
         }

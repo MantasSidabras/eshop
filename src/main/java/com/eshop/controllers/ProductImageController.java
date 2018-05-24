@@ -1,6 +1,9 @@
 package com.eshop.controllers;
 
 import com.eshop.entities.ProductImage;
+import com.eshop.entities.User;
+import com.eshop.exceptions.UnauthorizedException;
+import com.eshop.services.AuthService;
 import com.eshop.services.ProductImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,8 +23,10 @@ public class ProductImageController {
     @Autowired
     private ProductImageService productImageService;
 
+    @Autowired
+    private AuthService authService;
 
-    //check  image is being getted
+
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> getImage(@PathVariable Integer id) {
         ProductImage pp = productImageService.findById(id);
@@ -34,13 +39,26 @@ public class ProductImageController {
     }
 
 
-    //   //check  image is being deleted
+    //   //check  if ADMIN
     @DeleteMapping("/{id}")
     @ResponseBody
-    public Map<String, String> deleteImage(@PathVariable Integer id) {
-        Map<String, String> res = new HashMap<>();
-        this.productImageService.deleteById(id);
-        res.put("message", "success");
-        return res;
+    public ResponseEntity<Map<String, String>> deleteImage(@RequestHeader("Authorization") String authHead, @PathVariable Integer id) {
+
+
+        try{
+            User tokenUser = authService.getUserFromHeader(authHead);
+            authService.authorizeAdmin(tokenUser);
+
+            Map<String, String> res = new HashMap<>();
+            this.productImageService.deleteById(id);
+
+            //Returning map to parse as json
+            res.put("message", "success");
+            return ResponseEntity.ok(res);
+        }
+        catch(UnauthorizedException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
     }
 }

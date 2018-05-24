@@ -36,7 +36,6 @@ public class OrderController {
     }
 
 
-    //check who order is being created
     @PostMapping
     @ResponseBody
     public ResponseEntity<Map<String, String>> create(@RequestHeader("Authorization") String authHeader, @RequestBody Payment payment) {
@@ -73,16 +72,25 @@ public class OrderController {
         }
     }
 
-    ////check who cart product is being updated
     @PutMapping
     @ResponseBody
-    public ResponseEntity<Order> updateOrder(@RequestBody Order order){
-        Order updated = commerceService.updateOrder(order);
+    public ResponseEntity<Order> updateOrder(@RequestHeader("Authorization") String authHead, @RequestBody Order order){
 
-        if (updated == null) {
-            return ResponseEntity.status(400).body(null);
-        } else {
-            return ResponseEntity.ok(updated);
+        try{
+            User tokenUser = authService.getUserFromHeader(authHead);
+            authService.authorizeAdmin(tokenUser);
+
+            Order updated = commerceService.updateOrder(order);
+
+            if (updated == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            } else {
+                return ResponseEntity.ok(updated);
+            }
         }
+        catch(UnauthorizedException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
     }
 }
