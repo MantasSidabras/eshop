@@ -28,6 +28,8 @@ public class ProductController {
     @Autowired
     private ProductImageService productImageService;
 
+
+    //check  product is being created
     @PostMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
@@ -36,12 +38,15 @@ public class ProductController {
         return this.productService.create(product);
     }
 
+    //check  product is being get all
     @GetMapping
     @ResponseBody
     public List<Product> getAllProducts() {
         return productService.findAll();
     }
 
+
+    //check  product is being get by id
     @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity<Product> getProductById(@PathVariable("id") Integer id) {
@@ -53,12 +58,16 @@ public class ProductController {
         }
     }
 
+
+    //check  product is being updated
     @PutMapping
     @ResponseBody
     public Product updateProduct(@RequestBody Product product) {
         return this.productService.update(product);
     }
 
+
+    //check  product is being created
     @DeleteMapping("/{id}")
     @ResponseBody
     public Map<String, String> deleteProduct(@PathVariable("id") Integer id) {
@@ -67,6 +76,8 @@ public class ProductController {
         res.put("message", "success");
         return res;
     }
+
+    //check  images is being created
 
     @PostMapping("/{id}/images")
     @ResponseBody

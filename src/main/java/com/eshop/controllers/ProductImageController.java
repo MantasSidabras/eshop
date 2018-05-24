@@ -20,6 +20,8 @@ public class ProductImageController {
     @Autowired
     private ProductImageService productImageService;
 
+
+    //check  image is being getted
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> getImage(@PathVariable Integer id) {
         ProductImage pp = productImageService.findById(id);
@@ -31,6 +33,8 @@ public class ProductImageController {
         }
     }
 
+
+    //   //check  image is being deleted
     @DeleteMapping("/{id}")
     @ResponseBody
     public Map<String, String> deleteImage(@PathVariable Integer id) {

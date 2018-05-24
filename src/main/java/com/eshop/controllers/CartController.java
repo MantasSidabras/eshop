@@ -23,6 +23,8 @@ public class CartController {
   @Autowired
   private CommerceService commerceService;
 
+
+  //check who cart product is being created
   @PostMapping
   @ResponseBody
   @ResponseStatus(HttpStatus.CREATED)
@@ -37,6 +39,8 @@ public class CartController {
     return ResponseEntity.ok(newCp);
   }
 
+
+  //check who cart product is being created
   @PutMapping
   @ResponseBody
   public ResponseEntity<CartProduct> updateCartProduct(@RequestBody CartProduct cp) {
@@ -50,6 +54,8 @@ public class CartController {
     return ResponseEntity.ok(updatedCp);
   }
 
+
+  //check who cart product is being deleted
   @DeleteMapping("/{id}")
   @ResponseBody
   public Map<String, String> deleteCartProduct(@PathVariable Integer id) {

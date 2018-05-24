@@ -37,6 +37,8 @@ public class OrderController {
         return this.commerceService.getAllOrders();
     }
 
+
+    //check who order is being created
     @PostMapping
     @ResponseBody
     public ResponseEntity<Map<String, String>> create(@RequestHeader("Authorization") String authHeader, @RequestBody Payment payment) {
@@ -67,6 +69,7 @@ public class OrderController {
         }
     }
 
+    ////check who cart product is being updated
     @PutMapping
     @ResponseBody
     public ResponseEntity<Order> updateOrder(@RequestBody Order order){
