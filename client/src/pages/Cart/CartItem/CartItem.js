@@ -33,7 +33,7 @@ const Quantity = styled.input.attrs({
   type: 'number',
   min: '1'
 })`
-  width: 50px;
+  width: 60px;
   padding: 5px 8px;
   border: 1px solid hsl(0, 0%, 75%);
   border-radius: 3px;
