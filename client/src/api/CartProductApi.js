@@ -1,6 +1,8 @@
+import Config from './Config';
+
 class CartProductApi {
   add = cartProduct => {
-    return fetch(`http://localhost:8080/api/cartProduct`, {
+    return fetch(Config.url + `/cartProduct`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -18,7 +20,7 @@ class CartProductApi {
   }
 
   update = cartProduct => {
-    return fetch('http://localhost:8080/api/cartProduct', {
+    return fetch(Config.url + '/cartProduct', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -36,7 +38,7 @@ class CartProductApi {
   }
 
   deleteById = id => {
-    return fetch(`http://localhost:8080/api/cartProduct/${id}`, {
+    return fetch(Config.url + `/cartProduct/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'

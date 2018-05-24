@@ -1,8 +1,9 @@
 import AuthApi from './AuthApi';
+import Config from './Config';
 
 class UserApi {
   login = user => {
-    return fetch('http://localhost:8080/api/login', {
+    return fetch(Config.url + '/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -39,7 +40,7 @@ class UserApi {
   }
 
   getAll = () => {
-    return fetch('http://localhost:8080/api/user', {
+    return fetch(Config.url +'/user', {
       method: 'GET',
         headers: {
             'Authorization' : 'Bearer ' + AuthApi.getToken()
@@ -56,7 +57,7 @@ class UserApi {
   }
 
   getById = id => {
-    return fetch(`http://localhost:8080/api/user/${id}`, {
+    return fetch(Config.url + `/user/${id}`, {
         method: 'GET',
         headers: {
             'Authorization' : 'Bearer ' + AuthApi.getToken()
@@ -73,7 +74,7 @@ class UserApi {
   }
 
   update = user => {
-    return fetch('http://localhost:8080/api/user', {
+    return fetch(Config.url + '/user', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -94,7 +95,7 @@ class UserApi {
   }
 
   create = user => {
-    return fetch('http://localhost:8080/api/user', {
+    return fetch(Config.url +'/user', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -105,7 +106,7 @@ class UserApi {
   }
 
   deleteAllCartProducts = id => {
-    return fetch(`http://localhost:8080/api/user/${id}/cartProduct`, {
+    return fetch(Config.url + `/user/${id}/cartProduct`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
