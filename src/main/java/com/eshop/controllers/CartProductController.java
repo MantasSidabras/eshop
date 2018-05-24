@@ -17,9 +17,8 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("api/cartProduct")
-//@CrossOrigin("http://localhost:3000")
-@CrossOrigin("http://84.32.162.71:3000")
-public class CartController {
+@CrossOrigin("http://localhost:3000")
+public class CartProductController {
 
   @Autowired
   private CommerceService commerceService;
@@ -41,14 +40,12 @@ public class CartController {
   @PutMapping
   @ResponseBody
   public ResponseEntity<CartProduct> updateCartProduct(@RequestBody CartProduct cp) {
-    CartProduct updatedCp;
     try {
-      updatedCp = commerceService.updateCartProduct(cp);
+      return ResponseEntity.ok(commerceService.updateCartProduct(cp));
     } catch (InvalidProductQuantityException e) {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
-    return ResponseEntity.ok(updatedCp);
   }
 
   @DeleteMapping("/{id}")

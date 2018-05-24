@@ -20,8 +20,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("api/user")
-//@CrossOrigin("http://localhost:3000")
-@CrossOrigin("http://84.32.162.71:3000")
+@CrossOrigin("http://localhost:3000")
 public class UserController {
 
     @Autowired
@@ -126,6 +125,27 @@ public class UserController {
         }
         catch(UnauthorizedException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+    }
+
+    @GetMapping("/{id}/cart")
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> checkCartIntegrity(@RequestHeader("Authorization") String authHead, @PathVariable("id") Integer id){
+        Map<String, String> res = new HashMap<>();
+        try{
+            User tokenUser = authService.getUserFromHeader(authHead);
+            authService.authorizeResource(tokenUser, id);
+
+            commerceService.checkIntegrity(tokenUser);
+
+
+            res.put("message", "success");
+            return ResponseEntity.ok(res);
+        }
+        catch(UnauthorizedException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        } catch (InvalidProductQuantityException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
     }
 }
