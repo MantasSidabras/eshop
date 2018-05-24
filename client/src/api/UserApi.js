@@ -45,13 +45,12 @@ class UserApi {
             'Authorization' : 'Bearer ' + AuthApi.getToken()
         }
     })
-      .then(res => {
-        if(res.status !== 200){
-          throw new Error('failed to get users');
-         } else {
-          return res;
-        }
-
+    .then(res => {
+      if(res.status !== 200){
+        throw new Error('Failed to get users');
+        } else {
+        return res;
+      }
     })
     .then(res => res.json())
   }
@@ -63,12 +62,12 @@ class UserApi {
             'Authorization' : 'Bearer ' + AuthApi.getToken()
         }
     })
-        .then(res => {
-        if(res.status !== 200){
-        throw new Error('failed to get user');
-        } else {
+    .then(res => {
+      if(res.status !== 200){
+        throw new Error('Failed to get user');
+      } else {
         return res;
-     }
+    }
     })
     .then(res => res.json())
   }
@@ -129,9 +128,10 @@ class UserApi {
           'Authorization' : 'Bearer ' + AuthApi.getToken()
       }
     })
-      .then(res => {
+      .then(async res => {
         if (res.status === 409) {
-          throw new Error('Not enough items, please update your cart');
+          const err = await res.json();
+          throw err;
         } else {
           return res;
         }

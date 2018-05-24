@@ -95,6 +95,11 @@ const TotalPrice = styled.span`
 `
 
 class Cart extends Component {
+  state = {
+    error: false,
+    errorData: null
+  }
+
   componentDidMount() {
     this.props.cartStore.getCart();
   }
@@ -108,11 +113,19 @@ class Cart extends Component {
 
     UserApi.checkCartIntegrity(this.props.userStore.user.id)
       .then(res => this.props.history.push('/purchase'))
-      .catch(error => console.error(error.message))
+      .catch(error => {
+        this.setState({ error: true, errorData: error });
+        this.timeout = setTimeout(() => this.setState({ error: false }), 3000);
+      })
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
   }
 
   render() {
     const { cartProductList, sum } = this.props.cartStore;
+    const { error, errorData } = this.state;
     return ( 
       <Wrapper>
         <Title>Your cart</Title>
@@ -127,7 +140,7 @@ class Cart extends Component {
               <div style={{ width: 110,  textAlign: 'center', marginRight: 20 }}>Total Price</div>
             </div>
    
-            {cartProductList.map(cp => <CartItem key={cp.id} {...cp} />)}
+            {cartProductList.map(cp => <CartItem error={error && errorData && errorData[cp.id]} unitsLeft={errorData && errorData[cp.id]} key={cp.id} {...cp} />)}
 
             {cartProductList.length === 0 
               ? <p style={{textAlign: 'center', color: 'hsla(0, 0%, 0%, 0.6)'}}>Cart is empty</p> 
