@@ -1,8 +1,6 @@
-<<<<<<< HEAD
 import AuthApi from './AuthApi';
-=======
 import Config from './Config';
->>>>>>> 66b0791aa33ebe668f161c4ceac47fe707b88cb4
+
 
 class ProductImageApi {
   get = id => Config.url + `/product-image/${id}`;

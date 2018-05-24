@@ -30,6 +30,7 @@ public class Product {
 
     private Integer quantity;
 
+    @Column(updatable = false)
     private LocalDateTime dateCreated;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)

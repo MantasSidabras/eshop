@@ -2,6 +2,9 @@ package com.eshop.controllers;
 
 import com.eshop.entities.Product;
 import com.eshop.entities.ProductImage;
+import com.eshop.entities.User;
+import com.eshop.exceptions.UnauthorizedException;
+import com.eshop.services.AuthService;
 import com.eshop.services.ProductImageService;
 import com.eshop.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,17 +31,30 @@ public class ProductController {
     @Autowired
     private ProductImageService productImageService;
 
+    @Autowired
+    private AuthService authService;
 
-    //check  product is being created
+
+    //Only admin
     @PostMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public Product createProduct(@RequestBody Product product) {
-        product.setDateCreated(LocalDateTime.now());
-        return this.productService.create(product);
+    public ResponseEntity<Product> createProduct(@RequestHeader("Authorization") String authHead, @RequestBody Product product) {
+
+        try{
+            User tokenUser = authService.getUserFromHeader(authHead);
+            authService.authorizeAdmin(tokenUser);
+
+            //change localDateNow logic
+            //product.setDateCreated(LocalDateTime.now());
+            return ResponseEntity.ok(this.productService.create(product));
+        }
+        catch(UnauthorizedException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
     }
 
-    //check  product is being get all
+    //Everyone can use
     @GetMapping
     @ResponseBody
     public List<Product> getAllProducts() {
@@ -46,7 +62,7 @@ public class ProductController {
     }
 
 
-    //check  product is being get by id
+    //Everyone can use
     @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity<Product> getProductById(@PathVariable("id") Integer id) {
@@ -59,53 +75,79 @@ public class ProductController {
     }
 
 
-    //check  product is being updated
+    //Only admin
     @PutMapping
     @ResponseBody
-    public Product updateProduct(@RequestBody Product product) {
-        return this.productService.update(product);
+    public ResponseEntity<Product> updateProduct(@RequestHeader("Authorization") String authHead, @RequestBody Product product) {
+
+        try{
+            User tokenUser = authService.getUserFromHeader(authHead);
+            authService.authorizeAdmin(tokenUser);
+
+            return ResponseEntity.ok(this.productService.update(product));
+        }
+        catch(UnauthorizedException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
     }
 
 
-    //check  product is being created
+    //Only admin
     @DeleteMapping("/{id}")
     @ResponseBody
-    public Map<String, String> deleteProduct(@PathVariable("id") Integer id) {
-        Map<String, String> res = new HashMap<>();
-        this.productService.deleteById(id);
-        res.put("message", "success");
-        return res;
+    public ResponseEntity<Map<String, String>> deleteProduct(@RequestHeader("Authorization") String authHead, @PathVariable("id") Integer id) {
+
+        try{
+            User tokenUser = authService.getUserFromHeader(authHead);
+            authService.authorizeAdmin(tokenUser);
+            Map<String, String> res = new HashMap<>();
+            this.productService.deleteById(id);
+            res.put("message", "success");
+            return ResponseEntity.ok(res);
+        }
+        catch(UnauthorizedException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
     }
 
-    //check  images is being created
-
+    //Only admin
     @PostMapping("/{id}/images")
     @ResponseBody
-    public Map<String, String> setImages(@PathVariable("id") Integer id, @RequestParam("file") MultipartFile[] images) {
-        Map<String, String> res = new HashMap<>();
+    public ResponseEntity<Map<String, String>> setImages(@RequestHeader("Authorization") String authHead, @PathVariable("id") Integer id, @RequestParam("file") MultipartFile[] images) {
 
-        for (MultipartFile image : images) {
-            try {
-                InputStream targetStream = image.getInputStream();
-                byte[] buffer = new byte[targetStream.available()];
-                targetStream.read(buffer);
-                targetStream.close();
+        try{
+            User tokenUser = authService.getUserFromHeader(authHead);
+            authService.authorizeAdmin(tokenUser);
 
-                ProductImage pp = new ProductImage();
-                Product product = productService.findById(id);
-                pp.setProduct(product);
-                pp.setData(buffer);
-                pp.setName(image.getOriginalFilename());
+            Map<String, String> res = new HashMap<>();
 
-                productImageService.create(pp);
-            } catch (Exception e) {
-                System.out.println("ERROR input stream" + e.toString());
-                res.put("message", "failure");
-                return res;
+            for (MultipartFile image : images) {
+                try {
+                    InputStream targetStream = image.getInputStream();
+                    byte[] buffer = new byte[targetStream.available()];
+                    targetStream.read(buffer);
+                    targetStream.close();
+
+                    ProductImage pp = new ProductImage();
+                    Product product = productService.findById(id);
+                    pp.setProduct(product);
+                    pp.setData(buffer);
+                    pp.setName(image.getOriginalFilename());
+
+                    productImageService.create(pp);
+                } catch (Exception e) {
+                    System.out.println("ERROR input stream" + e.toString());
+                    res.put("message", "failure");
+                    return ResponseEntity.ok(res);
+                }
             }
+
+            res.put("message", "success");
+            return ResponseEntity.ok(res);
+        }
+        catch(UnauthorizedException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
-        res.put("message", "success");
-        return res;
     }
 }

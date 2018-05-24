@@ -1,3 +1,4 @@
+import AuthApi from './AuthApi';
 import Config from './Config';
 
 class ProductApi {
@@ -15,9 +16,17 @@ class ProductApi {
     return fetch(Config.url +'/product', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization' : 'Bearer ' + AuthApi.getToken()
       },
       body: JSON.stringify(product)
+    }).then(res => {
+      if(res.status === 401){
+        throw new Error('Unautherized access')
+      }
+      else{
+        return res;
+      }
     })
       .then(res => res.json())
   }
@@ -26,9 +35,17 @@ class ProductApi {
     return fetch(Config.url + '/product', {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization' : 'Bearer ' + AuthApi.getToken()
       },
       body: JSON.stringify(product)
+    }).then(res => {
+      if(res.status === 401){
+        throw new Error('Unautherized access')
+      }
+      else{
+        return res;
+      }
     })
       .then(res => res.json())
   }
@@ -37,7 +54,15 @@ class ProductApi {
     return fetch(Config.url + `/product/${id}`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization' : 'Bearer ' + AuthApi.getToken()
+      }
+    }).then(res => {
+      if(res.status === 401){
+        throw new Error('Unautherized access')
+      }
+      else{
+        return res;
       }
     })
       .then(res => res.json())
@@ -46,7 +71,17 @@ class ProductApi {
   addImages = (id, images) => {
     return fetch(Config.url + `/product/${id}/images`, {
       method: 'POST',
-      body: images
+      body: images,
+      headers:{
+        'Authorization' : 'Bearer ' + AuthApi.getToken()
+      }
+    }).then(res => {
+      if(res.status === 401){
+        throw new Error('Unautherized access')
+      }
+      else{
+        return res;
+      }
     })
       .then(res => res.json())
   }
