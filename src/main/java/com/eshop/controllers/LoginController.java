@@ -3,7 +3,9 @@ package com.eshop.controllers;
 
 import com.eshop.controllers.responsor.UserLoginResponse;
 import com.eshop.entities.User;
+import com.eshop.exceptions.BlockedUserException;
 import com.eshop.exceptions.InvalidUserCredentials;
+import com.eshop.exceptions.UserNotFoundException;
 import com.eshop.services.JWTTokenService;
 import com.eshop.services.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +37,13 @@ public class LoginController {
                 UserLoginResponse response = new UserLoginResponse();
                 response.setToken(token);
                 response.setUser(loginUser);
-
                 return ResponseEntity.ok(response);
            }catch(InvalidUserCredentials ex){
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+               return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+           } catch (UserNotFoundException e) {
+               return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+           } catch (BlockedUserException e) {
+               return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
            }
 
     }

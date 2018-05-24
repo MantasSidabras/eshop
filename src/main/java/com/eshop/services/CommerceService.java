@@ -58,18 +58,23 @@ public class CommerceService {
     }
 
     public CartProduct createCartProduct(CartProductRequest cartProductRequest) throws InvalidProductQuantityException {
+        Product product = productService.findById(cartProductRequest.getProductId());
+
+        if (product.getQuantity().equals(0)) {
+            throw new InvalidProductQuantityException();
+        }
+
         CartProduct existing = cartProductDAO.findByProductIdAndUserId(cartProductRequest.getProductId(), cartProductRequest.getUserId());
 
         if (existing != null) {
-            if (existing.getQuantity().equals(existing.getProduct().getQuantity())) {
-                throw new InvalidProductQuantityException();
-            }
+//            if (existing.getQuantity().equals(existing.getProduct().getQuantity())) {
+//                throw new InvalidProductQuantityException();
+//            }
             existing.setQuantity(existing.getQuantity() + 1);
             return cartProductDAO.save(existing);
         }
 
         CartProduct cp = new CartProduct();
-        Product product = productService.findById(cartProductRequest.getProductId());
         User user;
 
         cp.setQuantity(1);
@@ -96,7 +101,7 @@ public class CommerceService {
     public CartProduct updateCartProduct(CartProduct cartProduct) throws InvalidProductQuantityException {
         CartProduct oldCartProduct = this.getCartProductById(cartProduct.getId());
 
-        if (cartProduct.getQuantity() > oldCartProduct.getProduct().getQuantity()) {
+        if (cartProduct.getQuantity().equals(0)) {
             throw new InvalidProductQuantityException();
         }
 
@@ -113,6 +118,14 @@ public class CommerceService {
     @Transactional
     public void removeAllFromCartByUserId(Integer id){
         cartProductDAO.deleteAllByUserId(id);
+    }
+
+    public void checkIntegrity(User user) throws InvalidProductQuantityException {
+        for (CartProduct cp: user.getCartProductList()) {
+            if (cp.getQuantity() > cp.getProduct().getQuantity()) {
+                throw new InvalidProductQuantityException();
+            }
+        }
     }
 
     @Transactional
@@ -139,6 +152,9 @@ public class CommerceService {
             op.setOrder(savedOrder);
             op.setProduct(cp.getProduct());
             op.setQuantity(cp.getQuantity());
+
+            op.getProduct().setQuantity(op.getProduct().getQuantity() - op.getQuantity());
+
             orderProductDAO.save(op);
         }
 

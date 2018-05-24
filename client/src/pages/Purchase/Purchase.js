@@ -227,9 +227,11 @@ class Purchase extends Component {
         this.props.cartStore.getCart();
       })
       .catch(error => {
-        console.error(error);
         this.setState({ showMessage: true, isError: true, message: error.message });
-        this.timeout = setTimeout(() => this.setState({ showMessage: false }), 1500);
+        this.timeout = setTimeout(() => {
+          this.setState({ showMessage: false });
+          if (error.status === 409) this.props.history.push('/cart');
+        }, 2000);
       })
   }
 

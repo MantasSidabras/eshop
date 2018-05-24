@@ -31,7 +31,7 @@ const QuantityWrapper = styled.div`
 
 const Quantity = styled.input.attrs({
   type: 'number',
-  min: 1
+  min: '1'
 })`
   width: 50px;
   padding: 5px 8px;

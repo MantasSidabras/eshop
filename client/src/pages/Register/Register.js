@@ -98,7 +98,7 @@ const Message = styled.div`
     flex-direction: column;
     align-items: center;
     padding: 1.5rem 3rem;
-    ${props => props.error ? 'background: hsl(0, 50%, 85%);' : 'background: hsl(110, 50%, 85%);'};
+    background: hsl(0, 50%, 85%);
     border-radius: 3px;
 
     @media (min-width: 700px) {

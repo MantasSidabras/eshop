@@ -1,6 +1,7 @@
 package com.eshop.services;
 
 import com.eshop.entities.User;
+import com.eshop.exceptions.BlockedUserException;
 import com.eshop.exceptions.InvalidUserCredentials;
 import com.eshop.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,19 +14,20 @@ public class LoginService {
     @Autowired
     private UserService userService;
 
-    public User verify(User user) throws InvalidUserCredentials{
+    public User verify(User user) throws InvalidUserCredentials, BlockedUserException, UserNotFoundException{
 
         try{
             User foundUser = userService.findByEmail(user.getEmail());
-            if(foundUser.getPassword().equals(user.getPassword()) && !foundUser.isBlocked()){
-
-                return foundUser;
+            if(!foundUser.getPassword().equals(user.getPassword())){
+                throw new InvalidUserCredentials();
             }
-            throw new InvalidUserCredentials();
-
+            if(foundUser.isBlocked()){
+                throw new BlockedUserException();
+            }
+            return foundUser;
         }
         catch(UserNotFoundException e){
-            throw new InvalidUserCredentials();
+            throw new UserNotFoundException();
         }
 
     }

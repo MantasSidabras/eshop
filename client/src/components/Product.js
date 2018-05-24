@@ -63,20 +63,22 @@ const Add = styled.button`
   cursor: pointer;
   transition: 0.2s ease-in-out;
 
-  &:hover {
-    background: hsl(110, 50%, 72%);
-  }
+  ${props => props.disabled ? `cursor: not-allowed;` : ` 
+    &:hover {
+      background: hsl(110, 50%, 72%);
+    }
 
-  &:active {
-    background: hsl(110, 45%, 67%);
-    transform: scale(0.98);
-  }
+    &:active {
+      background: hsl(110, 45%, 67%);
+      transform: scale(0.98);
+    }
+  `}
 `;
 
 class Product extends Component {
   handleAdd = () => {
-    this.props.cartStore.addCartProductByProductId(this.props.id);
-      // .catch(error => console.error(error));
+    this.props.cartStore.addCartProductByProductId(this.props.id)
+      .catch(error => console.error(error));
   }
 
   navigateToProduct = () => {
@@ -84,7 +86,7 @@ class Product extends Component {
   }
 
   render() {
-    const { name, price, productImages } = this.props;
+    const { name, price, productImages, quantity } = this.props;
     return (
       <Wrapper>
         <div onClick={this.navigateToProduct}>
@@ -93,7 +95,7 @@ class Product extends Component {
         </div>
         <div style={{ width: '100%'}}>
           <Price>{price.toFixed(2)}€</Price>
-          <Add onClick={this.handleAdd}>Add to cart</Add>
+          <Add disabled={quantity === 0} onClick={this.handleAdd}>Add to cart</Add>
         </div>
       </Wrapper>
     );

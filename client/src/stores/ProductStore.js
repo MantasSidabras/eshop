@@ -14,7 +14,8 @@ class ProductStore {
 
   getOne = id => {
     return ProductApi.getOne(id)
-    .then(product => this.product = product);
+      .then(product => this.product = product)
+      .catch(error => console.error(error))
   }
 }
 

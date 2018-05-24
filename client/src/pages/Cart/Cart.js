@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { inject, observer } from 'mobx-react';
 
 import CartItem from './CartItem/CartItem';
+import AuthApi from 'api/AuthApi';
+import UserApi from 'api/UserApi';
 
 const Wrapper = styled.div`
   display: flex;
@@ -62,7 +64,7 @@ const ClearButton = Button.extend`
   }
 `
 
-const ProceedButton = styled(Link)`
+const ProceedButton = styled.a`
   padding: 7px 14px;
   width: 100px;
   margin-left: auto;
@@ -101,6 +103,14 @@ class Cart extends Component {
     this.props.cartStore.deleteAll();
   }
 
+  handleProceed = e => {
+    e.preventDefault();
+
+    UserApi.checkCartIntegrity(this.props.userStore.user.id)
+      .then(res => this.props.history.push('/purchase'))
+      .catch(error => console.error(error.message))
+  }
+
   render() {
     const { cartProductList, sum } = this.props.cartStore;
     return ( 
@@ -133,7 +143,7 @@ class Cart extends Component {
           {cartProductList.length > 0 &&
             <ButtonWrapper>
               <ClearButton onClick={this.handleDeleteAll} >Clear Cart</ClearButton>
-              <ProceedButton to='/purchase'>Proceed <i className="fas fa-arrow-right"></i></ProceedButton>
+              <ProceedButton onClick={this.handleProceed} >Proceed <i className="fas fa-arrow-right"></i></ProceedButton>
             </ButtonWrapper>
           }
         </Container>
@@ -142,4 +152,4 @@ class Cart extends Component {
   }
 }
  
-export default inject('cartStore')(observer(Cart));
+export default inject('userStore', 'cartStore')(observer(Cart));

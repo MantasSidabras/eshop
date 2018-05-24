@@ -20,7 +20,7 @@ class UserStore {
       this.user = {};
       return Promise.resolve();
     }
-    
+
     return Promise.all([
       UserApi.getById(token.id).then(user => this.user = user),
       CartStore.getCart()
@@ -31,7 +31,7 @@ class UserStore {
   get fullName() {
     return this.user && `${this.user.firstName} ${this.user.lastName}`;
   }
-  
+
   get isLoggedIn() {
     return this.user && AuthApi.isTokenValid();
   }
@@ -41,13 +41,12 @@ class UserStore {
   }
 
   login = user => {
-    UserApi.login(user)
+    return UserApi.login(user)
       .then(res => {
         AuthApi.setToken(res.token);
         this.user = res.user;
         CartStore.getCart();
       })
-      .catch(err => console.error(err));
   }
 
   logout = () => {

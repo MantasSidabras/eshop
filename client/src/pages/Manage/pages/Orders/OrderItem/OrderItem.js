@@ -30,7 +30,7 @@ const Order = styled.div`
 
   &:hover {
     background: hsl(0, 0%, 100%);
-    transform: scale(1.01)
+    ${props => !props.showProducts && 'transform: scale(1.01);'}
   }
 `
 
@@ -146,6 +146,7 @@ class OrderItem extends Component {
         <Order 
           onMouseOver={this.showIcon} 
           onMouseLeave={this.hideIcon}
+          showProducts={showProducts}
         >
           <Id>{id}</Id>
           <DateCreated>{format(dateCreated, 'YYYY-MM-DD, HH:mm')}</DateCreated>

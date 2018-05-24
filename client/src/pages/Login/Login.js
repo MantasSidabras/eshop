@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import { inject, observer } from 'mobx-react';
 import { Redirect } from 'react-router-dom';
 
+import FadeIn from 'animations/FadeIn';
+import ScaleUp from 'animations/ScaleUp';
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -14,7 +17,7 @@ const Wrapper = styled.div`
   border: 1px solid hsl(0, 0%, 75%);
   border-radius: 3px;
 
-  > div{
+  > div {
     width: 100%;
     max-width: 500px;
     background: hsl(0,0%,95%);
@@ -63,11 +66,41 @@ const Wrapper = styled.div`
     }
   }
   `
+const Message = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: hsla(0, 0%, 0%, 0.6);
+  z-index: 999;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    background: hsl(0, 50%, 85%);
+    border-radius: 3px;
+
+    @media (min-width: 700px) {
+      margin-top: -20vh;
+    }
+  }
+  `
+
+
 
 class Login extends Component {
   state = {
     email: '',
-    password: ''
+    password: '',
+    displayPopup: null,
+    errorMsg: ''
   };
 
   onChange = (e) => {
@@ -77,7 +110,13 @@ class Login extends Component {
 
   login = (e) => {
     e.preventDefault();
-    this.props.userStore.login(this.state);
+    this.props.userStore.login(this.state)
+    .catch(err => {
+      this.setState({ displayPopup: true, errorMsg: err.message });
+      this.timeout = setTimeout(() => {
+        this.setState({displayPopup: false, errorMsg: ''});
+      }, 2000);
+    });
     // TODO: login user
   }
 
@@ -96,6 +135,13 @@ class Login extends Component {
               <input type="password" id='password' name='password' onChange={this.onChange} required />
               <button type="submit">Login</button>
             </form>
+            <FadeIn in={this.state.displayPopup}>
+              <Message>
+                <ScaleUp>
+                  {this.state.errorMsg ? <div>{this.state.errorMsg}</div> : <div></div> }
+                </ScaleUp>
+              </Message>
+            </FadeIn>
           </div>
         </Wrapper>
       )
