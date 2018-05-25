@@ -120,6 +120,11 @@ class Login extends Component {
     // TODO: login user
   }
 
+  handleClose = () => {
+    clearTimeout(this.timeout);
+    this.setState({ displayPopup: false });
+  }
+
   render() {
     if (this.props.userStore.isLoggedIn) {
       return <Redirect to='/' />
@@ -136,7 +141,7 @@ class Login extends Component {
               <button type="submit">Login</button>
             </form>
             <FadeIn in={this.state.displayPopup}>
-              <Message>
+              <Message onClick={this.handleClose}>
                 <ScaleUp>
                   {this.state.errorMsg ? <div>{this.state.errorMsg}</div> : <div></div> }
                 </ScaleUp>
