@@ -38,6 +38,7 @@ public class User {
 
     private boolean isBlocked;
 
+    @Column(updatable = false)
     private LocalDateTime dateCreated;
 
 

@@ -28,6 +28,7 @@ public class Order {
 
     private boolean state;
 
+    @Column(updatable = false)
     private LocalDateTime dateCreated;
 
     private LocalDateTime dateCompleted;
