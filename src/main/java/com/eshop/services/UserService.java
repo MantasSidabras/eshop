@@ -1,11 +1,12 @@
 package com.eshop.services;
 
 import com.eshop.dao.UserDAO;
-import com.eshop.entities.CartProduct;
 import com.eshop.entities.User;
 import com.eshop.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -15,11 +16,12 @@ public class UserService {
     @Autowired
     private UserDAO userDAO;
 
-   // @Autowired
-    //private BCryptPasswordEncoder passwordEncoder;
+    //@Autowired
+    private PasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public User create(User user) throws UserNotCreatedException {
-        //user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(encoder.encode(user.getPassword()));
+
         User newUser = userDAO.save(user);
         if(newUser == null){
             throw new UserNotCreatedException();
