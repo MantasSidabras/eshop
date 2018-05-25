@@ -29,7 +29,7 @@ public class PaymentService {
 
     private final String url = "https://mock-payment-processor.appspot.com/v1/payment";
     private final String userAuth = "technologines:platformos";
-
+    
     @Async
     public void sendPayment(Payment payment) throws Exception {
 //        if(!isPaymentValid(payment)){
@@ -60,6 +60,12 @@ public class PaymentService {
         HttpClient httpClient = HttpClientBuilder.create().build();
         request.setEntity(entity);
         HttpResponse response = httpClient.execute(request);
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         int statusCode = response.getStatusLine().getStatusCode();
 

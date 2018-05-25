@@ -17,10 +17,12 @@ public class CartProduct {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(updatable = false)
     @JsonIgnore
     @ManyToOne
     private User user;
 
+    @Column(updatable = false)
     @ManyToOne
     private Product product;
 
