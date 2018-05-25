@@ -26,6 +26,9 @@ const Wrapper = styled.div`
 `
 
 const Name = styled.div`
+  display: inline;
+  overflow: hidden;
+  width: 100%;
   margin-bottom: 5px;
   color: hsla(0, 0%, 0%, 0.85);
 `;
@@ -63,7 +66,7 @@ const Add = styled.button`
   cursor: pointer;
   transition: 0.2s ease-in-out;
 
-  ${props => props.disabled ? `cursor: not-allowed;` : ` 
+  ${props => props.disabled ? `cursor: not-allowed;` : `
     &:hover {
       background: hsl(110, 50%, 72%);
     }
@@ -76,7 +79,8 @@ const Add = styled.button`
 `;
 
 class Product extends Component {
-  handleAdd = () => {
+  handleAdd = (e) => {
+    e.stopPropagation();
     this.props.cartStore.addCartProductByProductId(this.props.id)
       .catch(error => console.error(error));
   }
@@ -88,11 +92,9 @@ class Product extends Component {
   render() {
     const { name, price, productImages, quantity } = this.props;
     return (
-      <Wrapper>
-        <div onClick={this.navigateToProduct}>
+      <Wrapper onClick={this.navigateToProduct}>
           <Name>{name}</Name>
           {productImages.length > 0 ? <Image src={ProductImageApi.get(productImages[0].id)} /> : <Placeholder>No image</Placeholder>}
-        </div>
         <div style={{ width: '100%'}}>
           <Price>{price.toFixed(2)}€</Price>
           <Add disabled={quantity === 0} onClick={this.handleAdd}>Add to cart</Add>
