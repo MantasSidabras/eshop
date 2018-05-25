@@ -71,7 +71,7 @@ class CartItem extends Component {
 
     if (e.target.value < 1 || e.target.value === '') return;
     
-    const cartProduct = { id: this.props.id, quantity: e.target.value };
+    const cartProduct = { id: this.props.id, quantity: e.target.value, product: { id: this.props.product.id } };
 
     this.props.cartStore.updateCartProduct(cartProduct)
       .catch(error => {

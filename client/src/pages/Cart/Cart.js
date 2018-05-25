@@ -111,6 +111,10 @@ class Cart extends Component {
   handleProceed = e => {
     e.preventDefault();
 
+    if (!this.props.userStore.isLoggedIn) {
+      return this.props.history.push('/register')
+    }
+
     UserApi.checkCartIntegrity(this.props.userStore.user.id)
       .then(res => this.props.history.push('/purchase'))
       .catch(error => {

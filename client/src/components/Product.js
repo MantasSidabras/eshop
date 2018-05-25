@@ -80,8 +80,7 @@ const Add = styled.button`
 class Product extends Component {
   handleAdd = (e) => {
     e.stopPropagation();
-    this.props.cartStore.addCartProductByProductId(this.props.id)
-      .catch(error => console.error(error));
+    this.props.cartStore.addCartProductByProductId(this.props);
   }
 
   navigateToProduct = () => {

@@ -10,6 +10,13 @@ class CartStore {
   cartProductList = [];
 
   getCart = () => {
+    if (!UserStore.isLoggedIn) {
+      if (localStorage.getItem('cart')) {
+        this.cartProductList = JSON.parse(localStorage.getItem('cart'));
+      }
+      return Promise.resolve();
+    }
+
     const token = AuthApi.getDecodedToken();
     if (!token || !AuthApi.isTokenValid()) return;
 
@@ -30,7 +37,13 @@ class CartStore {
       .then(cart => this.cartProductList = cart)
   }
 
-  clearCart = () => this.cartProductList = [];
+  clearCart = () => {
+    if (localStorage.getItem('cart')) {
+      localStorage.removeItem('cart')
+    }
+    
+    this.cartProductList = [];
+  }
 
   get sum() {
     return this.cartProductList.reduce((total, cp) => total += cp.quantity * cp.product.price, 0).toFixed(2);
@@ -40,29 +53,69 @@ class CartStore {
     return this.cartProductList.reduce((total, cp) => total += cp.quantity, 0);
   }
   
-  addCartProductByProductId = productId => {
+  addCartProductByProductId = ({ id, name, price }) => {
     if (!UserStore.isLoggedIn) {
-      // TODO: somehow add product when not logged in
-      return Promise.reject(new Error('Please login again'));
+      if (this.cartProductList.find(cp => cp.product.id === id)) {
+        this.cartProductList.forEach((cp, index) => {
+          if (cp.product.id === id) {
+            this.cartProductList[index].quantity += 1;
+          }
+        })
+      } else {
+        this.cartProductList.push({ id: this.cartProductList.length + 1, product: { id, name, price }, quantity: 1 })
+      }
+
+      localStorage.setItem('cart', JSON.stringify(this.cartProductList));
+      return;
     }
 
-    return CartProductApi.add(productId)
+    CartProductApi.add(id)
       .then(res => this.getCart())
+      .catch(error => console.error(error));
   }
 
   updateCartProduct = cartProduct => {
     this.error = false;
+    if (!UserStore.isLoggedIn) {
+      this.cartProductList.forEach((cp, index) => {
+        if (cp.id === cartProduct.id) {
+          this.cartProductList[index].quantity = Number(cartProduct.quantity);
+        }
+      })
+
+      localStorage.setItem('cart', JSON.stringify(this.cartProductList));
+      return Promise.resolve();
+    }
+
     return CartProductApi.update(cartProduct)
       .then(res => this.getCart())
   }
 
   deleteCartProductById = id => {
+    if (!UserStore.isLoggedIn) {
+      this.cartProductList.forEach((cp, index) => {
+        if (cp.id === id) {
+          this.cartProductList.splice(index, 1);
+        }
+      })
+
+      localStorage.setItem('cart', JSON.stringify(this.cartProductList));
+      return Promise.resolve();
+    }
+
     return CartProductApi.deleteById(id)
       .then(res => this.getCart())
       .catch(error => console.error(error))
   }
 
   deleteAll = () => {
+    if (!UserStore.isLoggedIn) {
+      this.cartProductList = [];
+
+      localStorage.setItem('cart', JSON.stringify(this.cartProductList));
+      return Promise.resolve();
+    }
+
     const token = AuthApi.getDecodedToken();
     if (!token) return;
 

@@ -41,8 +41,11 @@ class App extends Component {
     loaded: false
   }
   componentDidMount() {
-    this.props.productStore.getAll();
-    this.props.userStore.fetchUser()
+    Promise.all([
+      this.props.productStore.getAll(),
+      this.props.userStore.fetchUser()
+    ])
+      .then(() => this.props.cartStore.getCart())
       .then(() => this.setState({ loaded: true }))
   }
 
@@ -76,4 +79,4 @@ class App extends Component {
   }
 }
 
-export default inject('productStore', 'userStore')(App);
+export default inject('productStore', 'userStore', 'cartStore')(App);

@@ -53,6 +53,14 @@ public class CommerceService {
         return cartProductDAO.findAllByUserId(user.getId());
     }
 
+    public CartProduct getCartProductByProductIdAndUserId(Integer productId, Integer userId) throws CartProductNotFoundException {
+        CartProduct cp = cartProductDAO.findByProductIdAndUserId(productId, userId);
+        if (cp == null) {
+            throw new CartProductNotFoundException();
+        }
+        return cp;
+    }
+
     public CartProduct getCartProductById(Integer id) throws CartProductNotFoundException {
         CartProduct cp = cartProductDAO.findById(id).orElse(null);
         if (cp == null) {
@@ -62,7 +70,7 @@ public class CommerceService {
     }
 
 
-    public CartProduct createCartProduct(User user, Integer productId) throws InvalidProductQuantityException, ProductNotFoundException {
+    public CartProduct createCartProduct(User user, Integer productId, Integer initQuantity) throws InvalidProductQuantityException, ProductNotFoundException {
         Product product = productService.findById(productId);
 
         if (product.getQuantity().equals(0)) {
@@ -77,24 +85,31 @@ public class CommerceService {
         }
 
         CartProduct cp = new CartProduct();
-        cp.setQuantity(1);
+        cp.setQuantity(initQuantity);
         cp.setProduct(product);
         cp.setUser(user);
 
         return cartProductDAO.save(cp);
     }
 
-    public CartProduct updateCartProduct(CartProduct cartProduct) throws InvalidProductQuantityException, CartProductNotFoundException {
-        CartProduct oldCartProduct = this.getCartProductById(cartProduct.getId());
-
-        if (cartProduct.getQuantity().equals(0)) {
+    public CartProduct updateCartProduct(CartProduct oldCartProduct, Integer newQuantity) throws InvalidProductQuantityException, CartProductNotFoundException {
+        if (newQuantity.equals(0)) {
             throw new InvalidProductQuantityException();
         }
 
-        cartProduct.setProduct(oldCartProduct.getProduct());
-        cartProduct.setUser(oldCartProduct.getUser());
+        oldCartProduct.setQuantity(newQuantity);
 
-        return cartProductDAO.save(cartProduct);
+        return cartProductDAO.save(oldCartProduct);
+    }
+
+    public CartProduct syncCartProduct(CartProduct oldCartProduct, Integer newQuantity) throws InvalidProductQuantityException, CartProductNotFoundException {
+        if (newQuantity.compareTo(0) < 0) {
+            throw new InvalidProductQuantityException();
+        }
+
+        oldCartProduct.setQuantity(oldCartProduct.getQuantity() + newQuantity);
+
+        return cartProductDAO.save(oldCartProduct);
     }
 
     public void removeFromCart(Integer id){

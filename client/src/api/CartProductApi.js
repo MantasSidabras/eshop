@@ -40,6 +40,25 @@ class CartProductApi {
       .then(res => res.json())
   }
 
+  sync = cartProduct => {
+    return fetch(Config.url + '/cartProduct/sync', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${AuthApi.getToken()}`
+      },
+      body: JSON.stringify(cartProduct)
+    })
+      .then(res => {
+        if (res.status === 400) {
+          throw new Error('Not enough items')
+        } else {
+          return res;
+        }
+      })
+      .then(res => res.json())
+  }
+
   deleteById = id => {
     return fetch(Config.url + `/cartProduct/${id}`, {
       method: 'DELETE',

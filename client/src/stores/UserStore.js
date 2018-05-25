@@ -3,6 +3,7 @@ import { observable, action, decorate, computed } from 'mobx';
 import AuthApi from '../api/AuthApi';
 import UserApi from '../api/UserApi';
 import CartStore from './CartStore';
+import CartProductApi from '../api/CartProductApi';
 
 class UserStore {
   allUsers = [];
@@ -21,10 +22,8 @@ class UserStore {
       return Promise.resolve();
     }
 
-    return Promise.all([
-      UserApi.getById(token.id).then(user => this.user = user),
-      CartStore.getCart()
-    ])
+    return UserApi.getById(token.id)
+      .then(user => this.user = user)
       .catch(error => console.error(error))
   }
 
@@ -45,8 +44,9 @@ class UserStore {
       .then(res => {
         AuthApi.setToken(res.token);
         this.user = res.user;
-        CartStore.getCart();
       })
+      .then(() => Promise.all([CartStore.cartProductList.map(cp => CartProductApi.sync(cp))]))
+      .then(() => setTimeout(() => CartStore.getCart()))
   }
 
   logout = () => {

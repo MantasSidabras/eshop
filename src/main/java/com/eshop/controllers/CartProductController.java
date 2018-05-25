@@ -39,7 +39,7 @@ public class CartProductController {
                                                        @RequestBody Integer productId){
       try{
           User user = authService.getUserFromHeader(authHead);
-          return ResponseEntity.ok(commerceService.createCartProduct(user, productId));
+          return ResponseEntity.ok(commerceService.createCartProduct(user, productId, 1));
       }
       catch(UnauthorizedException e){
           e.printStackTrace();
@@ -59,16 +59,49 @@ public class CartProductController {
                                                        @RequestBody CartProduct cp) {
     try {
       User user = authService.getUserFromHeader(authHead);
-      CartProduct cpExisting = commerceService.getCartProductById(cp.getId());
+      CartProduct cpExisting = commerceService.getCartProductByProductIdAndUserId(cp.getProduct().getId(), user.getId());
       authService.authorizeResource(user, cpExisting.getUser().getId());
 
-      return ResponseEntity.ok(commerceService.updateCartProduct(cp));
-    }catch (UnauthorizedException e) {
+      return ResponseEntity.ok(commerceService.updateCartProduct(cpExisting, cp.getQuantity()));
+
+    } catch (UnauthorizedException e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+    } catch (InvalidProductQuantityException | CartProductNotFoundException e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    }
+  }
+
+  @PutMapping("/sync")
+  @ResponseBody
+  public ResponseEntity<CartProduct> syncCartProduct(@RequestHeader("Authorization") String authHead,
+                                                       @RequestBody CartProduct cp) {
+    User user = new User();
+    try {
+      user = authService.getUserFromHeader(authHead);
+      CartProduct cpExisting = commerceService.getCartProductByProductIdAndUserId(cp.getProduct().getId(), user.getId());
+      authService.authorizeResource(user, cpExisting.getUser().getId());
+
+      return ResponseEntity.ok(commerceService.syncCartProduct(cpExisting, cp.getQuantity()));
+
+    } catch (UnauthorizedException e) {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-    } catch (InvalidProductQuantityException | CartProductNotFoundException e) {
+
+    } catch (InvalidProductQuantityException e) {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+    } catch (CartProductNotFoundException e) {
+      try {
+        return ResponseEntity.ok(commerceService.createCartProduct(user, cp.getProduct().getId(), cp.getQuantity()));
+
+      } catch (ProductNotFoundException | InvalidProductQuantityException ex) {
+        ex.printStackTrace();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+      }
     }
   }
 
