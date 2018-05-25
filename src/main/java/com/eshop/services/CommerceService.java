@@ -6,6 +6,7 @@ import com.eshop.dao.OrderDAO;
 import com.eshop.dao.OrderProductDAO;
 import com.eshop.dao.ProductDAO;
 import com.eshop.entities.*;
+import com.eshop.exceptions.CartProductNotFoundException;
 import com.eshop.exceptions.InvalidProductQuantityException;
 import com.eshop.exceptions.ProductCartEmptyException;
 import com.eshop.exceptions.UserNotFoundException;
@@ -51,11 +52,11 @@ public class CommerceService {
         return cartProductDAO.findAllByUserId(id);
     }
 
-    public List<CartProduct> getCartProductsForUser(User user){
+    public List<CartProduct> getCartProductsForUser(User user) {
         return cartProductDAO.findAllByUserId(user.getId());
     }
 
-    public CartProduct getCartProductById(Integer id){
+    public CartProduct getCartProductById(Integer id) throws CartProductNotFoundException {
         return cartProductDAO.findById(id).orElse(null);
     }
 
