@@ -199,7 +199,7 @@ class Header extends Component {
 
   render() {
     const { isLoggedIn, isAdmin } = this.props.userStore;
-    const { cartProductList, sum, allProductCount } = this.props.cartStore;
+    const { sum, allProductCount } = this.props.cartStore;
     const { showMyAccount } = this.state;
 
     return (
@@ -231,7 +231,7 @@ class Header extends Component {
             <CartCount count={allProductCount}>{allProductCount}</CartCount>
           </i>
           <span style={{ marginRight: 5 }}>CART</span>
-          {cartProductList.length > 0 && <span style={{ fontWeight: 'bold'}} >{sum}€</span>}
+          {allProductCount > 0 && <span style={{ fontWeight: 'bold'}} >{sum}€</span>}
         </CartLink>
       </Wrapper>
     );
