@@ -109,16 +109,17 @@ const Message = styled.div`
 
 class Register extends Component {
   state = {
-    firstname: '',
-    lastname: '',
+    firstName: '',
+    lastName: '',
     email: '',
-    adress: '',
+    address: '',
     zipCode: '',
     password: '',
     password2: '',
     err: null,
     loginErr: null,
     displayPopup: null,
+    popupMsg: '',
     errMsg: ''
   };
 
@@ -133,24 +134,32 @@ class Register extends Component {
 
   register = (e) => {
     e.preventDefault();
+    
     if(this.state.password !== this.state.password2) {
-      this.setState({ err: true, errMsg: 'Passwords does not match'});
+      this.setState({ err: true, errMsg: 'Passwords do not match'});
       return;
     }
     UserApi.create(this.state)
-    .then(() => {
-      this.setState({ displayPopup: true,  loginErr: false})
-      this.timeout = setTimeout(() => {
-        this.props.history.push('/login');
-      }, 2000);
-    })
-    .catch(err => {
-      this.setState({displayPopup: true, loginErr: true});
-      this.timeout = setTimeout(() => {
-        this.setState({displayPopup: false});
-      }, 2000);
-    })
+      .then(() => {
+        this.setState({ displayPopup: true,  loginErr: false, popupMsg: 'Registration successful!' })
+        this.timeout = setTimeout(() => {
+          this.props.history.push('/login');
+        }, 2000);
+      })
+      .catch(err => {
+        this.setState({ displayPopup: true, loginErr: true, popupMsg: err.message });
+        this.timeout = setTimeout(() => {
+          this.setState({ displayPopup: false });
+        }, 2000);
+      })
+  }
 
+  handleClose = () => {
+    clearTimeout(this.timeout);
+    this.setState({ displayPopup: false });
+    if (!this.state.loginErr) {
+      this.props.history.push('/login');
+    }
   }
 
   render() {
@@ -162,14 +171,14 @@ class Register extends Component {
           <div>
             <h2>Register</h2>
             <form onSubmit={this.register}>
-              <label htmlFor='firstname'>First name</label>
-              <input type="text" id='firstname' name='firstname' onChange={this.onChange} required />
-              <label htmlFor='lastname'>Last name</label>
-              <input type="text" id='lastname' name='lastname' onChange={this.onChange} required />
+              <label htmlFor='firstName'>First name</label>
+              <input type="text" id='firstName' name='firstName' onChange={this.onChange} required />
+              <label htmlFor='lastName'>Last name</label>
+              <input type="text" id='lastName' name='lastName' onChange={this.onChange} required />
               <label htmlFor='email'>Email</label>
               <input type="text" id='email' name='email' onChange={this.onChange} required />
-              <label htmlFor='adress'>Adress</label>
-              <input type="text" id='adress' name='adress' onChange={this.onChange} required />
+              <label htmlFor='adress'>Address</label>
+              <input type="text" id='address' name='address' onChange={this.onChange} required />
               <label htmlFor='password'>Password</label>
               <input type="password" id='password' name='password' minLength='8' onChange={this.onChange} required />
               {this.state.err && <div style={{ marginTop: -13, marginBottom: 5, fontSize: '0.8rem', color: 'hsla(0, 90%, 40%, 0.85)'}}>Passwords does not match</div>}
@@ -178,9 +187,9 @@ class Register extends Component {
               <button type="submit">Register</button>
             </form>
             <FadeIn in={this.state.displayPopup}>
-              <Message error={this.state.loginErr}>
+              <Message error={this.state.loginErr} onClick={this.handleClose}>
                 <ScaleUp>
-                  {this.state.loginErr ? <div>Failed to register</div> : <div>Registration successful!</div>}
+                  <div>{this.state.popupMsg}</div>
                 </ScaleUp>
               </Message>
             </FadeIn>

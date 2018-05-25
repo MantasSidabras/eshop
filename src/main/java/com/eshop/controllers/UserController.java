@@ -8,6 +8,7 @@ import com.eshop.services.AuthService;
 import com.eshop.services.CommerceService;
 import com.eshop.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -40,7 +41,7 @@ public class UserController {
             user.setDateCreated(LocalDateTime.now());
             return ResponseEntity.ok(userService.create(user));
         } catch(UserNotCreatedException ex){
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 

@@ -95,6 +95,13 @@ class UserApi {
       },
       body: JSON.stringify(user)
     })
+      .then(res => {
+        if (res.status === 400) {
+          throw new Error('Such email already exists')
+        } else {
+          return res;
+        }
+      })
       .then(res => res.json())
   }
 

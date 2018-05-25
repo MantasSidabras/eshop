@@ -4,6 +4,7 @@ import com.eshop.dao.UserDAO;
 import com.eshop.entities.User;
 import com.eshop.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,13 +22,15 @@ public class UserService {
 
     public User create(User user) throws UserNotCreatedException {
         user.setPassword(encoder.encode(user.getPassword()));
+        User newUser;
 
-        User newUser = userDAO.save(user);
-        if(newUser == null){
-            throw new UserNotCreatedException();
-        } else {
-            return userDAO.save(newUser);
+        try {
+            newUser = userDAO.save(user);
         }
+        catch (DataIntegrityViolationException e) {
+            throw new UserNotCreatedException();
+        }
+        return newUser;
     }
     
     public User create(String email, String password, String address, String zipCode, String firstName, String lastName, Boolean isAdmin, Boolean isBlocked){
