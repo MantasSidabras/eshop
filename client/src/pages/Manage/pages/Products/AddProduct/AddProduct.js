@@ -72,7 +72,7 @@ class AddProduct extends Component {
     showMessage: false,
   }
 
-  handleDrop = images => { 
+  handleDrop = images => {
     this.setState({ images });
   }
 
@@ -86,7 +86,7 @@ class AddProduct extends Component {
 
     this.setState({ showMessage: false });
 
-    const product = { 
+    const product = {
       id: this.props.id,
       name: this.state.name,
       description: this.state.description,
@@ -111,7 +111,7 @@ class AddProduct extends Component {
       ))
       .catch(error => console.error(error));
   }
-   
+
   handleImageClick = name => this.setState({ images: this.state.images.filter(i => i.name !== name )});
   
   handleClose = () => {
@@ -119,16 +119,16 @@ class AddProduct extends Component {
     this.setState({ showMessage: false });
   }
 
-  render() { 
+  render() {
     const { images, showMessage } = this.state;
-    return ( 
+    return (
       <Wrapper onSubmit={this.handleSubmit}>
         <ProductForm onChange={this.handleChange} {...this.state} />
 
         <label>Images</label>
-        <ImageSelect 
-          onDrop={this.handleDrop} 
-          images={images} 
+        <ImageSelect
+          onDrop={this.handleDrop}
+          images={images}
           onImageClick={this.handleImageClick}
         />
 
@@ -145,5 +145,5 @@ class AddProduct extends Component {
      )
   }
 }
- 
+
 export default inject('productStore')(AddProduct);

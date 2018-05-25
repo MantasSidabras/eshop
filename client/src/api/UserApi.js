@@ -28,13 +28,6 @@ class UserApi {
             throw new Error('Something went wrong. Cannot login');
           }
         }
-
-
-        if (res.status !== 200) {
-          throw new Error('rethink life');
-        } else {
-          return res;
-        }
       })
       .then(res => res.json())
   }

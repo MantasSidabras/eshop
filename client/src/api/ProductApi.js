@@ -47,6 +47,19 @@ class ProductApi {
         return res;
       }
     })
+      .then(res => {
+        switch(res.status) {
+          case 409: {
+            throw new Error('Another user already updated this product');
+          }
+          case 200 : {
+            return  res;
+          }
+          default : {
+            throw new Error('Something went wrong. Cannot login');
+          }
+        }
+      })
       .then(res => res.json())
   }
 

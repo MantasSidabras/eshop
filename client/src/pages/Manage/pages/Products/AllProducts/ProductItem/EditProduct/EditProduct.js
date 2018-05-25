@@ -66,12 +66,13 @@ class EditProduct extends Component {
       price: props.price,
       quantity: props.quantity,
       oldImages: props.productImages,
+      version: props.version,
       images: [],
       imageIdsToDelete: []
     };
   }
 
-  handleDrop = images => { 
+  handleDrop = images => {
     this.setState({ images });
   }
 
@@ -83,14 +84,15 @@ class EditProduct extends Component {
   handleSubmit = e => {
     e.preventDefault();
     const { imageIdsToDelete, images } = this.state;
-    const product = { 
+    const product = {
       id: this.props.id,
       name: this.state.name,
       description: this.state.description,
       price: this.state.price,
-      quantity: this.state.quantity
+      quantity: this.state.quantity,
+      version: this.state.version
     };
-    
+
     this.props.onEdit({ product, imageIdsToDelete, images });
   }
 
@@ -107,6 +109,18 @@ class EditProduct extends Component {
     this.setState({ images: this.state.images.filter(i => i.name !== name )});
   }
 
+  componentWillReceiveProps(props){
+    this.setState({
+      name: props.name,
+      description: props.description,
+      price: props.price,
+      quantity: props.quantity,
+      oldImages: props.productImages,
+      version: props.version
+    }
+    );
+  }
+
   render() {
     const { oldImages, images } = this.state;
     return (
@@ -116,8 +130,8 @@ class EditProduct extends Component {
             <ProductForm onChange={this.handleChange} {...this.state}/>
 
             <label>Images</label>
-            <ImageSelect 
-              onDrop={this.handleDrop} 
+            <ImageSelect
+              onDrop={this.handleDrop}
               images={images}
               onImageClick={this.handleNewImageClick}
               oldImages={oldImages}
