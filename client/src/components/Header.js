@@ -18,6 +18,10 @@ const Wrapper = styled.header`
 
 const Title = styled.h1`
   margin: 0;
+  a {
+    color: hsla(0, 0%, 0%, 0.75);
+    text-decoration: none;
+  }
 `
 const Nav = styled.ul`
   display: flex;
@@ -204,7 +208,7 @@ class Header extends Component {
 
     return (
       <Wrapper>
-        <Title>{this.props.children}</Title>
+        <Title><a href='/'>{this.props.children}</a></Title>
         <Nav>
           <li><NavLink exact to='/'>Home</NavLink></li>
           {isLoggedIn && isAdmin && <li><NavLink to='/manage'>Manage</NavLink></li>}
