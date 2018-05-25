@@ -40,6 +40,9 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     private List<ProductImage> productImages = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+    private List<Property> productProperties = new ArrayList<>();
+
     @JsonIgnore
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     private List<CartProduct> cartProducts = new ArrayList<>();
@@ -146,5 +149,13 @@ public class Product {
 
     public void setOrderProducts(List<OrderProduct> orderProducts) {
         this.orderProducts = orderProducts;
+    }
+
+    public List<Property> getProductProperties() {
+        return productProperties;
+    }
+
+    public void setProductProperties(List<Property> productProperties) {
+        this.productProperties = productProperties;
     }
 }
