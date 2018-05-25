@@ -1,4 +1,4 @@
 package com.eshop.exceptions;
 
-public class ProductNotFoundException {
+public class ProductNotFoundException extends Exception{
 }

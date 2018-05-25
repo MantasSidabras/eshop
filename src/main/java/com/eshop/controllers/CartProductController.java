@@ -4,10 +4,7 @@ import com.eshop.controllers.requestors.CartProductRequest;
 import com.eshop.dao.CartProductDAO;
 import com.eshop.entities.CartProduct;
 import com.eshop.entities.User;
-import com.eshop.exceptions.CartProductNotFoundException;
-import com.eshop.exceptions.InvalidProductQuantityException;
-import com.eshop.exceptions.UnauthorizedException;
-import com.eshop.exceptions.UserNotFoundException;
+import com.eshop.exceptions.*;
 import com.eshop.services.AuthService;
 import com.eshop.services.CommerceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,14 +37,18 @@ public class CartProductController {
   @ResponseStatus(HttpStatus.CREATED)
   public ResponseEntity<CartProduct> createCartProduct(@RequestHeader("Authorization") String authHead,
                                                        @RequestBody Integer productId){
-//    CartProduct newCp;
-//    try {
-//      newCp = commerceService.createCartProduct(cartProductRequest);
-//    } catch (InvalidProductQuantityException e) {
-//      e.printStackTrace();
-//      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-//    }
-//    return ResponseEntity.ok(newCp);
+      try{
+          User user = authService.getUserFromHeader(authHead);
+          return ResponseEntity.ok(commerceService.createCartProduct(user, productId));
+      }
+      catch(UnauthorizedException e){
+          e.printStackTrace();
+          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+      }
+      catch(ProductNotFoundException e){
+          e.printStackTrace();
+          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+      }
   }
 
 
@@ -73,14 +74,29 @@ public class CartProductController {
 
 
   // All users can do it?
+  //check if trying to delete their cartproduct
   @DeleteMapping("/{id}")
   @ResponseBody
-  public Map<String, String> deleteCartProduct(@RequestHeader("Authorization") String authHead,
-                                               @PathVariable Integer id) {
-    Map<String, String> res = new HashMap<>();
-    this.commerceService.removeFromCart(id);
-    res.put("message", "success");
-    return res;
+  public ResponseEntity<Map<String, String>> deleteCartProduct(@RequestHeader("Authorization") String authHead,
+                                               @PathVariable Integer cartProductId) {
+      try{
+          Map<String, String> res = new HashMap<>();
+          User user = authService.getUserFromHeader(authHead);
+          CartProduct cpExisting = commerceService.getCartProductById(cartProductId);
+          authService.authorizeResource(user, cpExisting.getUser().getId());
+
+          commerceService.removeFromCart(cartProductId);
+          res.put("message", "success");
+          return ResponseEntity.ok(res);
+      }
+      catch(UnauthorizedException e){
+          e.printStackTrace();
+          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+      }
+      catch(CartProductNotFoundException e){
+          e.printStackTrace();
+          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+      }
   }
 
 }

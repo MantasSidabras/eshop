@@ -6,10 +6,7 @@ import com.eshop.dao.OrderDAO;
 import com.eshop.dao.OrderProductDAO;
 import com.eshop.dao.ProductDAO;
 import com.eshop.entities.*;
-import com.eshop.exceptions.CartProductNotFoundException;
-import com.eshop.exceptions.InvalidProductQuantityException;
-import com.eshop.exceptions.ProductCartEmptyException;
-import com.eshop.exceptions.UserNotFoundException;
+import com.eshop.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,36 +57,48 @@ public class CommerceService {
         return cartProductDAO.findById(id).orElse(null);
     }
 
-    public CartProduct createCartProduct(CartProductRequest cartProductRequest) throws InvalidProductQuantityException {
-        Product product = productService.findById(cartProductRequest.getProductId());
+    public CartProduct createCartProduct(User user, Integer productID) throws ProductNotFoundException{
+        try{
+            Product product = productService.findById(productID);
 
-        if (product.getQuantity().equals(0)) {
-            throw new InvalidProductQuantityException();
+            return cartProductDAO.save(new CartProduct(user, product));
+        }
+        catch(ProductNotFoundException e){
+            throw e;
         }
 
-        CartProduct existing = cartProductDAO.findByProductIdAndUserId(cartProductRequest.getProductId(), cartProductRequest.getUserId());
-
-        if (existing != null) {
-//            if (existing.getQuantity().equals(existing.getProduct().getQuantity())) {
-//                throw new InvalidProductQuantityException();
-//            }
-            existing.setQuantity(existing.getQuantity() + 1);
-            return cartProductDAO.save(existing);
-        }
-
-        CartProduct cp = new CartProduct();
-        User user;
-
-        cp.setQuantity(1);
-        cp.setProduct(product);
-
-        try {
-            user = userService.findById(cartProductRequest.getUserId());
-            cp.setUser(user);
-        } catch (UserNotFoundException e) { e.printStackTrace();}
-
-        return cartProductDAO.save(cp);
     }
+
+//    public CartProduct createCartProduct(CartProductRequest cartProductRequest) throws InvalidProductQuantityException {
+//        Product product = productService.findById(cartProductRequest.getProductId());
+//
+//        if (product.getQuantity().equals(0)) {
+//            throw new InvalidProductQuantityException();
+//        }
+//
+//        CartProduct existing = cartProductDAO.findByProductIdAndUserId(cartProductRequest.getProductId(), cartProductRequest.getUserId());
+//
+//        if (existing != null) {
+////            if (existing.getQuantity().equals(existing.getProduct().getQuantity())) {
+////                throw new InvalidProductQuantityException();
+////            }
+//            existing.setQuantity(existing.getQuantity() + 1);
+//            return cartProductDAO.save(existing);
+//        }
+//
+//        CartProduct cp = new CartProduct();
+//        User user;
+//
+//        cp.setQuantity(1);
+//        cp.setProduct(product);
+//
+//        try {
+//            user = userService.findById(cartProductRequest.getUserId());
+//            cp.setUser(user);
+//        } catch (UserNotFoundException e) { e.printStackTrace();}
+//
+//        return cartProductDAO.save(cp);
+//    }
 
 //    public CartProduct addToCartForUser(User user, Product product, Integer quantity)
 //            throws InvalidProductQuantityException {
@@ -101,7 +110,7 @@ public class CommerceService {
 //        return cartProductDAO.save(new CartProduct(user, product, quantity));
 //    }
 
-    public CartProduct updateCartProduct(CartProduct cartProduct) throws InvalidProductQuantityException {
+    public CartProduct updateCartProduct(CartProduct cartProduct) throws InvalidProductQuantityException, CartProductNotFoundException {
         CartProduct oldCartProduct = this.getCartProductById(cartProduct.getId());
 
         if (cartProduct.getQuantity().equals(0)) {
