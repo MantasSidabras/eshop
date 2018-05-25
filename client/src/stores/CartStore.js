@@ -46,14 +46,7 @@ class CartStore {
       return Promise.reject(new Error('Please login again'));
     }
 
-    const token = AuthApi.getDecodedToken();
-
-    const cartProduct = {
-      productId,
-      userId: token.id
-    }
-
-    return CartProductApi.add(cartProduct)
+    return CartProductApi.add(productId)
       .then(res => this.getCart())
   }
 

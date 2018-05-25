@@ -45,7 +45,7 @@ public class CartProductController {
           e.printStackTrace();
           return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
       }
-      catch(ProductNotFoundException e){
+      catch(ProductNotFoundException | InvalidProductQuantityException e){
           e.printStackTrace();
           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
       }
@@ -78,14 +78,14 @@ public class CartProductController {
   @DeleteMapping("/{id}")
   @ResponseBody
   public ResponseEntity<Map<String, String>> deleteCartProduct(@RequestHeader("Authorization") String authHead,
-                                               @PathVariable Integer cartProductId) {
-      try{
+                                               @PathVariable Integer id) {
+      try {
           Map<String, String> res = new HashMap<>();
           User user = authService.getUserFromHeader(authHead);
-          CartProduct cpExisting = commerceService.getCartProductById(cartProductId);
+          CartProduct cpExisting = commerceService.getCartProductById(id);
           authService.authorizeResource(user, cpExisting.getUser().getId());
 
-          commerceService.removeFromCart(cartProductId);
+          commerceService.removeFromCart(id);
           res.put("message", "success");
           return ResponseEntity.ok(res);
       }

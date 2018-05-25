@@ -1,13 +1,15 @@
 import Config from './Config';
+import AuthApi from './AuthApi';
 
 class CartProductApi {
-  add = cartProduct => {
+  add = productId => {
     return fetch(Config.url + `/cartProduct`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${AuthApi.getToken()}`
       },
-      body: JSON.stringify(cartProduct)
+      body: JSON.stringify(productId)
     })
       .then(res => {
         if (res.status === 400) {
@@ -23,7 +25,8 @@ class CartProductApi {
     return fetch(Config.url + '/cartProduct', {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${AuthApi.getToken()}`
       },
       body: JSON.stringify(cartProduct)
     })
@@ -41,7 +44,8 @@ class CartProductApi {
     return fetch(Config.url + `/cartProduct/${id}`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${AuthApi.getToken()}`
       }
     })
       .then(res => res.json())

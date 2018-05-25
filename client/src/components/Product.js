@@ -26,7 +26,6 @@ const Wrapper = styled.div`
 `
 
 const Name = styled.div`
-  display: inline;
   overflow: hidden;
   width: 100%;
   margin-bottom: 5px;

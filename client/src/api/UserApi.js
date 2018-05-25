@@ -119,7 +119,8 @@ class UserApi {
     return fetch(`http://localhost:8080/api/user/${id}/cart`, {
       method: 'GET',
       headers: {
-          'Authorization' : 'Bearer ' + AuthApi.getToken()
+        'Content-Type': 'application/json',
+        'Authorization' : 'Bearer ' + AuthApi.getToken()
       }
     })
       .then(async res => {
