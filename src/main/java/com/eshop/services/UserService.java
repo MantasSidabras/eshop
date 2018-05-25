@@ -59,7 +59,6 @@ public class UserService {
         updated.setDateCreated(existing.getDateCreated());
         updated.setAdmin(existing.isAdmin());
         updated.setBlocked(existing.isBlocked());
-
         return userDAO.save(updated);
     }
 

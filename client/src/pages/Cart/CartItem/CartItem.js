@@ -61,30 +61,18 @@ const ErrorMsg = styled.div`
 `
 
 class CartItem extends Component {
-  state = {
-    error: false,
-    errorMsg: ''
-  }
-
   handleQuantityChange = e => {
-    this.setState({ error: false });
-
-    if (e.target.value < 1 || e.target.value === '') return;
+    if (e.target.value < 1 || e.target.value === '') {
+      return;
+    }
     
-    const cartProduct = { id: this.props.id, quantity: e.target.value, product: { id: this.props.product.id } };
+    const cartProduct = { id: this.props.id, quantity: e.target.value };
 
-    this.props.cartStore.updateCartProduct(cartProduct)
-      .catch(error => {
-        console.error(error);
-        this.setState({ error: true, errorMsg: error.message });
-        this.timeout = setTimeout(() => this.setState({ error: false }), 2500);
-      });
+    this.props.cartStore.updateCartProduct(cartProduct);
   }
 
-  handleDelete = () => {
-    this.props.cartStore.deleteCartProductById(this.props.id);
-  }
-  
+  handleDelete = () => this.props.cartStore.deleteCartProductById(this.props.id);
+    
   componentWillUnmount() {
     clearTimeout(this.timeout);
   }

@@ -105,23 +105,6 @@ class UserApi {
       .then(res => res.json())
   }
 
-  deleteAllCartProducts = id => {
-    return fetch(Config.url + `/user/${id}/cartProduct`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization' : 'Bearer ' + AuthApi.getToken()
-      }
-    })
-      .then(res => {
-        if(res.status === 401){
-          throw new Error('Unautherized cart delete access')
-        }else{
-          return res;
-        }
-      }).then(res => res.json())
-  }
-
   checkCartIntegrity = id => {
     return fetch(`http://localhost:8080/api/user/${id}/cart`, {
       method: 'GET',

@@ -25,23 +25,46 @@ const Wrapper = styled.div`
   }
 `
 
+const AddProp = styled.button`
+  padding: 6px 12px;
+  margin-bottom: 15px;
+  background: hsl(0, 0%, 88%);
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.9rem;
+  border: 1px solid hsl(0, 0%, 50%);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+
+  &:hover {
+    background: hsl(0, 0%, 83%);
+  }
+`
+
 class ProductForm extends Component {
   state = {
     name: '',
     value: ''
   }
+
   onChange = e => {
     const { name, value } = e.target;
     this.setState({ [name]: value });
   }
 
-  addProperty = () => {
-    if(this.state.name.trim() === '' || this.state.value.trim() === '') return;
+  addProperty = e => {
+    e.preventDefault();
+
+    if (this.state.name.trim() === '' || this.state.value.trim() === '') {
+      return;
+    }
+
     this.props.addProperty(this.state)
   }
+
   render() {
     // const productProperties = [];
-    const { name, price, quantity,properties, description, onChange } = this.props;
+    const { name, price, quantity, properties, description, onChange } = this.props;
     return (
       <Wrapper>
         <label htmlFor='name'>Name</label>
@@ -62,7 +85,7 @@ class ProductForm extends Component {
         <label htmlFor='desc'>Description <span style={{ fontSize: '0.8rem', color: 'hsla(0, 0%, 0%, 0.6)', fontStyle: 'italic' }}>(optional)</span></label>
         <textarea id='desc' name='description' value={description} onChange={onChange} />
 
-        <div style={{display: 'block'}}><p>Add property<span style={{ fontSize: '0.8rem', color: 'hsla(0, 0%, 0%, 0.6)', fontStyle: 'italic' }}>(optional)</span></p></div>
+        <label style={{ marginBottom: 5 }}>Add properties <span style={{ fontSize: '0.8rem', color: 'hsla(0, 0%, 0%, 0.6)', fontStyle: 'italic' }}>(optional)</span></label>
         <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between'}}>
           <div style={{ width: '45%' }}>
             <label htmlFor='price'>Property name</label>
@@ -74,11 +97,9 @@ class ProductForm extends Component {
             <input type="text" id='propertyValue' name='value' value={this.state.value} onChange={this.onChange}/>
           </div>
         </div>
-		    <input type="button" value="add property" onClick={this.addProperty}/>
+		    <AddProp onClick={this.addProperty}>Add property</AddProp>
 
-        {properties.map(property =>{
-          return <p>{property.name} {property.value}</p>
-        })}
+        {properties.map((property, index) => <p key={index} style={{ margin: '0 0 10px 0'}}>{property.name} {property.value}</p>)}
 
       </Wrapper>
     )

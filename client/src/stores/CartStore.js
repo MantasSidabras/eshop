@@ -20,29 +20,8 @@ class CartStore {
     const token = AuthApi.getDecodedToken();
     if (!token || !AuthApi.isTokenValid()) return;
 
-    return fetch(Config.url + `/user/${token.id}/cartProduct`, {
-      method: 'GET',
-      headers: {
-        'Authorization' : 'Bearer ' + AuthApi.getToken()
-      }
-    })
-      .then(res => {
-        if(res.status === 401){
-          throw new Error('failed to authenticate user');
-        } else{
-          return res;
-        }
-      })
-      .then(res => res.json())
+    return CartProductApi.getAll()
       .then(cart => this.cartProductList = cart)
-  }
-
-  clearCart = () => {
-    if (localStorage.getItem('cart')) {
-      localStorage.removeItem('cart')
-    }
-    
-    this.cartProductList = [];
   }
 
   get sum() {
@@ -53,7 +32,7 @@ class CartStore {
     return this.cartProductList.reduce((total, cp) => total += cp.quantity, 0);
   }
   
-  addCartProductByProductId = ({ id, name, price }) => {
+  addProductToCart = ({ id, name, price }) => {
     if (!UserStore.isLoggedIn) {
       if (this.cartProductList.find(cp => cp.product.id === id)) {
         this.cartProductList.forEach((cp, index) => {
@@ -89,6 +68,7 @@ class CartStore {
 
     return CartProductApi.update(cartProduct)
       .then(res => this.getCart())
+      .catch(error => console.error(error));
   }
 
   deleteCartProductById = id => {
@@ -116,12 +96,17 @@ class CartStore {
       return Promise.resolve();
     }
 
-    const token = AuthApi.getDecodedToken();
-    if (!token) return;
-
-    return UserApi.deleteAllCartProducts(token.id)
+    return CartProductApi.deleteAll()
       .then(res => this.getCart())
       .catch(error => console.error(error))
+  }
+
+  clearCart = () => {
+    if (localStorage.getItem('cart')) {
+      localStorage.removeItem('cart')
+    }
+    
+    this.cartProductList = [];
   }
 }
 

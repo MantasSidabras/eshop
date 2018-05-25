@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -25,11 +26,20 @@ public class CartProductController {
   private CommerceService commerceService;
 
   @Autowired
-  private CartProductDAO cartProductDAO;
-
-  @Autowired
   private AuthService authService;
 
+  @GetMapping
+  @ResponseBody
+  public ResponseEntity<List<CartProduct>> getCartByUserId(@RequestHeader("Authorization") String authHead){
+
+    try{
+      User tokenUser = authService.getUserFromHeader(authHead);
+      return ResponseEntity.ok(commerceService.getCartProductsByUserId(tokenUser.getId()));
+    }
+    catch(UnauthorizedException e){
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+    }
+  }
 
   // All users can do it
   @PostMapping
@@ -59,7 +69,7 @@ public class CartProductController {
                                                        @RequestBody CartProduct cp) {
     try {
       User user = authService.getUserFromHeader(authHead);
-      CartProduct cpExisting = commerceService.getCartProductByProductIdAndUserId(cp.getProduct().getId(), user.getId());
+      CartProduct cpExisting = commerceService.getCartProductById(cp.getId());
       authService.authorizeResource(user, cpExisting.getUser().getId());
 
       return ResponseEntity.ok(commerceService.updateCartProduct(cpExisting, cp.getQuantity()));
@@ -71,6 +81,24 @@ public class CartProductController {
     } catch (InvalidProductQuantityException | CartProductNotFoundException e) {
         e.printStackTrace();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    }
+  }
+
+  @DeleteMapping
+  @ResponseBody
+  public ResponseEntity<Map<String, String>> deleteAllCartProducts(@RequestHeader("Authorization") String authHead) {
+
+    try {
+      User tokenUser = authService.getUserFromHeader(authHead);
+      Map<String, String> res = new HashMap<>();
+      this.commerceService.removeAllFromCartByUserId(tokenUser.getId());
+
+      //Returning map to parse as json
+      res.put("message", "success");
+      return ResponseEntity.ok(res);
+    }
+    catch(UnauthorizedException e){
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     }
   }
 

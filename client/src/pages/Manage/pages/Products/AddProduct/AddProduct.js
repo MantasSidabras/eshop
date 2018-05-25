@@ -82,8 +82,8 @@ class AddProduct extends Component {
     this.setState({ [name]: value });
   }
 
-  addProperty = (property) => {
-    this.setState({ properties: [...this.state.properties, property]})
+  addProperty = property => {
+    this.setState({ properties: [...this.state.properties, property] });
   }
 
   handleSubmit = e => {
@@ -96,7 +96,8 @@ class AddProduct extends Component {
       name: this.state.name,
       description: this.state.description,
       price: this.state.price,
-      quantity: this.state.quantity
+      quantity: this.state.quantity,
+      properties: this.state.properties
     };
 
     const formData = new FormData();

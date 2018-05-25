@@ -92,42 +92,6 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{id}/cartProduct")
-    @ResponseBody
-    public ResponseEntity<List<CartProduct>> getCartByUserId(@RequestHeader("Authorization") String authHead, @PathVariable("id") Integer id){
-
-        try{
-            User tokenUser = authService.getUserFromHeader(authHead);
-            authService.authorizeResource(tokenUser, id);
-
-            //User trying to retrieve self cart
-            return ResponseEntity.ok(commerceService.getCartProductsByUserId(id));
-        }
-        catch(UnauthorizedException e){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        }
-    }
-
-    @DeleteMapping("/{id}/cartProduct")
-    @ResponseBody
-    public ResponseEntity<Map<String, String>> deleteAllCartProducts(@RequestHeader("Authorization") String authHead, @PathVariable Integer id) {
-
-        try{
-            User tokenUser = authService.getUserFromHeader(authHead);
-            authService.authorizeResource(tokenUser, id);
-
-            Map<String, String> res = new HashMap<>();
-            this.commerceService.removeAllFromCartByUserId(id);
-
-            //Returning map to parse as json
-            res.put("message", "success");
-            return ResponseEntity.ok(res);
-        }
-        catch(UnauthorizedException e){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        }
-    }
-
     @GetMapping("/{id}/cart")
     @ResponseBody
     public ResponseEntity<Map<String, String>> checkCartIntegrity(@RequestHeader("Authorization") String authHead, @PathVariable("id") Integer id){

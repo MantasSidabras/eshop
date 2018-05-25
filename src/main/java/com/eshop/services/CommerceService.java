@@ -92,7 +92,7 @@ public class CommerceService {
         return cartProductDAO.save(cp);
     }
 
-    public CartProduct updateCartProduct(CartProduct oldCartProduct, Integer newQuantity) throws InvalidProductQuantityException, CartProductNotFoundException {
+    public CartProduct updateCartProduct(CartProduct oldCartProduct, Integer newQuantity) throws InvalidProductQuantityException {
         if (newQuantity.equals(0)) {
             throw new InvalidProductQuantityException();
         }
@@ -102,7 +102,7 @@ public class CommerceService {
         return cartProductDAO.save(oldCartProduct);
     }
 
-    public CartProduct syncCartProduct(CartProduct oldCartProduct, Integer newQuantity) throws InvalidProductQuantityException, CartProductNotFoundException {
+    public CartProduct syncCartProduct(CartProduct oldCartProduct, Integer newQuantity) throws InvalidProductQuantityException {
         if (newQuantity.compareTo(0) < 0) {
             throw new InvalidProductQuantityException();
         }

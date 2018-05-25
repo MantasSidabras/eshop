@@ -65,6 +65,7 @@ class EditProduct extends Component {
       description: props.description,
       price: props.price,
       quantity: props.quantity,
+      properties: props.properties || [],
       oldImages: props.productImages,
       version: props.version,
       images: [],

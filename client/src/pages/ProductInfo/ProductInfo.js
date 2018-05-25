@@ -146,10 +146,9 @@ class ProductInfo extends Component {
   }
 
   handleAdd = () => {
-     this.props.cartStore.addCartProductByProductId(this.props.match.params.id)
-      .catch(error => console.error(error));
+    this.props.cartStore.addProductToCart(this.props.productStore.product);
   }
-
+  
   render(){
     const product = this.props.productStore.product;
     return (

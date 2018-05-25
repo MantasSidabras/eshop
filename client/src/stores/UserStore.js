@@ -54,7 +54,6 @@ class UserStore {
     this.user = null;
     CartStore.clearCart();
   }
-
 }
 
 decorate(UserStore, {
