@@ -108,7 +108,7 @@ class ProductItem extends Component {
       .catch(error => {
         console.error(error);
         this.setState({ showMessage: true, showError: true, errMsg: error.message });
-        this.timeout = setTimeout(() => this.setState({ showMessage: false}), 1200);
+        this.timeout = setTimeout(() => this.setState({ showMessage: false}), 3000);
         this.props.productStore.getOne(this.props.id);
       });
   }
