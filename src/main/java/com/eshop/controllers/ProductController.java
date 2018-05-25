@@ -3,6 +3,7 @@ package com.eshop.controllers;
 import com.eshop.entities.Product;
 import com.eshop.entities.ProductImage;
 import com.eshop.entities.User;
+import com.eshop.exceptions.ProductNotFoundException;
 import com.eshop.exceptions.UnauthorizedException;
 import com.eshop.services.AuthService;
 import com.eshop.services.ProductImageService;
@@ -68,11 +69,13 @@ public class ProductController {
     @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity<Product> getProductById(@PathVariable("id") Integer id) {
-        Product product = productService.findById(id);
-        if (product == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        } else {
+        try{
+            Product product = productService.findById(id);
             return ResponseEntity.ok(product);
+        }
+        catch(ProductNotFoundException e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 

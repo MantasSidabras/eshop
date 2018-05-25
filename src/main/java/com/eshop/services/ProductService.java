@@ -2,6 +2,7 @@ package com.eshop.services;
 
 import com.eshop.dao.ProductDAO;
 import com.eshop.entities.Product;
+import com.eshop.exceptions.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +25,14 @@ public class ProductService {
         return productDAO.findAll();
     }
 
-    public Product findById(Integer id) {
-        return productDAO.findById(id).orElse(null);
+    public Product findById(Integer id) throws ProductNotFoundException {
+        Product product = productDAO.findById(id).orElse(null);
+        if(product == null){
+            throw new ProductNotFoundException();
+        }
+        else{
+            return product;
+        }
     }
 
     public Product update(Product product) {

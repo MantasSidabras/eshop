@@ -17,13 +17,13 @@ public class CartProduct {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(updatable = false)
     @JsonIgnore
     @ManyToOne
+    @JoinColumn(updatable = false)
     private User user;
 
-    @Column(updatable = false)
     @ManyToOne
+    @JoinColumn(updatable = false)
     private Product product;
 
     @Min(0)
@@ -35,6 +35,12 @@ public class CartProduct {
         this.user = user;
         this.product = product;
         this.quantity = quantity;
+    }
+
+    public CartProduct(User user, Product product){
+        this.user = user;
+        this.product = product;
+        this.quantity = 1;
     }
 
     public Integer getId() {
