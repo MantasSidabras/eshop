@@ -36,8 +36,6 @@ public class ProductService {
     }
 
     public Product update(Product product) {
-        Product p = productDAO.findById(product.getId()).orElse(null);
-//        product.setVersion(p.getVersion());
         return productDAO.save(product);
     }
 
