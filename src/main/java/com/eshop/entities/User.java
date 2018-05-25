@@ -41,8 +41,6 @@ public class User {
     @Column(updatable = false)
     private LocalDateTime dateCreated;
 
-
-
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "user")
     private List<CartProduct> cartProductList = new ArrayList<>();
