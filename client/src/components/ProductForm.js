@@ -26,9 +26,23 @@ const Wrapper = styled.div`
 `
 
 class ProductForm extends Component {
-  render() { 
-    const { name, price, quantity, description, onChange } = this.props;
-    return ( 
+  state = {
+    name: '',
+    value: ''
+  }
+  onChange = e => {
+    const { name, value } = e.target;
+    this.setState({ [name]: value });
+  }
+
+  addProperty = () => {
+    if(this.state.name.trim() === '' || this.state.value.trim() === '') return;
+    this.props.addProperty(this.state)
+  }
+  render() {
+    // const productProperties = [];
+    const { name, price, quantity,properties, description, onChange } = this.props;
+    return (
       <Wrapper>
         <label htmlFor='name'>Name</label>
         <input type="text" id='name' name='name' value={name} onChange={onChange} required />
@@ -47,9 +61,28 @@ class ProductForm extends Component {
 
         <label htmlFor='desc'>Description <span style={{ fontSize: '0.8rem', color: 'hsla(0, 0%, 0%, 0.6)', fontStyle: 'italic' }}>(optional)</span></label>
         <textarea id='desc' name='description' value={description} onChange={onChange} />
-      </Wrapper> 
+
+        <div style={{display: 'block'}}><p>Add property<span style={{ fontSize: '0.8rem', color: 'hsla(0, 0%, 0%, 0.6)', fontStyle: 'italic' }}>(optional)</span></p></div>
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between'}}>
+          <div style={{ width: '45%' }}>
+            <label htmlFor='price'>Property name</label>
+            <input type="text" id='propertyName' name='name' value={this.state.name} onChange={this.onChange}/>
+          </div>
+
+          <div style={{ width: '45%' }}>
+            <label htmlFor='quant'>Property value</label>
+            <input type="text" id='propertyValue' name='value' value={this.state.value} onChange={this.onChange}/>
+          </div>
+        </div>
+		    <input type="button" value="add property" onClick={this.addProperty}/>
+
+        {properties.map(property =>{
+          return <p>{property.name} {property.value}</p>
+        })}
+
+      </Wrapper>
     )
   }
 }
- 
+
 export default ProductForm;

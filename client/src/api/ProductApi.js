@@ -98,6 +98,25 @@ class ProductApi {
     })
       .then(res => res.json())
   }
+
+  addProperties = (id, properties) => {
+    return fetch(Config.url + `/product/${id}/properties`, {
+      method: 'POST',
+      body: properties,
+      headers:{
+        'Authorization' : 'Bearer ' + AuthApi.getToken()
+      }
+    }).then(res => {
+      if(res.status === 401){
+        throw new Error('Unautherized access')
+      }
+      else{
+        return res;
+      }
+    })
+      .then(res => res.json())
+  }
+
 }
 
 export default new ProductApi();

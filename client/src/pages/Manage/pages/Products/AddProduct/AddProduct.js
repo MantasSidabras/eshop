@@ -69,6 +69,7 @@ class AddProduct extends Component {
     price: '',
     quantity: 1,
     images: [],
+    properties: [],
     showMessage: false,
   }
 
@@ -79,6 +80,10 @@ class AddProduct extends Component {
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({ [name]: value });
+  }
+
+  addProperty = (property) => {
+    this.setState({ properties: [...this.state.properties, property]})
   }
 
   handleSubmit = e => {
@@ -113,17 +118,17 @@ class AddProduct extends Component {
   }
 
   handleImageClick = name => this.setState({ images: this.state.images.filter(i => i.name !== name )});
-  
+
   handleClose = () => {
     clearTimeout(this.timeout);
     this.setState({ showMessage: false });
   }
 
   render() {
-    const { images, showMessage } = this.state;
+    const { images, showMessage, properties } = this.state;
     return (
       <Wrapper onSubmit={this.handleSubmit}>
-        <ProductForm onChange={this.handleChange} {...this.state} />
+        <ProductForm onChange={this.handleChange} {...this.state} addProperty={this.addProperty}/>
 
         <label>Images</label>
         <ImageSelect

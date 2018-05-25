@@ -56,6 +56,26 @@ const Wrapper = styled.div`
     max-height: 400px;
   }
 
+  table {
+    width: 100%;
+    margin: 10px 0;
+    box-shadow: 0 1px 1px hsla(0,0%,0%, 0.2);
+    background: hsl(0,0%,98%);
+    padding: 5px 5px;
+    border-radius: 5px;
+  }
+  td{
+    font-size: 1em;
+    padding-bottom: 5px;
+  }
+  td.name_field {
+  }
+  td.value_field {
+    width: 20px;
+    text-align: right;
+  }
+
+
 `
 const Placeholder = styled.div`
   display: flex;
@@ -145,7 +165,23 @@ class ProductInfo extends Component {
           <p>
             {product.description}
           </p>
+          <table>
+          {product.productProperties && product.productProperties.map(property => {
+            return(
+            <tr>
+              <td className="name_field">
+                {property.name}:
+              </td>
+              <td className="value_field">
+                <strong>{property.value}</strong>
+              </td>
+            </tr>
+          )
+          })}
+          </table>
+
           <Button disabled={product.quantity === 0} onClick={this.handleAdd}>Add to cart</Button>
+
         </div>
       </Wrapper>
     )
