@@ -132,13 +132,6 @@ class ProductInfo extends Component {
 
   render(){
     const product = this.props.productStore.product;
-    // const product = {
-    //   name: 'Iphone',
-    //   amount: '6',
-    //    images: ['https://www.t-mobile.com/content/dam/t-mobile/en-p/cell-phones/apple/apple-iphone-6s-plus/space-grey/apple-iphone-6splus-spacegray-1-3x.jpg'],
-    //   price: '700',
-    //   description: "It's an Iphone"
-    // };
     return (
       <Wrapper>
         <div className="main">

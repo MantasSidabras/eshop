@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { inject } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 
 import ProductApi from 'api/ProductApi';
 import ProductImageApi from 'api/ProductImageApi';
@@ -58,8 +58,8 @@ const Message = styled.div`
     align-items: center;
     padding: 1.5rem 3rem;
     background: hsl(110, 50%, 85%);
+    ${props => props.error ? 'background: hsl(0, 50%, 95%);' : 'background: hsl(110, 50%, 85%);'};
     border-radius: 3px;
-
     @media (min-width: 700px) {
       margin-top: -20vh;
     }
@@ -67,11 +67,13 @@ const Message = styled.div`
 `
 
 class ProductItem extends Component {
-  state = { 
-    showIcons: false, 
+  state = {
+    showIcons: false,
     showEdit: false,
     showConfirm: false,
-    showMessage: false
+    showMessage: false,
+    showError: false,
+    errMsg: ''
   }
 
   showIcons = () => {
@@ -79,13 +81,13 @@ class ProductItem extends Component {
       this.setState({ showIcons: true });
     }
   }
-  
+
   hideIcons = () => this.setState({ showIcons: false });
 
   toggleShowEdit = () => this.setState(state => ({ showEdit: !state.showEdit }));
-  
+
   showConfirm = () => this.setState({ showConfirm: true });
-  
+
   handleEdit = ({ product, imageIdsToDelete, images }) => {
     const formData = new FormData();
 
@@ -96,14 +98,19 @@ class ProductItem extends Component {
     Promise.all([
       ProductApi.update(product),
       ProductApi.addImages(product.id, formData),
-      ...imageIdsToDelete.map(id => ProductImageApi.delete(id))  
+      ...imageIdsToDelete.map(id => ProductImageApi.delete(id))
     ])
       .then(() => {
         this.props.productStore.getAll();
-        this.setState({ showMessage: true });
+        this.setState({ showMessage: true, showError: false });
         this.timeout = setTimeout(() => this.setState({ showEdit: false, showMessage: false }), 1200)
       })
-      .catch(error => console.error(error));
+      .catch(error => {
+        console.error(error);
+        this.setState({ showMessage: true, showError: true, errMsg: error.message });
+        this.timeout = setTimeout(() => this.setState({ showMessage: false}), 1200);
+        this.props.productStore.getOne(this.props.id);
+      });
   }
 
   handleDelete = () => {
@@ -125,10 +132,10 @@ class ProductItem extends Component {
   render() {
     const { name } = this.props;
     const { showIcons, showEdit, showConfirm, showMessage } = this.state;
-    return ( 
+    return (
       <Wrapper>
         <Product
-          onMouseOver={this.showIcons} 
+          onMouseOver={this.showIcons}
           onMouseLeave={this.hideIcons}
         >
           <Name>{name}</Name>
@@ -149,15 +156,15 @@ class ProductItem extends Component {
         </FadeIn>
 
         <FadeIn in={showMessage}>
-          <Message onClick={this.handleClose}>
+          <Message onClick={this.handleClose} error={this.state.showError}>
             <ScaleUp>
-              <div>Edited successfully!</div>
+              { this.state.showError ? <div>{this.state.errMsg}</div> : <div>Edited successfully!</div> }
             </ScaleUp>
           </Message>
         </FadeIn>
-      </Wrapper> 
+      </Wrapper>
     )
   }
 }
- 
-export default inject('productStore')(ProductItem);
+
+export default inject('productStore')(observer(ProductItem));
