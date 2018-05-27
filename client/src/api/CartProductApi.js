@@ -10,8 +10,8 @@ class CartProductApi {
       }
     })
       .then(res => {
-        if(res.status === 401){
-          throw new Error('failed to authenticate user');
+        if (res.status === 401){
+          throw new Error('Unauthorized');
         } else{
           return res;
         }
@@ -30,7 +30,17 @@ class CartProductApi {
     })
       .then(res => {
         if (res.status === 400) {
-          throw new Error('Not enough items')
+          const err = {
+            status: res.status,
+            message: 'Not enough items'
+          }
+          throw err;
+        } else if (res.status === 401){
+          const err = {
+            status: res.status,
+            message: 'Unauthorized'
+          }
+          throw err;
         } else {
           return res;
         }
@@ -47,13 +57,23 @@ class CartProductApi {
       },
       body: JSON.stringify(cartProduct)
     })
-      .then(res => {
-        if (res.status === 400) {
-          throw new Error('Bad request')
-        } else {
-          return res;
+    .then(res => {
+      if (res.status === 400) {
+        const err = {
+          status: res.status,
+          message: 'Bad request'
         }
-      })
+        throw err;
+      } else if (res.status === 401){
+        const err = {
+          status: res.status,
+          message: 'Unauthorized'
+        }
+        throw err;
+      } else {
+        return res;
+      }
+    })
       .then(res => res.json())
   }
 

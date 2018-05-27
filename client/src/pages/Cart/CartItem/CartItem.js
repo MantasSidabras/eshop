@@ -68,7 +68,14 @@ class CartItem extends Component {
     
     const cartProduct = { id: this.props.id, quantity: e.target.value };
 
-    this.props.cartStore.updateCartProduct(cartProduct);
+    this.props.cartStore.updateCartProduct(cartProduct)
+      .catch(error => {
+        console.error(error.message);
+        if (error.status === 401) {
+          this.props.userStore.logout();
+          return this.props.history.push('/login');
+        }
+      });
   }
 
   handleDelete = () => this.props.cartStore.deleteCartProductById(this.props.id);
@@ -95,4 +102,4 @@ class CartItem extends Component {
   }
 }
 
-export default inject('cartStore')(CartItem);
+export default inject('cartStore', 'userStore')(CartItem);

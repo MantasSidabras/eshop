@@ -80,7 +80,14 @@ const Add = styled.button`
 class Product extends Component {
   handleAdd = (e) => {
     e.stopPropagation();
-    this.props.cartStore.addProductToCart(this.props);
+    this.props.cartStore.addProductToCart(this.props)
+      .catch(error => {
+        console.error(error.message);
+        if (error.status === 401) {
+          this.props.userStore.logout();
+          return this.props.history.push('/login');
+        }
+      });
   }
 
   navigateToProduct = () => {
@@ -102,4 +109,4 @@ class Product extends Component {
   }
 }
 
-export default inject('cartStore')(Product);
+export default inject('cartStore', 'userStore')(Product);

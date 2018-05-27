@@ -16,14 +16,18 @@ class UserStore {
   }
 
   fetchUser = () => {
-    const token = AuthApi.getDecodedToken();
-    if (!token) {
+    if (!this.isLoggedIn) {
       this.user = {};
-      return Promise.resolve();
+      return CartStore.getCart();
     }
 
+    const token = AuthApi.getDecodedToken();
+
     return UserApi.getById(token.id)
-      .then(user => this.user = user)
+      .then(user => {
+        this.user = user;
+        CartStore.cartProductList = user.cartProductList;
+      })
       .catch(error => console.error(error))
   }
 
@@ -46,7 +50,7 @@ class UserStore {
         this.user = res.user;
       })
       .then(() => Promise.all([CartStore.cartProductList.map(cp => CartProductApi.sync(cp))]))
-      .then(() => setTimeout(() => CartStore.getCart()))
+      .then(() => setTimeout(() => CartStore.getCart(), 50))
   }
 
   logout = () => {

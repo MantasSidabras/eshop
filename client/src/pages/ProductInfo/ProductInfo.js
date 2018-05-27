@@ -146,7 +146,14 @@ class ProductInfo extends Component {
   }
 
   handleAdd = () => {
-    this.props.cartStore.addProductToCart(this.props.productStore.product);
+    this.props.cartStore.addProductToCart(this.props.productStore.product)
+      .catch(error => {
+        console.error(error.message);
+        if (error.status === 401) {
+          this.props.userStore.logout();
+          return this.props.history.push('/login');
+        }
+      });
   }
   
   render(){

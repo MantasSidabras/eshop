@@ -110,14 +110,21 @@ class Cart extends Component {
 
   handleProceed = e => {
     e.preventDefault();
+    const { userStore, history } = this.props;
 
-    if (!this.props.userStore.isLoggedIn) {
-      return this.props.history.push('/register')
+    if (!userStore.isLoggedIn) {
+      return history.push('/register')
     }
 
-    UserApi.checkCartIntegrity(this.props.userStore.user.id)
-      .then(res => this.props.history.push('/purchase'))
+    UserApi.checkCartIntegrity(userStore.user.id)
+      .then(res => history.push('/purchase'))
       .catch(error => {
+        if (error.status === 401) {
+          console.error(error.message);
+          userStore.logout();
+          return history.push('/login');
+        }
+
         this.setState({ error: true, errorData: error });
         this.timeout = setTimeout(() => this.setState({ error: false }), 3000);
       })
@@ -144,7 +151,7 @@ class Cart extends Component {
               <div style={{ width: 110,  textAlign: 'center', marginRight: 20 }}>Total Price</div>
             </div>
    
-            {cartProductList.map(cp => <CartItem error={error && errorData && errorData[cp.id]} unitsLeft={errorData && errorData[cp.id]} key={cp.id} {...cp} />)}
+            {cartProductList.map(cp => <CartItem history={this.props.history} error={error && errorData && errorData[cp.id]} unitsLeft={errorData && errorData[cp.id]} key={cp.id} {...cp} />)}
 
             {cartProductList.length === 0 
               ? <p style={{textAlign: 'center', color: 'hsla(0, 0%, 0%, 0.6)'}}>Cart is empty</p> 

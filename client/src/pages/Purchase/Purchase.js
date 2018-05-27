@@ -211,6 +211,8 @@ class Purchase extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
+    const { userStore, cartStore, history } = this.props;
+
     this.setState({ err: false, showMessage: false });
 
     if (!isValidCreditCard(this.state.number)) {
@@ -219,18 +221,25 @@ class Purchase extends Component {
 
     OrderApi.create(this.state)
       .then(res => {
-        console.log(res);
         this.setState({ showMessage: true, isError: false, message: res.message });
         this.timeout = setTimeout(() => this.setState({ showMessage: false }), 1200);
 
-        this.props.userStore.fetchUser();
-        this.props.cartStore.getCart();
+        userStore.fetchUser();
+        cartStore.getCart();
       })
       .catch(error => {
+        if (error.status === 401) {
+          console.error(error.message);
+          userStore.logout();
+          return history.push('/login');
+        }
+
         this.setState({ showMessage: true, isError: true, message: error.message });
         this.timeout = setTimeout(() => {
           this.setState({ showMessage: false });
-          if (error.status === 409) this.props.history.push('/cart');
+          if (error.status === 409) {
+            history.push('/cart');
+          }
         }, 2000);
       })
   }

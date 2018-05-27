@@ -93,7 +93,7 @@ public class CommerceService {
     }
 
     public CartProduct updateCartProduct(CartProduct oldCartProduct, Integer newQuantity) throws InvalidProductQuantityException {
-        if (newQuantity.equals(0)) {
+        if (newQuantity.compareTo(1) < 0) {
             throw new InvalidProductQuantityException();
         }
 

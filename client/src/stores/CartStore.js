@@ -9,21 +9,6 @@ import Config from '../api/Config';
 class CartStore {
   cartProductList = [];
 
-  getCart = () => {
-    if (!UserStore.isLoggedIn) {
-      if (localStorage.getItem('cart')) {
-        this.cartProductList = JSON.parse(localStorage.getItem('cart'));
-      }
-      return Promise.resolve();
-    }
-
-    const token = AuthApi.getDecodedToken();
-    if (!token || !AuthApi.isTokenValid()) return;
-
-    return CartProductApi.getAll()
-      .then(cart => this.cartProductList = cart)
-  }
-
   get sum() {
     return this.cartProductList.reduce((total, cp) => total += cp.quantity * cp.product.price, 0).toFixed(2);
   }
@@ -31,7 +16,28 @@ class CartStore {
   get allProductCount() {
     return this.cartProductList.reduce((total, cp) => total += cp.quantity, 0);
   }
-  
+
+  getCart = () => {
+    if (!UserStore.isLoggedIn) {
+      const cart = localStorage.getItem('cart');
+
+      if (cart) {
+        this.cartProductList = JSON.parse(cart);
+      } else {
+        this.cartProductList = [];
+      }
+
+      return Promise.resolve();
+    }
+
+    if (!AuthApi.isTokenValid()) {
+      return;
+    }
+
+    return CartProductApi.getAll()
+      .then(cart => this.cartProductList = cart.reverse())
+  }
+
   addProductToCart = ({ id, name, price }) => {
     if (!UserStore.isLoggedIn) {
       if (this.cartProductList.find(cp => cp.product.id === id)) {
@@ -45,16 +51,24 @@ class CartStore {
       }
 
       localStorage.setItem('cart', JSON.stringify(this.cartProductList));
-      return;
+      return Promise.resolve();
     }
 
-    CartProductApi.add(id)
-      .then(res => this.getCart())
-      .catch(error => console.error(error));
+    return CartProductApi.add(id)
+      .then(newCp => {
+        if (this.cartProductList.find(cp => cp.id === newCp.id)) {
+          this.cartProductList.forEach((cp, index) => {
+            if (cp.id === newCp.id) {
+              this.cartProductList[index] = newCp;
+            }
+          })
+        } else {
+          this.cartProductList.push(newCp)
+        }
+      })
   }
 
   updateCartProduct = cartProduct => {
-    this.error = false;
     if (!UserStore.isLoggedIn) {
       this.cartProductList.forEach((cp, index) => {
         if (cp.id === cartProduct.id) {
@@ -67,8 +81,13 @@ class CartStore {
     }
 
     return CartProductApi.update(cartProduct)
-      .then(res => this.getCart())
-      .catch(error => console.error(error));
+      .then(updatedCp => {
+        this.cartProductList.forEach((cp, index) => {
+          if (cp.id === updatedCp.id) {
+            this.cartProductList[index] = updatedCp;
+          }
+        })
+      })
   }
 
   deleteCartProductById = id => {
@@ -90,23 +109,17 @@ class CartStore {
 
   deleteAll = () => {
     if (!UserStore.isLoggedIn) {
-      this.cartProductList = [];
-
-      localStorage.setItem('cart', JSON.stringify(this.cartProductList));
-      return Promise.resolve();
+      return this.clearCart();
     }
 
-    return CartProductApi.deleteAll()
-      .then(res => this.getCart())
+    CartProductApi.deleteAll()
+      .then(res => this.cartProductList = [])
       .catch(error => console.error(error))
   }
 
   clearCart = () => {
-    if (localStorage.getItem('cart')) {
-      localStorage.removeItem('cart')
-    }
-    
     this.cartProductList = [];
+    localStorage.setItem('cart', JSON.stringify([]));
   }
 }
 
@@ -115,11 +128,11 @@ decorate(CartStore, {
   sum: computed,
   allProductCount: computed,
   getCart: action,
-  clearCart: action,
-  addCartProductByProductId: action,
+  addProductToCart: action,
   updateCartProduct: action,
   deleteCartProductById: action,
-  deleteAll: action
+  deleteAll: action,
+  clearCart: action,
 })
 
 export default new CartStore();

@@ -38,7 +38,6 @@ public class OrderController {
         return this.commerceService.getAllOrders();
     }
 
-    @Async
     @PostMapping
     @ResponseBody
     public ResponseEntity<Map<String, String>> create(@RequestHeader("Authorization") String authHeader, @RequestBody Payment payment) {

@@ -11,18 +11,18 @@ class UserApi {
       body: JSON.stringify(user)
     })
       .then(res => {
-        switch(res.status) {
-          case 401 : {
+        switch (res.status) {
+          case 401: {
             throw new Error('Incorrect username or password');
           }
-          case 403 : {
+          case 403: {
             throw new Error('User is blocked');
           }
-          case 404 : {
+          case 404: {
             throw new Error('User was not found');
           }
-          case 200 : {
-            return  res;
+          case 200: {
+            return res;
           }
           default : {
             throw new Error('Something went wrong. Cannot login');
@@ -40,9 +40,9 @@ class UserApi {
         }
     })
     .then(res => {
-      if(res.status !== 200){
+      if (res.status !== 200) {
         throw new Error('Failed to get users');
-        } else {
+      } else {
         return res;
       }
     })
@@ -57,11 +57,11 @@ class UserApi {
         }
     })
     .then(res => {
-      if(res.status !== 200){
-        throw new Error('Failed to get user');
+      if (res.status == 401) {
+        throw new Error('Unauthorized');
       } else {
         return res;
-    }
+      }
     })
     .then(res => res.json())
   }
@@ -79,8 +79,8 @@ class UserApi {
         if (res.status === 400) {
           throw new Error('Bad request')
         } else if(res.status === 401){
-          throw new Error('Unautherized access')
-    } else {
+          throw new Error('Unauthorized access')
+        } else {
           return res;
         }
       })
@@ -114,8 +114,9 @@ class UserApi {
       }
     })
       .then(async res => {
-        if (res.status === 409) {
+        if (res.status >= 400) {
           const err = await res.json();
+          err.status = res.status;
           throw err;
         } else {
           return res;

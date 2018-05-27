@@ -14,6 +14,7 @@ import Purchase from './pages/Purchase/Purchase';
 import OrderHistory from './pages/OrderHistory/OrderHistory';
 import ProductInfo from './pages/ProductInfo/ProductInfo';
 
+import DevTools from 'mobx-react-devtools';
 
 const ContentWrapper = styled.div`
   display: flex;
@@ -40,12 +41,10 @@ class App extends Component {
   state = {
     loaded: false
   }
+
   componentDidMount() {
-    Promise.all([
-      this.props.productStore.getAll(),
-      this.props.userStore.fetchUser()
-    ])
-      .then(() => this.props.cartStore.getCart())
+    this.props.productStore.getAll();
+    this.props.userStore.fetchUser()
       .then(() => this.setState({ loaded: true }))
   }
 
@@ -79,4 +78,4 @@ class App extends Component {
   }
 }
 
-export default inject('productStore', 'userStore', 'cartStore')(App);
+export default inject('productStore', 'userStore')(App);
