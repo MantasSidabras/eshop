@@ -40,6 +40,8 @@ public class Order {
 
     private String zipCode;
 
+    private Integer rating;
+
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "order")
     private List<OrderProduct> orderProductList = new ArrayList<>();
@@ -133,5 +135,13 @@ public class Order {
 
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
+    }
+
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
     }
 }

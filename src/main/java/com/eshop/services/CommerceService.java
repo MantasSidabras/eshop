@@ -201,6 +201,17 @@ public class CommerceService {
         }
     }
 
+    public Order setOrderRating(Integer orderId, Integer rating) {
+      try {
+        Order existing = this.findOrderById(orderId);
+        existing.setRating(rating);
+        return this.orderDAO.save(existing);
+      } catch (Exception e) {
+        e.printStackTrace();
+        return null;
+      }
+    }
+
     public Order createOrderForUser(User user) throws ProductCartEmptyException {
 
         if(user.getCartProductList().size() == 0){

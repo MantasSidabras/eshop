@@ -63,6 +63,27 @@ class OrderApi {
       })
       .then(res => res.json())
   }
+
+  rate = (id, rating) => {
+    return fetch(`${Config.url}/order/${id}/rating`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${AuthApi.getToken()}`
+      },
+      body: JSON.stringify(rating)
+    })
+      .then(res => {
+        if (res.status === 400) {
+          throw new Error('Bad request')
+        } else if(res.status === 401){
+          throw new Error('Unautherized access')
+        } else {
+          return res;
+        }
+      })
+      .then(res => res.json())
+  }
 }
 
 export default new OrderApi();

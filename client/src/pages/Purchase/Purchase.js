@@ -7,6 +7,9 @@ import OrderApi from 'api/OrderApi';
 import FadeIn from 'animations/FadeIn';
 import ScaleUp from 'animations/ScaleUp';
 
+import StarRatingComponent from 'react-star-rating-component';
+import Rating from './Rating';
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -141,7 +144,7 @@ const isValidCreditCard = value => {
 	return (nCheck % 10) === 0;
 }
 
-const Message = styled.div`
+const Background = styled.div`
   position: fixed;
   left: 0;
   top: 0;
@@ -153,18 +156,20 @@ const Message = styled.div`
   align-items: center;
   background: hsla(0, 0%, 0%, 0.6);
   z-index: 999;
+`
 
-  div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1.5rem 3rem;
-    ${props => props.error ? 'background: hsl(0, 50%, 90%);' : 'background: hsl(110, 50%, 85%);'}
-    border-radius: 3px;
+const Message = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem 3rem;
+  text-align: center;
+  ${props => props.error ? 'background: hsl(0, 50%, 90%);' : 'background: hsl(110, 50%, 85%);'}
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
 
-    @media (min-width: 700px) {
-      margin-top: -20vh;
-    }
+  @media (min-width: 700px) {
+    margin-top: -20vh;
   }
 `
 
@@ -182,7 +187,8 @@ class Purchase extends Component {
       err: false,
       showMessage: false,
       isError: false,
-      message: ''
+      message: '',
+      rating: 4
     }
   }
 
@@ -222,8 +228,8 @@ class Purchase extends Component {
     OrderApi.create(this.state)
       .then(res => {
         this.setState({ showMessage: true, isError: false, message: res.message });
-        this.timeout = setTimeout(() => this.setState({ showMessage: false }), 1200);
 
+        this.orderId = res.orderId;
         userStore.fetchUser();
         cartStore.getCart();
       })
@@ -244,6 +250,16 @@ class Purchase extends Component {
       })
   }
 
+  handleRatingChange = rating => {
+    this.setState({ rating });
+  }
+
+  handleRate = () => {
+    OrderApi.rate(this.orderId, this.state.rating)
+      .then(() => this.handleClose())
+      .catch(error => console.error(error));
+  }
+
   handleClose = () => {
     clearTimeout(this.timeout);
     this.setState({ showMessage: false });
@@ -251,7 +267,7 @@ class Purchase extends Component {
 
   render() {
     const { cartProductList, sum } = this.props.cartStore;
-    const { holder, address, zipCode, number, expYear, expMonth, cvv, err, showMessage, isError, message } = this.state;
+    const { holder, address, zipCode, number, expYear, expMonth, cvv, err, showMessage, isError, message, rating } = this.state;
 
     if (showMessage || (this.props.userStore.isLoggedIn && cartProductList.length > 0)) {
       return ( 
@@ -307,11 +323,14 @@ class Purchase extends Component {
           </Form>
 
           <FadeIn in={showMessage}>
-            <Message error={isError} onClick={this.handleClose}>
+            <Background onClick={this.handleClose}>
               <ScaleUp>
-                <div>{message}</div>
+                <div onClick={e => e.stopPropagation()} style={{display: 'flex', flexDirection: 'column', borderRadius: 3}}>
+                  <Message error={isError}>{message}</Message>
+                  {!isError && <Rating onRate={this.handleRate} value={rating} onChange={this.handleRatingChange}/>}
+                </div>
               </ScaleUp>
-            </Message>
+            </Background>
           </FadeIn>
 
         </Wrapper>

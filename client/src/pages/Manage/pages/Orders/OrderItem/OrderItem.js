@@ -19,8 +19,9 @@ const Wrapper = styled.div`
 const Order = styled.div`
   position: relative;
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
-  padding: 8px;
+  padding: 0 8px;
   ${'' /* height: 40px; */}
   background: hsl(0, 0%, 99%);
   border-top: 1px solid hsl(0, 0%, 85%);
@@ -40,17 +41,41 @@ const Id = styled.div`
   width: 25px;
   margin-right: 10px;
   font-weight:bold;
+  order: -5;
+
+  @media (max-width: 660px) {
+    margin: 0;
+  }
 `;
 
 const DateCreated = styled.div`
   display: flex;
   align-items: center;
   margin-right: 10px;
+  margin: 7px 0;
+  margin-right: 10px;
+
+  @media (max-width: 660px) {
+    order: -2;
+    width: 50%;
+  }
 `;
 
 const UserName = styled.div`
   display: flex;
   align-items: center;
+  margin-right: 10px;
+`;
+
+const Rating = styled.div`
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+
+  @media (max-width: 660px) {
+    order: -1;
+    margin: 0;
+  }
 `;
 
 const OrderPrice = styled.div`
@@ -64,6 +89,8 @@ const OrderPrice = styled.div`
 const Label = styled.div`
   width: 66px;
   padding: 4px 6px;
+  margin: 7px 0;
+  align-self: center;
   ${props => props.sent && 'background: hsl(110, 80%, 40%);'}
   ${props => props.pending && 'background: hsl(0, 0%, 70%);'}
   color: hsla(0, 0%, 100%, 0.95);
@@ -139,7 +166,7 @@ class OrderItem extends Component {
   }
 
   render() {
-    const { id, dateCreated, dateCompleted, fullName, price, state, orderProductList } = this.props;
+    const { id, dateCreated, dateCompleted, fullName, price, state, orderProductList, rating } = this.props;
     const { showIcon, showProducts } = this.state;
     return ( 
       <Wrapper showProducts={showProducts} onClick={this.toggleShowProducts}>
@@ -151,13 +178,14 @@ class OrderItem extends Component {
           <Id>{id}</Id>
           <DateCreated>{format(dateCreated, 'YYYY-MM-DD, HH:mm')}</DateCreated>
           <UserName>{fullName}</UserName>
+          {rating && <Rating>{new Array(rating).fill(0).map((el, index) => <i key={index} style={{ color: '#ffb400'}} className="fas fa-star"/>)}</Rating>}
           <OrderPrice>{price.toFixed(2)}€</OrderPrice>       
           {state 
             ? <Label sent>Sent</Label>
             : <Label pending>Pending</Label>
           } 
-          <div style={{ width: 30, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', cursor: 'pointer' }}>
-            {!state && 
+          <div style={{ width: 30, height: 'auto', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', cursor: 'pointer' }}>
+            {!state &&
               <FadeIn in={showIcon} enterDuration={200} exitDuration={200}>
                 <i title="Mark as sent" className="fas fa-check-square fa-lg" onClick={this.handleSent} /> 
               </FadeIn>

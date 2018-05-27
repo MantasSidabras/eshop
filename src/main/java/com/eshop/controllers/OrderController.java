@@ -49,9 +49,10 @@ public class OrderController {
 
             payment.setAmount(paymentService.calcAmountInCents(user.getCartProductList()));
             paymentService.sendPayment(payment);
-            commerceService.createOrder(user, payment);
+            Order savedOrder = commerceService.createOrder(user, payment);
 
             res.put("message", "Payment successful");
+            res.put("orderId", savedOrder.getId().toString());
             return ResponseEntity.status(HttpStatus.CREATED).body(res);
 
         } catch(UnauthorizedException e) {
@@ -91,6 +92,32 @@ public class OrderController {
         }
         catch(UnauthorizedException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+    }
+
+    @PostMapping("/{id}/rating")
+    @ResponseBody
+    public ResponseEntity<Order> updateOrder(@RequestHeader("Authorization") String authHead, @PathVariable("id") Integer id, @RequestBody Integer rating){
+
+        try{
+            User tokenUser = authService.getUserFromHeader(authHead);
+            Order existing = commerceService.findOrderById(id);
+            authService.authorizeResource(tokenUser, existing.getUser().getId());
+
+            Order updated = commerceService.setOrderRating(id, rating);
+
+            if (updated == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            } else {
+                return ResponseEntity.ok(updated);
+            }
+        }
+        catch(UnauthorizedException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        catch (Exception e ) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
     }

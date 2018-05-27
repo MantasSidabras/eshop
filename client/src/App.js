@@ -14,8 +14,6 @@ import Purchase from './pages/Purchase/Purchase';
 import OrderHistory from './pages/OrderHistory/OrderHistory';
 import ProductInfo from './pages/ProductInfo/ProductInfo';
 
-import DevTools from 'mobx-react-devtools';
-
 const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;

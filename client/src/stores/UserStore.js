@@ -16,7 +16,7 @@ class UserStore {
   }
 
   fetchUser = () => {
-    if (!this.isLoggedIn) {
+    if (!AuthApi.isTokenValid()) {
       this.user = {};
       return CartStore.getCart();
     }
