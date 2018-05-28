@@ -134,7 +134,7 @@ class Register extends Component {
 
   register = (e) => {
     e.preventDefault();
-    
+
     if(this.state.password !== this.state.password2) {
       this.setState({ err: true, errMsg: 'Passwords do not match'});
       return;
@@ -179,6 +179,8 @@ class Register extends Component {
               <input type="text" id='email' name='email' onChange={this.onChange} required />
               <label htmlFor='adress'>Address</label>
               <input type="text" id='address' name='address' onChange={this.onChange} required />
+              <label htmlFor='adress'>Zip code</label>
+              <input style={{width: '40%'}} type="text" id='zipCode' name='zipCode' onChange={this.onChange} required />
               <label htmlFor='password'>Password</label>
               <input type="password" id='password' name='password' minLength='8' onChange={this.onChange} required />
               {this.state.err && <div style={{ marginTop: -13, marginBottom: 5, fontSize: '0.8rem', color: 'hsla(0, 90%, 40%, 0.85)'}}>Passwords does not match</div>}
