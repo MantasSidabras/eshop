@@ -1,5 +1,6 @@
 package com.eshop.entities;
 
+import com.eshop.services.OrderState;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -26,7 +27,7 @@ public class Order {
 
     private BigDecimal price;
 
-    private boolean state;
+    private OrderState state;
 
     @Column(updatable = false)
     private LocalDateTime dateCreated;
@@ -51,7 +52,7 @@ public class Order {
     public Order(User user){
         this.user = user;
         this.price = new BigDecimal(0);
-        this.state = false;
+        this.state = OrderState.Unpaid;
         this.dateCreated =  LocalDateTime.now();
         this.address = user.getAddress();
 
@@ -81,11 +82,11 @@ public class Order {
         this.price = price;
     }
 
-    public boolean isState() {
+    public OrderState getState() {
         return state;
     }
 
-    public void setState(boolean state) {
+    public void setState(OrderState state) {
         this.state = state;
     }
 
