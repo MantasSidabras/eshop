@@ -62,7 +62,7 @@ public class PaymentService {
         HttpResponse response = httpClient.execute(request);
 
         try {
-            Thread.sleep(3000);
+            Thread.sleep(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

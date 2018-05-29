@@ -43,13 +43,21 @@ public class OrderController {
     public ResponseEntity<Map<String, String>> create(@RequestHeader("Authorization") String authHeader, @RequestBody Payment payment) {
         Map<String, String> res = new HashMap<>();
         try {
-            User user = authService.getUserFromHeader(authHeader);
 
+            User user = authService.getUserFromHeader(authHeader);
             commerceService.checkIntegrity(user);
+            for(Order order : user.getOrderList()){
+                if(order.getState() == OrderState.Unpaid) {
+                    res.put("message", "Payment failed");
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
+                }
+            }
+            Order newOrder = commerceService.createOrder(user, payment);
 
             payment.setAmount(paymentService.calcAmountInCents(user.getCartProductList()));
             paymentService.sendPayment(payment);
-            Order savedOrder = commerceService.createOrder(user, payment);
+            newOrder.setState(OrderState.Paid);
+            Order savedOrder = commerceService.updateOrder(newOrder);
 
             res.put("message", "Payment successful");
             res.put("orderId", savedOrder.getId().toString());

@@ -150,7 +150,7 @@ public class CommerceService {
         }
 
         Order order = new Order();
-
+        order.setState(OrderState.Unpaid);
         order.setFullName(payment.getHolder());
         order.setAddress(payment.getAddress());
         order.setZipCode(payment.getZipCode());
