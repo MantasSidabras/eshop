@@ -39,7 +39,17 @@ public class ProductService {
         return productDAO.save(product);
     }
 
-    public void deleteById(Integer id) {
-        productDAO.deleteById(id);
+    public void deleteById(Integer id) throws ProductNotFoundException{
+        //productDAO.deleteById(id);
+        try{
+            Product delProduct = findById(id);
+            delProduct.setDeleted(true);
+            productDAO.save(delProduct);
+
+        }
+        catch(ProductNotFoundException e){
+            throw e;
+        }
+
     }
 }

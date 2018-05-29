@@ -117,6 +117,9 @@ public class ProductController {
         catch(UnauthorizedException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
+        catch(ProductNotFoundException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
     //Only admin
