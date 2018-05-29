@@ -1,10 +1,8 @@
 import { observable, action, decorate, computed } from 'mobx';
 
 import AuthApi from '../api/AuthApi';
-import UserApi from '../api/UserApi';
 import CartProductApi from '../api/CartProductApi';
 import UserStore from '../stores/UserStore';
-import Config from '../api/Config';
 
 class CartStore {
   cartProductList = [];

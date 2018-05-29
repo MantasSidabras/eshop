@@ -111,35 +111,6 @@ const Button = styled.button`
   `}
 `
 
-const Message = styled.div`
-  position: fixed;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  padding: 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: hsla(0, 0%, 0%, 0.6);
-  z-index: 999;
-
-  div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1.5rem 3rem;
-    ${props => props.error ? 'background: hsl(0, 50%, 85%);' : 'background: hsl(110, 50%, 85%);'};
-    border-radius: 3px;
-
-    @media (min-width: 700px) {
-      margin-top: -20vh;
-    }
-  }
-`
-
-
-
 class ProductInfo extends Component {
   componentDidMount() {
     this.props.productStore.getOne(this.props.match.params.id);
@@ -162,7 +133,7 @@ class ProductInfo extends Component {
       <Wrapper>
         <div className="main">
           <h1>{product.name}</h1>
-          {product.productImages && product.productImages.length > 0 ? <img src={ProductImageApi.get(product.productImages [0].id)} alt={product.name}/> : <Placeholder>No image</Placeholder>}
+          {product.productImages && product.productImages.length > 0 ? <img src={ProductImageApi.get(product.productImages[0].id)} alt={product.name}/> : <Placeholder>No image</Placeholder>}
         </div>
         <div className="info">
           <h1>Info</h1>

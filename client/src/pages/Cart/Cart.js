@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import { inject, observer } from 'mobx-react';
 
 import CartItem from './CartItem/CartItem';
-import AuthApi from 'api/AuthApi';
 import UserApi from 'api/UserApi';
 
 const Wrapper = styled.div`

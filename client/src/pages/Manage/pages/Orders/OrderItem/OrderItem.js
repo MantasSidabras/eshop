@@ -166,7 +166,7 @@ class OrderItem extends Component {
   }
 
   render() {
-    const { id, dateCreated, dateCompleted, fullName, price, state, orderProductList, rating } = this.props;
+    const { id, dateCreated, fullName, price, state, orderProductList, rating } = this.props;
     const { showIcon, showProducts } = this.state;
     return ( 
       <Wrapper showProducts={showProducts} onClick={this.toggleShowProducts}>
