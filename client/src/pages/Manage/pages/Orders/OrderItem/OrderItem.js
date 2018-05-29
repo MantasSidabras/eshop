@@ -43,9 +43,10 @@ const Id = styled.div`
   font-weight:bold;
   order: -5;
 
-  @media (max-width: 660px) {
+  @media (max-width: 670px) {
     margin: 0;
   }
+
 `;
 
 const DateCreated = styled.div`
@@ -55,9 +56,14 @@ const DateCreated = styled.div`
   margin: 7px 0;
   margin-right: 10px;
 
-  @media (max-width: 660px) {
-    order: -2;
+  @media (max-width: 670px) {
+    order: -3;
     width: 50%;
+  }
+
+  @media (max-width: 500px) {
+    width: calc(100% - 25px);
+    margin-right: 0px;
   }
 `;
 
@@ -65,15 +71,36 @@ const UserName = styled.div`
   display: flex;
   align-items: center;
   margin-right: 10px;
+  
+  @media (max-width: 670px) {
+    width: 100%;
+  }
+
+  @media (max-width: 500px) {
+    order: -2;
+    margin-right: 0;
+    margin-bottom: 10px;
+    justify-content: center;
+  }
 `;
+
+const RatingWrap = styled.div`
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 670px) {
+    order: -1;
+    margin: 0 auto;
+  }
+`;
+
 
 const Rating = styled.div`
   display: flex;
   align-items: center;
   margin-right: 10px;
 
-  @media (max-width: 660px) {
-    order: -1;
+  @media (max-width: 670px) {
     margin: 0;
   }
 `;
@@ -91,12 +118,11 @@ const Label = styled.div`
   padding: 4px 6px;
   margin: 7px 0;
   align-self: center;
-  ${props => props.sent && 'background: hsl(110, 80%, 40%);'}
+  ${props => props.sent && 'background: hsl(110, 60%, 75%);'}
   ${props => props.pending && 'background: hsl(0, 0%, 70%);'}
-  color: hsla(0, 0%, 100%, 0.95);
   font-size: 0.75rem;
   text-align: center;
-  ${props => props.sent && 'border: 1px solid hsl(110, 80%, 30%);'}
+  ${props => props.sent && 'border: 1px solid hsl(110, 35%, 55%);'}
   ${props => props.pending && 'border: 1px solid hsl(0, 0%, 60%);'}
   border-radius: 3px;
 `
@@ -134,6 +160,14 @@ const Quantity = styled.div`
   text-align: center;
 `
 
+const CheckoutWrap = styled.div`
+  display: flex;
+  margin-left: auto;
+
+  @media (max-width: 870px) {
+    width: 100%;
+  }
+`
 class OrderItem extends Component {
   state = {
     showIcon: false,
@@ -158,7 +192,7 @@ class OrderItem extends Component {
 
     const { ...order} = this.props;
     
-    order.state = true;
+    order.state = 2;
 
     OrderApi.update(order)
       .then(res => this.props.orderStore.getAll())
@@ -178,39 +212,45 @@ class OrderItem extends Component {
           <Id>{id}</Id>
           <DateCreated>{format(dateCreated, 'YYYY-MM-DD, HH:mm')}</DateCreated>
           <UserName>{fullName}</UserName>
-          {rating && <Rating>{new Array(rating).fill(0).map((el, index) => <i key={index} style={{ color: '#ffb400'}} className="fas fa-star"/>)}</Rating>}
-          <OrderPrice>{price.toFixed(2)}€</OrderPrice>       
-          {state 
-            ? <Label sent>Sent</Label>
-            : <Label pending>Pending</Label>
-          } 
-          <div style={{ width: 30, height: 'auto', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', cursor: 'pointer' }}>
-            {!state &&
-              <FadeIn in={showIcon} enterDuration={200} exitDuration={200}>
-                <i title="Mark as sent" className="fas fa-check-square fa-lg" onClick={this.handleSent} /> 
-              </FadeIn>
-            }
-          </div>
+          <RatingWrap>
+            {rating && <Rating>{new Array(rating).fill(0).map((el, index) => <i key={index} style={{ color: '#ffb400'}} className="fas fa-star"/>)}</Rating>}
+          </RatingWrap>
+
+          <CheckoutWrap>
+            <OrderPrice>{price.toFixed(2)}€</OrderPrice>     
+            {state === 'Sent'
+              ? <Label sent>Sent</Label>
+              : <Label pending>Pending</Label>
+            } 
+            <div style={{ width: 30, height: 'auto', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', cursor: 'pointer' }}>
+              {state !== 'Sent' &&
+                <FadeIn in={showIcon} enterDuration={200} exitDuration={200}>
+                  <i title="Mark as sent" className="fas fa-check-square fa-lg" onClick={this.handleSent} /> 
+                </FadeIn>
+              }
+            </div>
+          </CheckoutWrap>
         </Order>
 
-        <SlideDown in={showProducts}>
-          <ProductListWrapper>
-            <div style={{ display: 'flex', padding: '5px 10px 5px 10px',  fontWeight: 'bold'}}>
-              <div style={{ flexGrow: 1, textAlign: 'center' }}>Item</div>
-              <div style={{ width: 110,  textAlign: 'center' }}>Unit Price</div>
-              <div style={{ width: 70,  textAlign: 'center' }}>Units</div>
-              <div style={{ width: 110,  textAlign: 'center'}}>Total Price</div>
-            </div>
-            {orderProductList.map(op => 
-              <ProductWrapper key={op.id}>
-                <Name>{op.product.name}</Name>
-                <Price>{op.product.price.toFixed(2)}€</Price>
-                <Quantity>{op.quantity}</Quantity>
-                <Price>{(op.product.price * op.quantity).toFixed(2)}€</Price>
-              </ProductWrapper>
-            )}
-          </ProductListWrapper>
-        </SlideDown>
+          <SlideDown in={showProducts}>
+            <ProductListWrapper>
+              <div style={{ display: 'flex', padding: '5px 10px 5px 10px',  fontWeight: 'bold'}}>
+                <div style={{ flexGrow: 1, textAlign: 'center' }}>Item</div>
+                <div style={{ width: 110,  textAlign: 'center' }}>Unit Price</div>
+                <div style={{ width: 70,  textAlign: 'center' }}>Units</div>
+                <div style={{ width: 110,  textAlign: 'center'}}>Total Price</div>
+              </div>
+              {orderProductList.map(op => 
+                <ProductWrapper key={op.id}>
+                  <Name>{op.product.name}</Name>
+                  <Price>{op.product.price.toFixed(2)}€</Price>
+                  <Quantity>{op.quantity}</Quantity>
+                  <Price>{(op.product.price * op.quantity).toFixed(2)}€</Price>
+                </ProductWrapper>
+              )}
+            </ProductListWrapper>
+          </SlideDown>
+   
       </Wrapper> 
     )
   }

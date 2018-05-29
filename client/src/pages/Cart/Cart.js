@@ -66,11 +66,11 @@ const ProceedButton = styled.a`
   padding: 7px 14px;
   width: 100px;
   margin-left: auto;
-  background: hsl(110, 50%, 78%);
+  background: hsl(110, 60%, 75%);
   color: hsla(0, 0%, 0%, 0.750);
   font-size: 0.9rem;
   text-decoration: none;
-  border: 1px solid hsl(110, 30%, 50%);
+  border: 1px solid hsl(110, 35%, 55%);
   border-radius: 3px;
   box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.2);
   cursor: pointer;

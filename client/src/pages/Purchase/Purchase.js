@@ -101,8 +101,8 @@ const PurchaseButton = styled.button`
   cursor: pointer;
   transition: 0.2s ease-in-out;
   margin-left: auto;
-  background: hsl(110, 50%, 78%);
-  border: 1px solid hsl(110, 30%, 50%);
+  background: hsl(110, 60%, 75%);
+  border: 1px solid hsl(110, 35%, 55%);
 
   &:hover {
     background: hsl(110, 50%, 72%);

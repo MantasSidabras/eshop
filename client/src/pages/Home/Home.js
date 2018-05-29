@@ -42,6 +42,10 @@ const Products = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+
+  @media (max-width: 415px) {
+    justify-content: flex-start;
+  }
 `
 
 class Home extends Component {
