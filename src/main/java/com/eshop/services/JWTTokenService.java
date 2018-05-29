@@ -19,7 +19,8 @@ import java.util.Date;
 public class JWTTokenService {
 
    // @Value("${jwt.secret}")
-    private String secret = "pskmilijonas";
+    @Value("${jwt.secret}")
+    private String secret;
     private long expirationTimeInMillis = 3000000;
 
     public Integer parseToken(String token) throws TokenParseException {
