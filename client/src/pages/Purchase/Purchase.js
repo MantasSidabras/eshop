@@ -7,7 +7,6 @@ import OrderApi from 'api/OrderApi';
 import FadeIn from 'animations/FadeIn';
 import ScaleUp from 'animations/ScaleUp';
 
-import StarRatingComponent from 'react-star-rating-component';
 import Rating from './Rating';
 
 const Wrapper = styled.div`
@@ -102,8 +101,8 @@ const PurchaseButton = styled.button`
   cursor: pointer;
   transition: 0.2s ease-in-out;
   margin-left: auto;
-  background: hsl(110, 50%, 78%);
-  border: 1px solid hsl(110, 30%, 50%);
+  background: hsl(110, 60%, 75%);
+  border: 1px solid hsl(110, 35%, 55%);
 
   &:hover {
     background: hsl(110, 50%, 72%);
@@ -126,12 +125,14 @@ const isValidCreditCard = value => {
 	if (/[^0-9-\s]+/.test(value)) return false;
 
 	// The Luhn Algorithm. It's so pretty.
-	let nCheck = 0, nDigit = 0, bEven = false;
+  let nCheck = 0;
+  let nDigit = 0;
+  let bEven = false;
 	value = value.replace(/\D/g, "");
 
 	for (let n = value.length - 1; n >= 0; n--) {
-		let cDigit = value.charAt(n),
-			  nDigit = parseInt(cDigit, 10);
+		let cDigit = value.charAt(n);
+		nDigit = parseInt(cDigit, 10);
 
 		if (bEven) {
 			if ((nDigit *= 2) > 9) nDigit -= 9;

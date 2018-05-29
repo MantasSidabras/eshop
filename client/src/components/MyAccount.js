@@ -7,7 +7,7 @@ import { inject } from 'mobx-react';
 const Wrapper = styled.div`
   position: absolute;
   top: 40px;
-  right: 0;
+  left: 0;
   width: 150px;
   text-align: left;
   background: hsl(0, 0%, 100%);

@@ -126,7 +126,7 @@ class AddProduct extends Component {
   }
 
   render() {
-    const { images, showMessage, properties } = this.state;
+    const { images, showMessage } = this.state;
     return (
       <Wrapper onSubmit={this.handleSubmit}>
         <ProductForm onChange={this.handleChange} {...this.state} addProperty={this.addProperty}/>
