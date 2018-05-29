@@ -1,5 +1,6 @@
 package com.eshop.services;
 
+import com.eshop.Interfaces.PaymentMethod;
 import com.eshop.entities.CartProduct;
 import com.eshop.entities.Payment;
 
@@ -17,6 +18,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +27,7 @@ import java.util.Base64;
 import java.util.List;
 
 @Service
-public class PaymentService {
+public class PaymentService implements PaymentMethod{
 
     private final String url = "https://mock-payment-processor.appspot.com/v1/payment";
     private final String userAuth = "technologines:platformos";
