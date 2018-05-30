@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import AddProduct from './AddProduct/AddProduct';
 import AllProducts from './AllProducts/AllProducts';
+import ImportProduct from './ImportProduct/ImportProduct';
 
 const Wrapper = styled.div`
   display: flex;
@@ -83,7 +84,9 @@ class Products extends Component {
         <ButtonGroup>
           <Button active={showAllProducts} onClick={this.handleAllClick}>All products</Button>
           <Button active={showAddProduct} onClick={this.handleAddClick}>New product</Button>
-          <Button>Import products</Button>
+          <Button>
+            <ImportProduct/>
+          </Button>
         </ButtonGroup>
 
         {showAllProducts && <AllProducts />}

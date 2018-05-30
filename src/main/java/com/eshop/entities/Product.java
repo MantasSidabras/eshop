@@ -22,6 +22,12 @@ public class Product {
     @Size(min = 1, max = 256)
     private String name;
 
+    @Size(min = 1, max = 512)
+    private String title;
+
+    @Size(min = 1, max = 128)
+    private String skuCode;
+
     @Size(min = 0, max = 2048)
     private String description;
 
@@ -54,6 +60,8 @@ public class Product {
     public Product() {
     }
 
+
+    //TODO: Add new fields (title, SKU code
     public Product(String name, String description, BigDecimal price, Integer quantity){
         this.name = name;
         this.description = description;
@@ -77,6 +85,22 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getSkuCode() {
+        return skuCode;
+    }
+
+    public void setSkuCode(String skuCode) {
+        this.skuCode = skuCode;
     }
 
     public String getDescription() {
