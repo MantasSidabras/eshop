@@ -16,6 +16,7 @@ const Wrapper = styled.div`
   box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.2);
   outline: none;
   z-index: 999;
+  cursor: pointer;
 
   > div {
     padding: 8px 15px;
