@@ -17,7 +17,11 @@ class ProductStore {
       .then(product =>
         {
           this.product = product;
-          this.products.forEach((p, i) => { if (p.id === product.id) this.products[i] = product; });
+          this.products.forEach((p, i) => { 
+            if (p.id === product.id) {
+              this.products[i] = product;
+            }
+          })
         })
       .catch(error => console.error(error))
   }
