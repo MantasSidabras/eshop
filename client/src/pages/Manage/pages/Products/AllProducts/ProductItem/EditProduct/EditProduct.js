@@ -4,8 +4,6 @@ import styled from 'styled-components';
 import ImageSelect from 'components/ImageSelect';
 import ProductForm from 'components/ProductForm';
 import ScaleUp from 'animations/ScaleUp';
-import ConfirmOverwrite from '../ConfirmOverwrite/ConfirmOverwrite';
-import FadeIn from 'animations/FadeIn';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -119,7 +117,7 @@ class EditProduct extends Component {
 
   removeProperty = index => {
     const properties = [...this.state.properties];
-    this.setState({ properties: properties.filter((p, i) => index != i) });
+    this.setState({ properties: properties.filter((p, i) => index !== i) });
   }
 
   componentWillReceiveProps(props){

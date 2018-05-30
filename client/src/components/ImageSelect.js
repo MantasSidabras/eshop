@@ -60,15 +60,14 @@ class ImageSelect extends Component {
           rejectStyle={{ border: '3px solid hsl(00, 50%, 80%)', background: 'hsl(0, 50%, 97%)'}}
         >
           {images.length !== 0 || oldImages.length !== 0 
-            ? <p>Click on the image to remove</p> 
-            : <p>Drop images here or click to select</p>
+            ? <p style={{ textAlign: 'center' }}>Click on the image to remove</p> 
+            : <p style={{ textAlign: 'center' }}>Drop images here or click to select</p>
           }
 
           <Images>
             {oldImages.map(i => 
               <ImageWrapper key={i.id}>
                 <Image onClick={e => { e.stopPropagation(); onOldImageClick(i.id)}} alt={i.name} src={ProductImageApi.get(i.id)}/>
-                <ImageInfo bold>{i.name}</ImageInfo>
               </ImageWrapper>
             )}
             {images.map(i => 

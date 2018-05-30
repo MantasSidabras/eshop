@@ -35,7 +35,7 @@ const Backdrop = styled.div`
   background-color: hsl(0, 0%, 99%);
 
   @media (max-width: 456px) {
-    height: 137px;
+    height: 149px;
   }
 `;
 

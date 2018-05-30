@@ -72,7 +72,6 @@ class ProductForm extends Component {
   }
 
   render() {
-    // const productProperties = [];
     const { name, price, quantity, properties, description, onChange } = this.props;
     return (
       <Wrapper>
@@ -107,12 +106,20 @@ class ProductForm extends Component {
           </div>
         </div>
 		    <AddProp onClick={this.addProperty}>Add property</AddProp>
-        {properties && properties.length > 0 && <PropertyBox>
-          {properties.map((property, index) => <div key={index} style={{ margin: '6px 0'}}>
-              {property.name} : {property.value}
-              <i style={{ float: 'right', fontSize: '1.1em'}} className="fas fa-times" onClick={() => this.props.removeProperty(index)}/>
-           </div>)}
-        </PropertyBox>}
+        {properties && properties.length > 0 && 
+          <PropertyBox>
+            {properties.map((property, index) => 
+              <div key={index} style={{ display: 'flex', justifyContent: 'space-between', margin: '6px 0'}}>
+                <div style={{ marginRight: 10}}>
+                  <b>{property.name}:</b></div>
+                <div style={{ display: 'flex',alignItems: 'center' }}>
+                  <span style={{ marginRight: 15 }}>{property.value}</span>
+                  <i style={{ fontSize: '1.1rem', cursor: 'pointer'}} className="fas fa-times" onClick={() => this.props.removeProperty(index)}/>
+                </div>
+              </div>
+            )}
+          </PropertyBox>
+        }
       </Wrapper>
     )
   }

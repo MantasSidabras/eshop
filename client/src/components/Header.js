@@ -19,6 +19,7 @@ const Wrapper = styled.header`
 const Title = styled.h1`
   margin: 0;
   margin-right: 30px;
+  font-size: 2.1rem;
   a {
     color: hsla(0, 0%, 0%, 0.75);
     text-decoration: none;
@@ -26,6 +27,9 @@ const Title = styled.h1`
 
   @media (max-width: 550px) {
     width: 100%;
+    margin-right: 0;
+    text-align: center;
+    margin-bottom: 10px;
   }
 `
 
@@ -71,14 +75,14 @@ const Nav = styled.ul`
   }
 `
 const LoginNav = styled.ul`
-display: flex;
-align-items: flex-end;
-margin: 0;
-${'' /* margin-right: 20px; */}
-padding: 0;
-font-size: 1.2rem;
-border-radius: 5px;
-list-style: none;
+  display: flex;
+  align-items: flex-end;
+  margin: 0;
+  padding: 0;
+  font-size: 1.2rem;
+  border-radius: 5px;
+  list-style: none;
+
    li{
     padding: 10px 20px;
     font-family: 'Roboto', sans-serif;
@@ -88,7 +92,7 @@ list-style: none;
     border: 1px solid hsl(210, 50%, 45%);
     outline: none;
     cursor: pointer;
-    transition: 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
     text-align: center;
 
     ${props => props.active && 'background: hsl(210, 50%, 45%);'}
@@ -96,15 +100,12 @@ list-style: none;
 
     &:hover {
       background: hsl(210, 50%, 50%);
+      color: hsla(0, 0%, 0%, 0.85);
+      border-bottom: 2px solid hsl(210, 70%, 60%);
     }
 
     &:focus {
       box-shadow: 0 0 0 1px #4D90FE;
-    }
-
-    &:hover {
-      color: hsla(0, 0%, 0%, 0.85);
-      border-bottom: 2px solid hsl(210, 70%, 60%);
     }
 
     &:first-child {
@@ -128,7 +129,7 @@ const RegisterLink = styled(Link)`
   border: 1px solid hsl(210, 50%, 45%);
   outline: none;
   cursor: pointer;
-  transition: 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
   text-align: center;
 
   &:hover {
@@ -145,7 +146,6 @@ const RegisterLink = styled(Link)`
     border-bottom-right-radius: 5px;
   }
 `
-
 
 const MyAccountLink = styled.button`
   padding: 0;
