@@ -116,7 +116,6 @@ class ProductApi {
     })
       .then(res => res.json())
   }
-
 }
 
 export default new ProductApi();

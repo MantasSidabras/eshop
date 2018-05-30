@@ -91,7 +91,8 @@ class EditProduct extends Component {
       description: this.state.description,
       price: this.state.price,
       quantity: this.state.quantity,
-      version: this.state.version
+      version: this.state.version,
+      productProperties: this.state.properties
     };
 
     this.props.onEdit({ product, imageIdsToDelete, images });
@@ -110,6 +111,15 @@ class EditProduct extends Component {
     this.setState({ images: this.state.images.filter(i => i.name !== name )});
   }
 
+  addProperty = property => {
+    this.setState({ properties: [...this.state.properties, property] });
+  }
+
+  removeProperty = index => {
+    const properties = [...this.state.properties];
+    this.setState({ properties: properties.filter((p, i) => index != i) });
+  }
+
   componentWillReceiveProps(props){
     this.setState({
       name: props.name,
@@ -117,6 +127,7 @@ class EditProduct extends Component {
       price: props.price,
       quantity: props.quantity,
       oldImages: props.productImages,
+      properties: props.productProperties,
       version: props.version
     }
     );
@@ -128,7 +139,7 @@ class EditProduct extends Component {
       <Wrapper onClick={this.handleCancel}>
         <ScaleUp>
           <Form onClick={e => e.stopPropagation()} onSubmit={this.handleSubmit}>
-            <ProductForm onChange={this.handleChange} {...this.state}/>
+            <ProductForm onChange={this.handleChange} {...this.state} addProperty={this.addProperty} removeProperty={this.removeProperty} />
 
             <label>Images</label>
             <ImageSelect

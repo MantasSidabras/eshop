@@ -1,13 +1,16 @@
 package com.eshop.services;
 
 import com.eshop.dao.ProductDAO;
+import com.eshop.dao.PropertyDAO;
 import com.eshop.entities.Product;
+import com.eshop.entities.Property;
 import com.eshop.exceptions.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -17,9 +20,18 @@ public class ProductService {
     @Autowired
     private ProductDAO productDAO;
 
+    @Autowired
+    private PropertyService propertyService;
+
     public Product create(Product product){
+        Product newProduct = productDAO.save(product);
+        for(Property p : product.getProductProperties()){
+            p.setProduct(newProduct);
+        }
+        propertyService.create(product.getProductProperties());
+
         product.setDateCreated(LocalDateTime.now());
-        return productDAO.save(product);
+        return newProduct;
     }
 
     public List<Product> findAll(){
@@ -37,7 +49,21 @@ public class ProductService {
     }
 
     public Product update(Product product) {
-        return productDAO.save(product);
+        List<Integer> propertiesIds = getIds(product.getProductProperties());
+        for(Property prop : propertyService.getProperties(product.getId())){
+            if(!propertiesIds.contains(prop.getId())){
+                propertyService.delete(prop.getId());
+            }
+        }
+        Product updateProduct = productDAO.save(product);
+        for(Property p : product.getProductProperties()){
+            p.setProduct(updateProduct);
+        }
+
+        propertyService.create(product.getProductProperties());
+
+
+        return updateProduct;
     }
 
     public void deleteById(Integer id) throws ProductNotFoundException{
@@ -52,5 +78,14 @@ public class ProductService {
             throw e;
         }
 
+    }
+
+    private List<Integer> getIds(final List<Property> dummyList)
+    {
+        List<Integer> ids = new ArrayList<Integer>();
+        for(Property dummy: dummyList){
+            ids.add(dummy.getId());
+        }
+        return ids;
     }
 }

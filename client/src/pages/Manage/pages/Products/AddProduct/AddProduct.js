@@ -86,6 +86,11 @@ class AddProduct extends Component {
     this.setState({ properties: [...this.state.properties, property] });
   }
 
+  removeProperty = index => {
+    const properties = [...this.state.properties];
+    this.setState({ properties: properties.filter((p, i) => index != i) });
+  }
+
   handleSubmit = e => {
     e.preventDefault();
 
@@ -97,7 +102,7 @@ class AddProduct extends Component {
       description: this.state.description,
       price: this.state.price,
       quantity: this.state.quantity,
-      properties: this.state.properties
+      productProperties: this.state.properties
     };
 
     const formData = new FormData();
@@ -129,7 +134,7 @@ class AddProduct extends Component {
     const { images, showMessage } = this.state;
     return (
       <Wrapper onSubmit={this.handleSubmit}>
-        <ProductForm onChange={this.handleChange} {...this.state} addProperty={this.addProperty}/>
+        <ProductForm onChange={this.handleChange} {...this.state} addProperty={this.addProperty} removeProperty={this.removeProperty}/>
 
         <label>Images</label>
         <ImageSelect

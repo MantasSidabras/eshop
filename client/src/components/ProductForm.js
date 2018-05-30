@@ -6,7 +6,6 @@ const Wrapper = styled.div`
     display: block;
     color: hsla(0, 0%, 0%, 0.85);
   }
-
   input, textarea {
     width: 100%;
     padding: 3px;
@@ -23,6 +22,16 @@ const Wrapper = styled.div`
     height: 100px;
     resize: none;
   }
+`
+const PropertyBox = styled.div`
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.9rem;
+  border: 1px solid hsl(0, 0%, 75%);
+  padding: 3px 8px;
+  border-radius: 3px;
+  box-shadow: inset 0 2px 4px 0 hsla(0, 0%, 0%, 0.08);
+  margin-bottom: 15px;
+
 `
 
 const AddProp = styled.button`
@@ -98,9 +107,12 @@ class ProductForm extends Component {
           </div>
         </div>
 		    <AddProp onClick={this.addProperty}>Add property</AddProp>
-
-        {properties.map((property, index) => <p key={index} style={{ margin: '0 0 10px 0'}}>{property.name} {property.value}</p>)}
-
+        {properties && properties.length > 0 && <PropertyBox>
+          {properties.map((property, index) => <div key={index} style={{ margin: '6px 0'}}>
+              {property.name} : {property.value}
+              <i style={{ float: 'right', fontSize: '1.1em'}} className="fas fa-times" onClick={() => this.props.removeProperty(index)}/>
+           </div>)}
+        </PropertyBox>}
       </Wrapper>
     )
   }

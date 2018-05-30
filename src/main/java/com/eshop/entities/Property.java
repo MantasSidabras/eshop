@@ -2,9 +2,9 @@ package com.eshop.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
-
 @Entity
 @Table(name = "properties")
+
 public class Property {
 
     @Id

@@ -2,12 +2,14 @@ package com.eshop.controllers;
 
 import com.eshop.entities.Product;
 import com.eshop.entities.ProductImage;
+import com.eshop.entities.Property;
 import com.eshop.entities.User;
 import com.eshop.exceptions.ProductNotFoundException;
 import com.eshop.exceptions.UnauthorizedException;
 import com.eshop.services.AuthService;
 import com.eshop.services.ProductImageService;
 import com.eshop.services.ProductService;
+import com.eshop.services.PropertyService;
 import org.hibernate.dialect.lock.OptimisticEntityLockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +46,6 @@ public class ProductController {
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Product> createProduct(@RequestHeader("Authorization") String authHead, @RequestBody Product product) {
-
         try{
             User tokenUser = authService.getUserFromHeader(authHead);
             authService.authorizeAdmin(tokenUser);
@@ -88,8 +90,7 @@ public class ProductController {
         try{
             User tokenUser = authService.getUserFromHeader(authHead);
             authService.authorizeAdmin(tokenUser);
-
-            return ResponseEntity.ok(this.productService.update(product));
+            return ResponseEntity.ok(productService.update(product));
         }
         catch(UnauthorizedException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
@@ -99,6 +100,7 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
+
 
 
     //Only admin
@@ -160,6 +162,5 @@ public class ProductController {
         catch(UnauthorizedException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-
     }
 }
