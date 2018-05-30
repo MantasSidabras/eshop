@@ -9,6 +9,8 @@ import ScaleUp from 'animations/ScaleUp';
 
 import Rating from './Rating';
 
+import MDSpinner from "react-md-spinner";
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -189,7 +191,9 @@ class Purchase extends Component {
       showMessage: false,
       isError: false,
       message: '',
-      rating: 4
+      rating: 4,
+      loading: false,
+      
     }
   }
 
@@ -226,22 +230,24 @@ class Purchase extends Component {
       return this.setState({ err: true });
     }
 
+    this.setState({ loading: true });
     OrderApi.create(this.state)
       .then(res => {
-        this.setState({ showMessage: true, isError: false, message: res.message });
+        this.setState({ showMessage: true, isError: false, message: res.message, loading: false });
 
         this.orderId = res.orderId;
         userStore.fetchUser();
         cartStore.getCart();
       })
       .catch(error => {
+
         if (error.status === 401) {
           console.error(error.message);
           userStore.logout();
           return history.push('/login');
         }
 
-        this.setState({ showMessage: true, isError: true, message: error.message });
+        this.setState({ showMessage: true, isError: true, message: error.message, loading: false });
         this.timeout = setTimeout(() => {
           this.setState({ showMessage: false });
           if (error.status === 409) {
@@ -268,72 +274,83 @@ class Purchase extends Component {
 
   render() {
     const { cartProductList, sum } = this.props.cartStore;
-    const { holder, address, zipCode, number, expYear, expMonth, cvv, err, showMessage, isError, message, rating } = this.state;
+    const { holder, address, zipCode, number, expYear, expMonth, cvv, err, showMessage, isError, message, rating, loading } = this.state;
 
-    if (showMessage || (this.props.userStore.isLoggedIn && cartProductList.length > 0)) {
+    if (this.props.userStore.isLoggedIn && cartProductList.length > 0 || showMessage) {
       return ( 
         <Wrapper>
-          <Title>Purchase</Title>
-          <Form onSubmit={this.handleSubmit}>
-            <div style={{ textAlign: 'right', marginBottom: 5, color: 'hsla(0, 0%, 0%, 0.85)' }}>Step 2/2</div>
-            <BorderWrapper>
-              <FormContainer>
-                <label htmlFor='holder'>Full name</label>
-                <input type="text" id='holder' name='holder' required value={holder} onChange={this.handleChange}/>
+          {loading && 
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexGrow: 1}}>
+              <MDSpinner singleColor='hsl(210, 60%, 60%)' size='70'/>
+            </div>
+          }
 
-                <label htmlFor='address'>Address</label>
-                <input type="text" id='address' name='address' value={address} onChange={this.handleChange} required />
+          {!loading && !showMessage && (
+            <React.Fragment>
+              <Title>Purchase</Title>
+              <Form onSubmit={this.handleSubmit}>
+                <div style={{ textAlign: 'right', marginBottom: 5, color: 'hsla(0, 0%, 0%, 0.85)' }}>Step 2/2</div>
+                <BorderWrapper>
+                  <FormContainer>
+                    <label htmlFor='holder'>Full name</label>
+                    <input type="text" id='holder' name='holder' required value={holder} onChange={this.handleChange}/>
 
-                <label htmlFor='zipCode'>Zip Code</label>
-                <input type="text" id='zipCode' name='zipCode' value={zipCode} onChange={this.handleChange} required />
+                    <label htmlFor='address'>Address</label>
+                    <input type="text" id='address' name='address' value={address} onChange={this.handleChange} required />
 
-                <label style={{ marginTop: 10 }} htmlFor='number'>Card number</label>
-                <input type="text" id='number' name='number' required value={number} onChange={this.handleChange}/>
-                {err && <div style={{ marginTop: -13, marginBottom: 5, fontSize: '0.8rem', color: 'hsla(0, 90%, 40%, 0.85)'}}>Invalid credit card number</div>}
+                    <label htmlFor='zipCode'>Zip Code</label>
+                    <input type="text" id='zipCode' name='zipCode' value={zipCode} onChange={this.handleChange} required />
 
-                <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between'}}>
-                  <div style={{ width: '45%' }}>
-                    <label htmlFor='expYear'>Exp. year</label>
-                    <input type="text" id='expYear' name='expYear' required value={expYear} onChange={this.handleChange}/>
+                    <label style={{ marginTop: 10 }} htmlFor='number'>Card number</label>
+                    <input type="text" id='number' name='number' required value={number} onChange={this.handleChange}/>
+                    {err && <div style={{ marginTop: -13, marginBottom: 5, fontSize: '0.8rem', color: 'hsla(0, 90%, 40%, 0.85)'}}>Invalid credit card number</div>}
+
+                    <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between'}}>
+                      <div style={{ width: '45%' }}>
+                        <label htmlFor='expYear'>Exp. year</label>
+                        <input type="text" id='expYear' name='expYear' required value={expYear} onChange={this.handleChange}/>
+                      </div>
+
+                      <div style={{ width: '45%' }}>
+                        <label htmlFor='expMonth'>Exp. month</label>
+                        <input type="text" id='expMonth' name='expMonth' required value={expMonth} onChange={this.handleChange}/>
+                      </div>
+                    </div>
+
+                    <div style={{ width: 50 }}>
+                      <label htmlFor='cvv'>CVV</label>
+                      <input type="text" id='cvv' name='cvv' required value={cvv} onChange={this.handleChange}/>
+                    </div>
+                  </FormContainer>
+      
+                  <div style={{ marginTop: 20, textAlign: 'right'}}>
+                    <span>
+                      Sum:
+                      <TotalPrice>{sum}€</TotalPrice>
+                    </span>
                   </div>
+                </BorderWrapper>
 
-                  <div style={{ width: '45%' }}>
-                    <label htmlFor='expMonth'>Exp. month</label>
-                    <input type="text" id='expMonth' name='expMonth' required value={expMonth} onChange={this.handleChange}/>
+                <ButtonWrapper>
+                  <BackButton to='/cart'><i className="fas fa-arrow-left"></i> Back</BackButton>
+                  <PurchaseButton>Purchase</PurchaseButton>
+                </ButtonWrapper>
+              </Form>
+            </React.Fragment>
+          )}
+
+          {showMessage && (
+            <FadeIn in={showMessage}>
+              <Background onClick={this.handleClose}>
+                <ScaleUp>
+                  <div onClick={e => e.stopPropagation()} style={{display: 'flex', flexDirection: 'column', borderRadius: 3}}>
+                    <Message error={isError}>{message}</Message>
+                    {!isError && <Rating onRate={this.handleRate} value={rating} onChange={this.handleRatingChange}/>}
                   </div>
-                </div>
-
-                <div style={{ width: 50 }}>
-                  <label htmlFor='cvv'>CVV</label>
-                  <input type="text" id='cvv' name='cvv' required value={cvv} onChange={this.handleChange}/>
-                </div>
-              </FormContainer>
-  
-              <div style={{ marginTop: 20, textAlign: 'right'}}>
-                <span>
-                  Sum:
-                  <TotalPrice>{sum}€</TotalPrice>
-                </span>
-              </div>
-            </BorderWrapper>
-
-            <ButtonWrapper>
-              <BackButton to='/cart'><i className="fas fa-arrow-left"></i> Back</BackButton>
-              <PurchaseButton>Purchase</PurchaseButton>
-            </ButtonWrapper>
-          </Form>
-
-          <FadeIn in={showMessage}>
-            <Background onClick={this.handleClose}>
-              <ScaleUp>
-                <div onClick={e => e.stopPropagation()} style={{display: 'flex', flexDirection: 'column', borderRadius: 3}}>
-                  <Message error={isError}>{message}</Message>
-                  {!isError && <Rating onRate={this.handleRate} value={rating} onChange={this.handleRatingChange}/>}
-                </div>
-              </ScaleUp>
-            </Background>
-          </FadeIn>
-
+                </ScaleUp>
+              </Background>
+            </FadeIn>
+          )}
         </Wrapper>
       )
     } else {
