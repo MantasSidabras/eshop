@@ -40,21 +40,26 @@ public class OrderController {
     @ResponseBody
     public ResponseEntity<Map<String, String>> create(@RequestHeader("Authorization") String authHeader, @RequestBody Payment payment) {
         Map<String, String> res = new HashMap<>();
+        Order newOrder = new Order();
         try {
 
             User user = authService.getUserFromHeader(authHeader);
             commerceService.checkIntegrity(user);
+
             for(Order order : user.getOrderList()){
                 if(order.getState() == OrderState.Unpaid) {
                     res.put("message", "Payment failed");
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
                 }
             }
-            Order newOrder = commerceService.createOrder(user, payment);
+
+            newOrder = commerceService.createOrder(user, payment);
 
             payment.setAmount(paymentService.calcAmountInCents(user.getCartProductList()));
             paymentService.sendPayment(payment);
+
             newOrder.setState(OrderState.Paid);
+            commerceService.removeAllFromCartByUserId(user.getId());
             Order savedOrder = commerceService.updateOrder(newOrder);
 
             res.put("message", "Payment successful");
@@ -71,6 +76,7 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(res);
         } catch(PaymentException e) {
             e.printStackTrace();
+            commerceService.deleteOrderById(newOrder.getId());
             res.put("message", e.getMessage());
             return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body(res);
         } catch(Exception e) {
@@ -127,4 +133,5 @@ public class OrderController {
         }
 
     }
+
 }

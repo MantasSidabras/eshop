@@ -171,8 +171,6 @@ public class CommerceService {
             orderProductDAO.save(op);
         }
 
-        this.removeAllFromCartByUserId(user.getId());
-
         return savedOrder;
     }
 
@@ -199,6 +197,9 @@ public class CommerceService {
             e.printStackTrace();
             return null;
         }
+    }
+    public void deleteOrderById(Integer id) {
+        this.orderDAO.deleteById(id);
     }
 
     public Order setOrderRating(Integer orderId, Integer rating) {

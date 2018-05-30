@@ -64,7 +64,7 @@ public class PaymentService implements PaymentMethod{
         HttpResponse response = httpClient.execute(request);
 
         try {
-            Thread.sleep(10000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -75,8 +75,8 @@ public class PaymentService implements PaymentMethod{
             throw new PaymentException("Incorrect data");
         }
 
-        if (statusCode == 401 || statusCode == 402) {
-            throw new PaymentException("Payment Failed");
+        if (statusCode == 402) {
+            throw new PaymentException("Card expired");
         }
     }
 
