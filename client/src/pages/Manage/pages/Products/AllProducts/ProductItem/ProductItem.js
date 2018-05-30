@@ -6,6 +6,8 @@ import ProductApi from 'api/ProductApi';
 import ProductImageApi from 'api/ProductImageApi';
 import EditProduct from './EditProduct/EditProduct';
 import ConfirmDelete from './ConfirmDelete/ConfirmDelete';
+import ConfirmOverwrite from './ConfirmOverwrite/ConfirmOverwrite';
+
 import FadeIn from 'animations/FadeIn';
 import ScaleUp from 'animations/ScaleUp';
 
@@ -73,7 +75,8 @@ class ProductItem extends Component {
     showConfirm: false,
     showMessage: false,
     showError: false,
-    errMsg: ''
+    errMsg: '',
+    err: false
   }
 
   showIcons = () => {
@@ -90,7 +93,9 @@ class ProductItem extends Component {
 
   handleEdit = ({ product, imageIdsToDelete, images }) => {
     const formData = new FormData();
-
+    this.product = product;
+    this.imageIdsToDelete = imageIdsToDelete;
+    this.images = images;
     for (const image of images) {
       formData.append('file', image)
     }
@@ -102,15 +107,50 @@ class ProductItem extends Component {
     ])
       .then(() => {
         this.props.productStore.getAll();
-        this.setState({ showMessage: true, showError: false });
+        this.setState({ showMessage: true, showError: false, err: false });
         this.timeout = setTimeout(() => this.setState({ showEdit: false, showMessage: false }), 1200)
       })
       .catch(error => {
         console.error(error);
-        this.setState({ showMessage: true, showError: true, errMsg: error.message });
+        this.setState({ showMessage: true, showError: true, errMsg: error.message, err: true });
         this.timeout = setTimeout(() => this.setState({ showMessage: false}), 3000);
-        this.props.productStore.getOne(this.props.id);
+        //this.props.productStore.getOne(this.props.id);
       });
+  }
+
+  handleRefresh = () => {
+    this.setState({ showMessage: false, showError: false, err: false });
+    this.props.productStore.getOne(this.props.id);
+  }
+
+  handleOverwrite = async () => {
+
+    const prod = await ProductApi.getOne(this.product.id);
+    this.product.version = prod.version;
+
+    const formData = new FormData();
+    for (const image of this.images) {
+      formData.append('file', image)
+    }
+    Promise.all([
+      ProductApi.update(this.product),
+      ProductApi.addImages(this.product.id, formData),
+      ...this.imageIdsToDelete.map(id => ProductImageApi.delete(id))
+    ])
+    .then(() => {
+      this.props.productStore.getAll();
+      this.setState({ showMessage: true, showError: false, err: false });
+      this.timeout = setTimeout(() => this.setState({ showEdit: false, showMessage: false }), 1200)
+    })
+    .catch(error => {
+      console.error(error);
+      this.setState({ showMessage: true, showError: true, errMsg: error.message, err: true });
+      this.timeout = setTimeout(() => this.setState({ showMessage: false}), 3000);
+      //this.props.productStore.getOne(this.props.id);
+    });
+
+    this.setState({ showMessage: true, showError: false, err: false });
+
   }
 
   handleDelete = () => {
@@ -155,13 +195,18 @@ class ProductItem extends Component {
           <ConfirmDelete name={name} onDelete={this.handleDelete} onCancel={this.handleCancel}/>
         </FadeIn>
 
-        <FadeIn in={showMessage}>
-          <Message onClick={this.handleClose} error={this.state.showError}>
+        <FadeIn in={showMessage && !this.state.err}>
+          <Message onClick={this.handleClose}>
             <ScaleUp>
-              { this.state.showError ? <div>{this.state.errMsg}</div> : <div>Edited successfully!</div> }
+              <div>Edited successfully!</div>
             </ScaleUp>
           </Message>
         </FadeIn>
+
+          <FadeIn in={this.state.err}>
+            <ConfirmOverwrite handleOverwrite={this.handleOverwrite} handleRefresh={this.handleRefresh}/>
+          </FadeIn>
+
       </Wrapper>
     )
   }
