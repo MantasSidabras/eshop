@@ -148,7 +148,6 @@ const RegisterLink = styled(Link)`
 
 
 const MyAccountLink = styled.button`
-  position: relative;
   padding: 0;
   padding-bottom: 2px;
   height: 32px;
@@ -257,14 +256,16 @@ class Header extends Component {
               </LoginNav>
             }
 
-            {isLoggedIn &&
-              <MyAccountLink onClick={() => this.setState({ showMyAccount: !showMyAccount })}>
-                My Account
+            {isLoggedIn && (
+              <div style={{ position: 'relative' }}>
+                <MyAccountLink onClick={() => this.setState({ showMyAccount: !showMyAccount })}>
+                  My Account
+                </MyAccountLink>
                 <FadeIn in={showMyAccount} enterDuration={200} exitDuration={100}>
                   <MyAccount hide={this.handleHideMyAccount}/>
                 </FadeIn>
-              </MyAccountLink>
-            }
+              </div>
+            )}
 
             <CartLink to='/cart'>
               <i style={{ position: 'relative', marginRight: 2}} className="fas fa-shopping-cart fa-lg">
