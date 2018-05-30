@@ -48,13 +48,12 @@ const OrderPrice = styled.div`
 const Label = styled.div`
   width: 66px;
   padding: 4px 6px;
-  ${props => props.sent && 'background: hsl(110, 80%, 40%);'}
-  ${props => props.pending && 'background: hsl(0, 0%, 70%);'}
-  color: hsla(0, 0%, 100%, 0.95);
+  ${props => props.sent && 'background: hsl(110, 60%, 75%);'}
+  ${props => props.pending && 'background: hsl(0, 0%, 85%);'}
   font-size: 0.75rem;
   text-align: center;
-  ${props => props.sent && 'border: 1px solid hsl(110, 80%, 30%);'}
-  ${props => props.pending && 'border: 1px solid hsl(0, 0%, 60%);'}
+  ${props => props.sent && 'border: 1px solid hsl(110, 35%, 55%);'}
+  ${props => props.pending && 'border: 1px solid hsl(0, 0%, 65%);'}
   border-radius: 3px;
 `
 
@@ -110,7 +109,7 @@ class OrderItem extends Component {
           <DateCreated>{format(dateCreated, 'YYYY-MM-DD, HH:mm')}</DateCreated>
           <div>{dateCompleted}</div>
           <OrderPrice>{price.toFixed(2)}€</OrderPrice>       
-          {state 
+          {state === 'Sent'
             ? <Label sent>Sent</Label>
             : <Label pending>Pending</Label>
           } 

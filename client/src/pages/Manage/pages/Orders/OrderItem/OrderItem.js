@@ -119,11 +119,11 @@ const Label = styled.div`
   margin: 7px 0;
   align-self: center;
   ${props => props.sent && 'background: hsl(110, 60%, 75%);'}
-  ${props => props.pending && 'background: hsl(0, 0%, 70%);'}
+  ${props => props.pending && 'background: hsl(0, 0%, 85%);'}
   font-size: 0.75rem;
   text-align: center;
   ${props => props.sent && 'border: 1px solid hsl(110, 35%, 55%);'}
-  ${props => props.pending && 'border: 1px solid hsl(0, 0%, 60%);'}
+  ${props => props.pending && 'border: 1px solid hsl(0, 0%, 65%);'}
   border-radius: 3px;
 `
 
