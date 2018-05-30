@@ -1,26 +1,13 @@
 package com.eshop.services;
 
-import com.eshop.dao.CartProductDAO;
-import com.eshop.dao.OrderDAO;
-import com.eshop.dao.OrderProductDAO;
-import com.eshop.dao.ProductDAO;
 import com.eshop.entities.*;
 import com.eshop.exceptions.ProductCartEmptyException;
-import org.junit.BeforeClass;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.api.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.mockito.AdditionalAnswers.returnsFirstArg;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CommerceServiceTest extends BaseServiceTest {
 

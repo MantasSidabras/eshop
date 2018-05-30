@@ -40,13 +40,12 @@ public class ProductService {
     private PropertyService propertyService;
 
     public Product create(Product product){
+        product.setDateCreated(LocalDateTime.now());
         Product newProduct = productDAO.save(product);
         for(Property p : product.getProductProperties()){
             p.setProduct(newProduct);
         }
         propertyService.create(product.getProductProperties());
-
-        product.setDateCreated(LocalDateTime.now());
         return newProduct;
     }
 
@@ -187,7 +186,6 @@ public class ProductService {
                             default:
                                 break;
                         }
-                        System.out.println(cellValue);
                     }
                 }
             }

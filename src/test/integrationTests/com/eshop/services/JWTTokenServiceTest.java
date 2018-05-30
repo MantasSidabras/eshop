@@ -1,27 +1,14 @@
 package com.eshop.services;
 
-import com.eshop.entities.User;
-import com.eshop.exceptions.TokenParseException;
-import com.eshop.exceptions.UserNotCreatedException;
-import com.eshop.exceptions.UserNotFoundException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
-import java.security.Key;
-import java.util.Date;
+import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class JWTTokenServiceTest {
 
@@ -49,7 +36,7 @@ public class JWTTokenServiceTest {
             jwtTokenService.parseToken(jwtTokenService.generateToken(userService.findById(1)));
         }
         catch(Exception e){
-            Assert.fail("ERROR parsingg token in test");
+            fail("ERROR parsingg token in test");
         }
     }
 
@@ -68,7 +55,7 @@ public class JWTTokenServiceTest {
             token = jwtTokenService.generateToken(userService.findById(1));
         }
         catch(Exception e){
-            Assert.fail("ERROR CREATING TOKEN");
+            fail("ERROR CREATING TOKEN");
 
         }
     }

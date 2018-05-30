@@ -5,8 +5,6 @@ import com.eshop.dao.OrderDAO;
 import com.eshop.dao.OrderProductDAO;
 import com.eshop.dao.ProductDAO;
 import com.eshop.entities.*;
-import org.junit.BeforeClass;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.math.BigDecimal;

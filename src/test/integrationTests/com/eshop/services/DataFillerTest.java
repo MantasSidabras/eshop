@@ -3,17 +3,26 @@ package com.eshop.services;
 import com.eshop.entities.Product;
 import com.eshop.entities.User;
 import com.eshop.exceptions.UserNotCreatedException;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.fail;
 
-@RunWith(SpringRunner.class)
+
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class DataFillerTest {
 
@@ -36,5 +45,24 @@ public class DataFillerTest {
         //Create products
         productService.create(new Product("Vienkartinės nosinaitės", "Išsipūsk savo nosį!", BigDecimal.valueOf(0.35), 5));
         productService.create(new Product("Tualetinis popierius", "Gali valytis, o gali ir ne", BigDecimal.valueOf(2.79), 100));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "PresentationFiller.xlsx" })
+    public void ImportDataFromXlsxFile(String fileName) {
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        try {
+            Path path = Paths.get(classLoader.getResource(fileName).toURI());
+
+            byte[] content = null;
+            content = Files.readAllBytes(path);
+            MultipartFile file = new MockMultipartFile(fileName,
+                    fileName, "text/plain", content);
+            productService.importProducts(file);
+        }
+        catch (Exception ex) {
+            fail(ex.getMessage());
+        }
     }
 }
