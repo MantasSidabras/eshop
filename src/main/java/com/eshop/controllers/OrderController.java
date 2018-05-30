@@ -1,5 +1,6 @@
 package com.eshop.controllers;
 
+import com.eshop.Interfaces.PaymentMethod;
 import com.eshop.entities.Order;
 import com.eshop.entities.Payment;
 import com.eshop.entities.User;
@@ -8,15 +9,12 @@ import com.eshop.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Future;
 
 @Controller
 @RequestMapping("api/order")
@@ -24,7 +22,7 @@ import java.util.concurrent.Future;
 public class OrderController {
 
     @Autowired
-    PaymentService paymentService;
+    PaymentMethod paymentService;
 
     @Autowired
     CommerceService commerceService;

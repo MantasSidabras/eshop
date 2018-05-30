@@ -33,6 +33,10 @@ const Backdrop = styled.div`
   box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.2);
   z-index: -1;
   background-color: hsl(0, 0%, 99%);
+
+  @media (max-width: 456px) {
+    height: 137px;
+  }
 `;
 
 class App extends Component {

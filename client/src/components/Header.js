@@ -11,33 +11,52 @@ const Wrapper = styled.header`
   flex-wrap: wrap;
   align-items: flex-end;
   width: 100%;
-  padding: 10px 0;
+  padding: 5px 0;
   padding-top: 25px;
   background-color: hsl(0, 0%, 99%);
 `
 
 const Title = styled.h1`
   margin: 0;
+  margin-right: 30px;
   a {
     color: hsla(0, 0%, 0%, 0.75);
     text-decoration: none;
   }
+
+  @media (max-width: 550px) {
+    width: 100%;
+  }
 `
-const Nav = styled.ul`
+
+const NavWrap = styled.div`
   display: flex;
   flex-grow: 1;
   align-items: center;
+
+  @media (max-width: 456px) {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+`
+const Nav = styled.ul`
+  display: inline-block;
+  flex-grow: 1;
   margin: 0;
+  padding-left: 0;
   font-size: 1.2rem;
   border-radius: 5px;
   list-style: none;
+
+  @media (max-width: 550px) {
+    padding-left: 0;
+  }
 
   li {
     display: inline-block;
     margin-right: 20px;
     a {
       display: inline-block;
-      padding: 5px 0;
       padding-bottom: 2px;
       color: hsla(0, 0%, 0%, 0.75);
       border-bottom: 2px solid transparent;
@@ -55,7 +74,8 @@ const LoginNav = styled.ul`
 display: flex;
 align-items: flex-end;
 margin: 0;
-margin-right: 20px;
+${'' /* margin-right: 20px; */}
+padding: 0;
 font-size: 1.2rem;
 border-radius: 5px;
 list-style: none;
@@ -194,6 +214,17 @@ const CartCount = styled.div`
   font-family: 'Roboto', sans-serif;
   padding: 5px;
 `
+
+const SomeWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  @media (max-width: 456px) {
+    flex-grow: 1;
+    margin: 0;
+  }
+
+`;
 class Header extends Component {
   state = {
     showMyAccount: false
@@ -209,34 +240,41 @@ class Header extends Component {
     return (
       <Wrapper>
         <Title><a href='/'>{this.props.children}</a></Title>
-        <Nav>
-          <li><NavLink exact to='/'>Home</NavLink></li>
-          {isLoggedIn && isAdmin && <li><NavLink to='/manage'>Manage</NavLink></li>}
-        </Nav>
+        <div style={{ display: 'flex', flexGrow: 1, flexWrap: 'wrap'}}>
+          <NavWrap>
+            <Nav>
+              <li><NavLink exact to='/'>Home</NavLink></li>
+              {isLoggedIn && isAdmin && <li><NavLink to='/manage'>Manage</NavLink></li>}
+            </Nav>
+          </NavWrap>
 
-        {!isLoggedIn &&
-          <LoginNav>
-            <RegisterLink to="/register">Register</RegisterLink>
-            <RegisterLink to="/login">Login</RegisterLink>
-          </LoginNav>
-        }
 
-        {isLoggedIn &&
-          <MyAccountLink onClick={() => this.setState({ showMyAccount: !showMyAccount })}>
-            My Account
-            <FadeIn in={showMyAccount} enterDuration={200} exitDuration={100}>
-              <MyAccount hide={this.handleHideMyAccount}/>
-            </FadeIn>
-          </MyAccountLink>
-        }
+          <SomeWrap> 
+            {!isLoggedIn &&
+              <LoginNav>
+                <RegisterLink to="/register">Register</RegisterLink>
+                <RegisterLink to="/login">Login</RegisterLink>
+              </LoginNav>
+            }
 
-        <CartLink to='/cart'>
-          <i style={{ position: 'relative', marginRight: 2}} className="fas fa-shopping-cart fa-lg">
-            <CartCount count={allProductCount}>{allProductCount}</CartCount>
-          </i>
-          <span style={{ marginRight: 5 }}>CART</span>
-          {allProductCount > 0 && <span style={{ fontWeight: 'bold'}} >{sum}€</span>}
-        </CartLink>
+            {isLoggedIn &&
+              <MyAccountLink onClick={() => this.setState({ showMyAccount: !showMyAccount })}>
+                My Account
+                <FadeIn in={showMyAccount} enterDuration={200} exitDuration={100}>
+                  <MyAccount hide={this.handleHideMyAccount}/>
+                </FadeIn>
+              </MyAccountLink>
+            }
+
+            <CartLink to='/cart'>
+              <i style={{ position: 'relative', marginRight: 2}} className="fas fa-shopping-cart fa-lg">
+                <CartCount count={allProductCount}>{allProductCount}</CartCount>
+              </i>
+              <span style={{ marginRight: 5 }}>CART</span>
+              {allProductCount > 0 && <span style={{ fontWeight: 'bold'}} >{sum}€</span>}
+            </CartLink>
+          </SomeWrap>
+        </div>
       </Wrapper>
     );
   }

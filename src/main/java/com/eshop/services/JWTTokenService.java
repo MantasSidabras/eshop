@@ -21,7 +21,9 @@ public class JWTTokenService {
    // @Value("${jwt.secret}")
     @Value("${jwt.secret}")
     private String secret;
-    private long expirationTimeInMillis = 3000000;
+
+    @Value("${jwt.expTime}")
+    private long expirationTimeInMillis;
 
     public Integer parseToken(String token) throws TokenParseException {
         try {

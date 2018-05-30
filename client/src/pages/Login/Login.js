@@ -13,26 +13,23 @@ const Wrapper = styled.div`
   flex-grow: 1;
   width: 100%;
   padding: 1rem;
+  margin: 0 auto;
   background-color: hsl(0, 0%, 100%);
   border: 1px solid hsl(0, 0%, 75%);
   border-radius: 3px;
 
   > div {
     width: 100%;
-    max-width: 500px;
-    background: hsl(0,0%,95%);
-    border-radius: 10px;
-    padding: 30px;
+    max-width: 300px;
+    border-radius: 3px;
     padding-top: 0px;
-    border: 1px solid hsl(0, 0%, 90%);
-    box-shadow: 0 1px 1px hsla(0,0%,0%, 0.2);
   }
 
   label {
     display: block;
     color: hsla(0, 0%, 0%, 0.85);
   }
-  margin: 0 auto;
+  
   input {
     width: 100%;
     padding: 3px;
@@ -46,15 +43,14 @@ const Wrapper = styled.div`
   }
 
   button{
-    border-radius: 5px;
+    border-radius: 3px;
     width: 100%;
     margin-top: 10px;
     padding: 7px;
     font-family: 'Roboto', sans-serif;
     font-size: 0.9rem;
-    color: hsl(0, 0%, 100%);
-    background: hsl(135, 60%, 45%);
-    border: 1px solid hsl(135, 65%, 40%);
+    background: hsl(110, 60%, 75%);
+    border: 1px solid hsl(110, 35%, 55%);
     box-shadow: 0 1px 1px hsla(0,0%,0%, 0.2);
     outline: none;
     cursor: pointer;
@@ -62,7 +58,7 @@ const Wrapper = styled.div`
     text-align: center;
 
     &:hover {
-      background: hsl(135, 60%, 40%);
+      background: hsl(110, 50%, 72%);
     }
   }
   `
