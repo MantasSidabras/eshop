@@ -43,12 +43,12 @@ const Name = styled.div`
 
 const Image = styled.img`
   max-width: 100%;
+  max-height: 100%;
   border-radius: 3px;
-  height: auto;
 `;
 
 const Placeholder = styled.div`
-position: relative;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -116,14 +116,14 @@ class Product extends Component {
   }
 
   render() {
-    const { name, price, productImages, quantity } = this.props;
+    const { name, price, productImages, deleted, quantity } = this.props;
     return (
       <Wrapper onClick={this.navigateToProduct}>
           <Name>{name}</Name>
-          {productImages.length > 0 ? <Image src={ProductImageApi.get(productImages[0].id)} /> : <Placeholder><Text>No image</Text></Placeholder>}
+          {productImages.length > 0 ? <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 130}}><Image src={ProductImageApi.get(productImages[0].id)} /></div> : <Placeholder><Text>No image</Text></Placeholder>}
         <div style={{ width: '100%'}}>
           <Price>{price.toFixed(2)}€</Price>
-          <Add disabled={quantity === 0} onClick={this.handleAdd}>Add to cart</Add>
+          <Add disabled={deleted || quantity === 0} onClick={this.handleAdd}>Add to cart</Add>
         </div>
       </Wrapper>
     );

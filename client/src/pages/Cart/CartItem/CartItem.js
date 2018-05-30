@@ -11,6 +11,7 @@ const Name = styled.div`
   align-items: center; 
   flex-grow: 1;
   min-width: 80px;
+  max-width: 360px;
 `
 
 const Price = styled.div`

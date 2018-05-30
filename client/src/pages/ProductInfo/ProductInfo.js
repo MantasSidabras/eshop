@@ -16,44 +16,32 @@ const Wrapper = styled.div`
   border: 1px solid hsl(0, 0%, 75%);
   border-radius: 3px;
 
-  > div{
-    width: 40%;
-    min-width: 300px;
+  > div {
     font-family: 'Roboto', sans-serif;
-    font-size: 0.8rem;
     margin: 0 10px;
     max-width: 500px;
-    border-radius: 10px;
-    padding: 20px;
-
+    border-radius: 3px;
   }
 
-  .main{
+  .main {
+    width: 100%;
+    max-width: 300px;
     text-align: center;
+    margin-bottom: 2rem;
   }
 
   .info {
-    width: 20%;
-    border: 1px solid hsl(0, 0%, 90%);
-    box-shadow: 0 1px 1px hsla(0,0%,0%, 0.2);
+    width: 100%;
+    max-width: 300px;
+    padding: 1rem;
+    box-shadow: 0 1px 2px hsla(0,0%,0%, 0.2);
   }
-  h1 {
-    text-align: center;
-  }
-  p{
-    height: 100%;
-    border: 1px solid hsl(0, 0%, 90%);
-    box-shadow: 0 1px 1px hsla(0,0%,0%, 0.2);
-    background: hsl(0,0%,98%);
-    border-radius: 5px;
-    padding: 5px 5px;
-    text-align: left;
-  }
-  img{
+
+  img {
     max-width: 100%;
+    max-height: 100%;
     border-radius: 3px;
-    height: auto;
-    max-height: 400px;
+    box-shadow: 0 1px 2px hsla(0,0%,0%, 0.2);
   }
 
   table {
@@ -62,30 +50,71 @@ const Wrapper = styled.div`
     box-shadow: 0 1px 1px hsla(0,0%,0%, 0.2);
     background: hsl(0,0%,98%);
     padding: 5px 5px;
-    border-radius: 5px;
+    border-radius: 3px;
   }
-  td{
-    font-size: 1em;
+  td {
+    font-size: 1rem;
     padding-bottom: 5px;
   }
+
   td.name_field {
   }
+
   td.value_field {
     width: 20px;
     text-align: right;
   }
-
-
 `
+
+const Name = styled.div`
+  overflow: hidden;
+  width: 100%;
+  font-size: calc(1rem + 0.4vw);
+  margin-bottom: 5px;
+  text-align: center;
+  color: hsla(0, 0%, 0%, 0.85);
+
+`;
+
+const Description = styled.div`
+  margin: 15px 0;
+  font-size: 0.9rem;
+`
+
+const Price = styled.div`
+  margin: 10px 0;
+  font-weight: bold;
+  font-size: 1.2rem;
+`;
+
+const Quantity = styled.div`
+  font-size: 1rem;
+  font-weight: bold;
+`;
+
 const Placeholder = styled.div`
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 300px;
+  padding-top: 100%;
   width: 100%;
   border: 1px solid hsl(0, 0%, 75%);
   border-radius: 3px;
+  box-shadow: 0 1px 1px hsla(0,0%,0%, 0.2);
 `;
+
+const Text = styled.div`
+  position:absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1rem;
+`
 
 const Button = styled.button`
   width: 100%;
@@ -111,9 +140,26 @@ const Button = styled.button`
   `}
 `
 
+const NotFound = styled.div`
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1rem;
+`
+
 class ProductInfo extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true,
+      image: null
+    }
+  }
+
   componentDidMount() {
-    this.props.productStore.getOne(this.props.match.params.id);
+    this.props.productStore.getOne(this.props.match.params.id)
+      .then(() => this.setState({ loading: false }));
   }
 
   handleAdd = () => {
@@ -127,41 +173,63 @@ class ProductInfo extends Component {
       });
   }
   
+  setImage = id => {
+    this.setState({ imageId: id })
+  }
+
   render(){
-    const product = this.props.productStore.product;
-    return (
-      <Wrapper>
-        <div className="main">
-          <h1>{product.name}</h1>
-          {product.productImages && product.productImages.length > 0 ? <img src={ProductImageApi.get(product.productImages[0].id)} alt={product.name}/> : <Placeholder>No image</Placeholder>}
-        </div>
-        <div className="info">
-          <h1>Info</h1>
-          <h3>Price: {product.price} Eur</h3>
-          {product.quantity > 0 ? <strong>In stock: {product.quantity}</strong> : <strong>Out of stock</strong>}
-          <p>
-            {product.description}
-          </p>
-          <table>
-          {product.productProperties && product.productProperties.map(property => {
-            return(
-            <tr>
-              <td className="name_field">
-                {property.name}:
-              </td>
-              <td className="value_field">
-                <strong>{property.value}</strong>
-              </td>
-            </tr>
-          )
-          })}
-          </table>
+    if (!this.state.loading && this.props.productStore.product !== null) {
+      const { name, price, quantity, productImages, description, productProperties, deleted } = this.props.productStore.product;
+      const { imageId } = this.state;
 
-          <Button disabled={product.quantity === 0} onClick={this.handleAdd}>Add to cart</Button>
+      return (
+        <Wrapper>
+          <div className="main">
+            {productImages && productImages.length > 0 ? <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 300, marginBottom: 10}}>
+                <img src={ProductImageApi.get(imageId || productImages[0].id)} alt={name}/>
+              </div> : <Placeholder><Text>No image</Text></Placeholder>}
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}>
+              {productImages && productImages.filter(i => i.id != imageId).map(i => 
+                <div key={i.id} onClick={() => this.setImage(i.id)} style={{ width: '32%', cursor: 'pointer',marginBottom: 5}}>
+                  <img src={ProductImageApi.get(i.id)} alt={name}/>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="info">
+            <Name>{name}</Name>
+            <Description>{description}</Description>
+            
+            <Quantity>{quantity > 0 && !deleted ? 'In stock' : 'Out of stock'}</Quantity>
 
-        </div>
-      </Wrapper>
-    )
+            {productProperties.length > 0 && (
+              <table>
+                {productProperties.map(property => (
+                  <tr>
+                    <td className="name_field">
+                      {property.name}:
+                    </td>
+                    <td className="value_field">
+                      <strong>{property.value}</strong>
+                    </td>
+                  </tr>
+                ))}
+              </table>
+            )}
+            <Price>{price.toFixed(2)}€</Price>
+            <Button disabled={deleted || quantity === 0} onClick={this.handleAdd}>Add to cart</Button>
+          </div>
+        </Wrapper>
+      )
+    } else if (!this.state.loading && this.props.productStore.product == null) {
+      return (
+        <Wrapper>
+          <NotFound>Product not found</NotFound>
+        </Wrapper>
+      )
+    } else {
+      return <Wrapper />
+    }
   }
 }
 

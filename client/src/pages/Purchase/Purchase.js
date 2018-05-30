@@ -172,7 +172,7 @@ const Message = styled.div`
   border-top-right-radius: 3px;
 
   @media (min-width: 700px) {
-    margin-top: -20vh;
+    margin-top: -10vh;
   }
 `
 
@@ -240,7 +240,6 @@ class Purchase extends Component {
         cartStore.getCart();
       })
       .catch(error => {
-
         if (error.status === 401) {
           console.error(error.message);
           userStore.logout();
@@ -285,7 +284,7 @@ class Purchase extends Component {
             </div>
           }
 
-          {!loading && !showMessage && (
+          {!loading && (!showMessage || isError) && (
             <React.Fragment>
               <Title>Purchase</Title>
               <Form onSubmit={this.handleSubmit}>

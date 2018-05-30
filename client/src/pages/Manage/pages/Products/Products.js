@@ -89,7 +89,7 @@ class Products extends Component {
           </Button>
         </ButtonGroup>
 
-        {showAllProducts && <AllProducts />}
+        {showAllProducts && <AllProducts history={this.props.history}/>}
         {showAddProduct && <AddProduct />}
       </Wrapper>
     );
