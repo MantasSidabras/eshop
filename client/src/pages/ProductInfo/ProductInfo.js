@@ -38,9 +38,9 @@ const Wrapper = styled.div`
   }
 
   img {
-    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
     border-radius: 3px;
-    height: auto;
     box-shadow: 0 1px 2px hsla(0,0%,0%, 0.2);
   }
 
@@ -178,7 +178,9 @@ class ProductInfo extends Component {
       return (
         <Wrapper>
           <div className="main">
-            {productImages && productImages.length > 0 ? <img src={ProductImageApi.get(imageId || productImages[0].id)} alt={name}/> : <Placeholder><Text>No image</Text></Placeholder>}
+            {productImages && productImages.length > 0 ? <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 300, marginBottom: 10}}>
+                <img src={ProductImageApi.get(imageId || productImages[0].id)} alt={name}/>
+              </div> : <Placeholder><Text>No image</Text></Placeholder>}
             <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}>
               {productImages && productImages.filter(i => i.id != imageId).map(i => 
                 <div key={i.id} onClick={() => this.setImage(i.id)} style={{ width: '32%', cursor: 'pointer',marginBottom: 5}}>

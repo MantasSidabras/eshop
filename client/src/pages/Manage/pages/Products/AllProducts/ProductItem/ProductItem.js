@@ -82,11 +82,21 @@ class ProductItem extends Component {
     }
   }
 
+  navigate = () => {
+    this.props.history.push(`/product/${this.props.id}`);
+  }
+
   hideIcons = () => this.setState({ showIcons: false });
 
-  toggleShowEdit = () => this.setState(state => ({ showEdit: !state.showEdit }));
+  toggleShowEdit = e => {
+    e.stopPropagation();
+    this.setState(state => ({ showEdit: !state.showEdit }));
+  }
 
-  showConfirm = () => this.setState({ showConfirm: true });
+  showConfirm = e => {
+    e.stopPropagation();
+    this.setState({ showConfirm: true });
+  }
 
   handleEdit = ({ product, imageIdsToDelete, images }) => {
     const formData = new FormData();
@@ -113,7 +123,8 @@ class ProductItem extends Component {
       });
   }
 
-  handleDelete = () => {
+  handleDelete = e => {
+    e.stopPropagation();
     ProductApi.delete(this.props.id)
       .then(() => {
         this.props.productStore.getAll();
@@ -122,21 +133,24 @@ class ProductItem extends Component {
       .catch(error => console.error(error));
   }
 
-  handleCancel = () => this.setState({ showEdit: false, showConfirm: false });
+  handleCancel = e => {
+    this.setState({ showEdit: false, showConfirm: false });
+  }
 
-  handleClose = () => {
+  handleClose = e => {
     clearTimeout(this.timeout);
-    this.setState({ showMessage: false });
+    this.setState({ showEdit: false, showMessage: false });
   }
 
   render() {
     const { name } = this.props;
     const { showIcons, showEdit, showConfirm, showMessage } = this.state;
     return (
-      <Wrapper>
+      <Wrapper >
         <Product
           onMouseOver={this.showIcons}
           onMouseLeave={this.hideIcons}
+          onClick={this.navigate}
         >
           <Name>{name}</Name>
           <FadeIn in={showIcons} enterDuration={200} exitDuration={200}>
