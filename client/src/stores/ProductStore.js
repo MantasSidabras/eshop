@@ -8,7 +8,7 @@ class ProductStore {
 
   getAll = () => {
     return ProductApi.getAll()
-      .then(products => this.products = products)
+      .then(products => this.products = products.filter(p => !p.deleted))
       .catch(error => console.error(error))
   }
 
@@ -16,12 +16,16 @@ class ProductStore {
     return ProductApi.getOne(id)
       .then(product =>
         {
-          this.product = product;
-          this.products.forEach((p, i) => { 
-            if (p.id === product.id) {
-              this.products[i] = product;
-            }
-          })
+          if (product.deleted) {
+            this.product = null;
+          } else {
+            this.product = product;
+            this.products.forEach((p, i) => { 
+              if (p.id === product.id) {
+                this.products[i] = product;
+              }
+            })
+          }
         })
       .catch(error => console.error(error))
   }

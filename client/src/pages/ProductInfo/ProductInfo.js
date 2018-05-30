@@ -140,6 +140,14 @@ const Button = styled.button`
   `}
 `
 
+const NotFound = styled.div`
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1rem;
+`
+
 class ProductInfo extends Component {
   constructor(props) {
     super(props);
@@ -170,11 +178,10 @@ class ProductInfo extends Component {
   }
 
   render(){
-    const { name, price, quantity, productImages, description, productProperties, deleted } = this.props.productStore.product;
+    if (!this.state.loading && this.props.productStore.product !== null) {
+      const { name, price, quantity, productImages, description, productProperties, deleted } = this.props.productStore.product;
+      const { imageId } = this.state;
 
-    const { imageId } = this.state;
-    
-    if (!this.state.loading) {
       return (
         <Wrapper>
           <div className="main">
@@ -214,7 +221,15 @@ class ProductInfo extends Component {
           </div>
         </Wrapper>
       )
-    } else return <Wrapper/>
+    } else if (!this.state.loading && this.props.productStore.product == null) {
+      return (
+        <Wrapper>
+          <NotFound>Product not found</NotFound>
+        </Wrapper>
+      )
+    } else {
+      return <Wrapper />
+    }
   }
 }
 
