@@ -88,7 +88,7 @@ public class CommerceService {
         cp.setQuantity(initQuantity);
         cp.setProduct(product);
         cp.setUser(user);
-
+        user.getCartProductList().add(cp);
         return cartProductDAO.save(cp);
     }
 

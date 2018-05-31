@@ -1,5 +1,7 @@
 package com.eshop.services;
 
+import com.eshop.entities.Order;
+import com.eshop.entities.Payment;
 import com.eshop.entities.Product;
 import com.eshop.entities.User;
 import com.eshop.exceptions.UserNotCreatedException;
@@ -71,15 +73,37 @@ public class DataFillerTest {
 
         //Create users
         try {
-            User user1 = userService.create(new User("Vartotojas1@eshop.local", "User1234", "Vartotojų g. 1", "11111", "Vartotojas", "Vienas", false, false));
-            User user2 = userService.create(new User("Vartotojas2@eshop.local", "User1234", "Vartotojų g. 2", "22222", "Vartotojas", "Du", false, false));
-            User user3 = userService.create(new User("Vartotojas3@eshop.local", "User1234", "Vartotojų g. 3", "33333", "Vartotojas", "Trys", false, true));
-            User admin = userService.create(new User("Administratorius@eshop.local", "User1234", "DROP TABLE `users`; g. 15", "151515", "Admministratorius", "Darbštuolis", true, false));
+            User user1 = userService.create(new User("Vartotojas1@test.lt", "User1234", "Vartotojų g. 1", "11111", "Vartotojas", "Vienas", false, false));
+            User user2 = userService.create(new User("Vartotojas2@test.lt", "User1234", "Vartotojų g. 2", "22222", "Vartotojas", "Du", false, false));
+            User user3 = userService.create(new User("Vartotojas3@etest.lt", "User1234", "Vartotojų g. 3", "33333", "Vartotojas", "Trys", false, true));
+            User admin = userService.create(new User("Administratorius@test.lt", "User1234", ";DROP TABLE `users`; g. 15", "151515", "Admministratorius", "Darbštuolis", true, false));
 
             //Create orders for users
             Iterable<Product> products = productService.findAll();
 
             createCartProduct(products, "Mindless Voodoo Cayuga II", user1, 1);
+            Order user1Order1 = commerceService.createOrder(user1, new Payment());
+            user1Order1.setState(OrderState.Paid);
+            commerceService.updateOrder(user1Order1);
+
+            createCartProduct(products, "Powerslide standard Man M", user1, 1);
+            createCartProduct(products, "Wicked SUS Rustproof", user1, 4);
+            Order user1Order2 = commerceService.createOrder(user1, new Payment());
+            user1Order2.setState(OrderState.Sent);
+            commerceService.updateOrder(user1Order2);
+
+
+            createCartProduct(products, "SEBA FR1 80 Grey", user2, 2);
+            createCartProduct(products, "Ennui City Brace", user2, 2);
+            Order user2Order = commerceService.createOrder(user2, new Payment());
+            user2Order.setState(OrderState.Sent);
+            commerceService.updateOrder(user2Order);
+
+
+            createCartProduct(products, "Mindless Voodoo Lakota DT", user3, 1);
+            Order user3Order = commerceService.createOrder(user3, new Payment());
+            user3Order.setState(OrderState.Paid);
+            commerceService.updateOrder(user3Order);
             
         }
         catch (Exception ex) {
@@ -102,7 +126,7 @@ public class DataFillerTest {
 
     private Product findProductByName(Iterable<Product> products, String name) {
         for(Product product : products)
-            if(product.getName() == name)
+            if(product.getName().equals(name))
                 return product;
         return null;
     }
