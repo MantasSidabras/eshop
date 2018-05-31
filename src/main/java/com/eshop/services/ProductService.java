@@ -152,13 +152,16 @@ public class ProductService {
                             case 2 :
                                 //price
                                 cellValue = cellValue.replace(',', '.');
-                                product.setPrice(new BigDecimal(cellValue));
+                                if(!cellValue.equals(""))
+                                    product.setPrice(new BigDecimal(cellValue));
                                 break;
                             case 3 :
                                 //image
-                                List<String> urlList = Arrays.asList(cellValue.split(","));
-                                for(String url : urlList) {
-                                    product.getProductImages().add(productImageService.create(product, url));
+                                if(!cellValue.equals("")) {
+                                    List<String> urlList = Arrays.asList(cellValue.split(","));
+                                    for(String url : urlList) {
+                                        product.getProductImages().add(productImageService.create(product, url));
+                                    }
                                 }
                                 break;
                             case 4 :
@@ -189,7 +192,7 @@ public class ProductService {
                     }
                 }
             }
-            if(product != null && !products.contains(product)) {
+            if(product != null && !product.getName().equals("") && !products.contains(product)) {
                 products.add(product);
             }
         } catch (Exception e) {
