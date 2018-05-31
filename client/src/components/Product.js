@@ -60,11 +60,11 @@ const Placeholder = styled.div`
 
 const Text = styled.div`
   position:absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    display: flex;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
   justify-content: center;
   align-items: center;
 `
@@ -72,6 +72,7 @@ const Text = styled.div`
 const Price = styled.div`
   margin: 5px 0;
   font-weight: bold;
+  font-size: 1.1rem;
 `;
 
 const Add = styled.button`
@@ -96,7 +97,22 @@ const Add = styled.button`
       transform: scale(0.98);
     }
   `}
+
+  @media (max-width: 400px) {
+    padding: 5px 8px;
+  }
 `;
+
+const ImageWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+
+  @media (max-width: 400px) {
+    height: 100px;
+  }
+`
 
 class Product extends Component {
   handleAdd = (e) => {
@@ -116,15 +132,20 @@ class Product extends Component {
   }
 
   render() {
-    const { name, price, productImages, deleted, quantity } = this.props;
+    const { name, price, productImages, quantity } = this.props;
     return (
       <Wrapper onClick={this.navigateToProduct}>
           <Name>{name}</Name>
-          {productImages.length > 0 ? <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 130}}><Image src={ProductImageApi.get(productImages[0].id)} /></div> : <Placeholder><Text>No image</Text></Placeholder>}
-        <div style={{ width: '100%'}}>
-          <Price>{price.toFixed(2)}€</Price>
-          <Add disabled={deleted || quantity === 0} onClick={this.handleAdd}>Add to cart</Add>
-        </div>
+          {productImages.length > 0 
+            ? (<ImageWrap>
+                <Image src={ProductImageApi.get(productImages[0].id)} />
+              </ImageWrap>
+            ) : <Placeholder><Text>No image</Text></Placeholder>
+          }
+          <div style={{ width: '100%'}}>
+            <Price>{price.toFixed(2)}€</Price>
+            <Add disabled={quantity === 0} onClick={this.handleAdd}>Add to cart</Add>
+          </div>
       </Wrapper>
     );
   }

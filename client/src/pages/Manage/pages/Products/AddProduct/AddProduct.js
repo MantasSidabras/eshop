@@ -88,7 +88,7 @@ class AddProduct extends Component {
 
   removeProperty = index => {
     const properties = [...this.state.properties];
-    this.setState({ properties: properties.filter((p, i) => index != i) });
+    this.setState({ properties: properties.filter((p, i) => index !== i) });
   }
 
   handleSubmit = e => {

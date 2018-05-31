@@ -69,7 +69,7 @@ class MyAccount extends Component {
 
   render() { 
     return ( 
-      <Wrapper innerRef={this.ref} >
+      <Wrapper innerRef={this.ref} onClick={this.props.hide}>
         <StyledLink to='/editAccount'>Edit Account</StyledLink>
         <StyledLink to='/orderHistory'>Order History</StyledLink>
         <Logout onClick={this.handleLogout}>Logout</Logout>

@@ -73,7 +73,7 @@ const Cancel = Button.extend`
 
 class ConfirmOverwrite extends Component {
   render () {
-    const { name, onDelete, onCancel } = this.props;
+    const { onCancel } = this.props;
     return (
       <Wrapper onClick={onCancel}>
         <ScaleUp>
