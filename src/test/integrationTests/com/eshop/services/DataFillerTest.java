@@ -3,6 +3,7 @@ package com.eshop.services;
 import com.eshop.entities.Product;
 import com.eshop.entities.User;
 import com.eshop.exceptions.UserNotCreatedException;
+import org.junit.Ignore;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -32,6 +33,9 @@ public class DataFillerTest {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private CommerceService commerceService;
+
     @Test
     public void createTestData() throws UserNotCreatedException {
 
@@ -49,12 +53,12 @@ public class DataFillerTest {
 
     @ParameterizedTest
     @ValueSource(strings = { "PresentationFiller.xlsx" })
-    public void ImportDataFromXlsxFile(String fileName) {
+    public void ImportDataFromXlsxFileTest(String fileName) {
 
+        //Import objects
         ClassLoader classLoader = getClass().getClassLoader();
         try {
             Path path = Paths.get(classLoader.getResource(fileName).toURI());
-
             byte[] content = null;
             content = Files.readAllBytes(path);
             MultipartFile file = new MockMultipartFile(fileName,
@@ -64,5 +68,42 @@ public class DataFillerTest {
         catch (Exception ex) {
             fail(ex.getMessage());
         }
+
+        //Create users
+        try {
+            User user1 = userService.create(new User("Vartotojas1@eshop.local", "User1234", "Vartotojų g. 1", "11111", "Vartotojas", "Vienas", false, false));
+            User user2 = userService.create(new User("Vartotojas2@eshop.local", "User1234", "Vartotojų g. 2", "22222", "Vartotojas", "Du", false, false));
+            User user3 = userService.create(new User("Vartotojas3@eshop.local", "User1234", "Vartotojų g. 3", "33333", "Vartotojas", "Trys", false, true));
+            User admin = userService.create(new User("Administratorius@eshop.local", "User1234", "DROP TABLE `users`; g. 15", "151515", "Admministratorius", "Darbštuolis", true, false));
+
+            //Create orders for users
+            Iterable<Product> products = productService.findAll();
+
+            createCartProduct(products, "Mindless Voodoo Cayuga II", user1, 1);
+            
+        }
+        catch (Exception ex) {
+            fail(ex.getMessage());
+        }
+    }
+
+
+    private void createCartProduct(Iterable<Product> products, String productName, User user, int quantity) {
+        try {
+            Product product = findProductByName(products, productName);
+            product.setQuantity(quantity);
+            productService.update(product);
+            commerceService.createCartProduct(user, product.getId(), quantity);
+        }
+        catch(Exception ex){
+            fail(ex.getMessage());
+        }
+    }
+
+    private Product findProductByName(Iterable<Product> products, String name) {
+        for(Product product : products)
+            if(product.getName() == name)
+                return product;
+        return null;
     }
 }
