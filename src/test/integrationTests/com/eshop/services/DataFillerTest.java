@@ -55,7 +55,7 @@ public class DataFillerTest {
 
     @ParameterizedTest
     @ValueSource(strings = { "PresentationFiller.xlsx" })
-    public void ImportDataFromXlsxFileTest(String fileName) {
+    public void DataFillerForPresentationTest(String fileName) {
 
         //Import objects
         ClassLoader classLoader = getClass().getClassLoader();
@@ -82,29 +82,39 @@ public class DataFillerTest {
             Iterable<Product> products = productService.findAll();
 
             createCartProduct(products, "Mindless Voodoo Cayuga II", user1, 1);
-            Order user1Order1 = commerceService.createOrder(user1, new Payment());
+            Payment payment = new Payment();
+            payment.setHolder(user1.getFirstName() + " " + user1.getLastName());
+            payment.setAddress(user1.getAddress());
+            payment.setZipCode(user1.getZipCode());
+            Order user1Order1 = commerceService.createOrder(user1, payment);
             user1Order1.setState(OrderState.Paid);
             commerceService.updateOrder(user1Order1);
+            user1 = userService.findById(user1.getId());
 
             createCartProduct(products, "Powerslide standard Man M", user1, 1);
             createCartProduct(products, "Wicked SUS Rustproof", user1, 4);
-            Order user1Order2 = commerceService.createOrder(user1, new Payment());
+            Order user1Order2 = commerceService.createOrder(user1, payment);
             user1Order2.setState(OrderState.Sent);
             commerceService.updateOrder(user1Order2);
 
-
             createCartProduct(products, "SEBA FR1 80 Grey", user2, 2);
             createCartProduct(products, "Ennui City Brace", user2, 2);
-            Order user2Order = commerceService.createOrder(user2, new Payment());
+            payment.setHolder(user2.getFirstName() + " " + user2.getLastName());
+            payment.setAddress(user2.getAddress());
+            payment.setZipCode(user2.getZipCode());
+            Order user2Order = commerceService.createOrder(user2, payment);
             user2Order.setState(OrderState.Sent);
             commerceService.updateOrder(user2Order);
 
 
             createCartProduct(products, "Mindless Voodoo Lakota DT", user3, 1);
-            Order user3Order = commerceService.createOrder(user3, new Payment());
+            payment.setHolder(user3.getFirstName() + " " + user3.getLastName());
+            payment.setAddress(user3.getAddress());
+            payment.setZipCode(user3.getZipCode());
+            Order user3Order = commerceService.createOrder(user3, payment);
             user3Order.setState(OrderState.Paid);
             commerceService.updateOrder(user3Order);
-            
+
         }
         catch (Exception ex) {
             fail(ex.getMessage());

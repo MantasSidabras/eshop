@@ -167,10 +167,11 @@ public class CommerceService {
             op.setQuantity(cp.getQuantity());
 
             op.getProduct().setQuantity(op.getProduct().getQuantity() - op.getQuantity());
-
+            productDAO.save(op.getProduct());
             orderProductDAO.save(op);
         }
 
+        removeAllFromCartByUserId(user.getId());
         return savedOrder;
     }
 
