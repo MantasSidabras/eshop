@@ -4,6 +4,7 @@ import com.eshop.Interfaces.PaymentMethod;
 import com.eshop.entities.Order;
 import com.eshop.entities.Payment;
 import com.eshop.entities.User;
+import com.eshop.enums.OrderState;
 import com.eshop.exceptions.*;
 import com.eshop.services.*;
 import org.springframework.beans.factory.annotation.Autowired;

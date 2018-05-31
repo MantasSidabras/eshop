@@ -1,4 +1,4 @@
-package com.eshop.services;
+package com.eshop.enums;
 
 public enum OrderState {
     Unpaid, Paid, Sent

@@ -1,11 +1,11 @@
 package com.eshop.services;
 
-import com.eshop.controllers.requestors.CartProductRequest;
 import com.eshop.dao.CartProductDAO;
 import com.eshop.dao.OrderDAO;
 import com.eshop.dao.OrderProductDAO;
 import com.eshop.dao.ProductDAO;
 import com.eshop.entities.*;
+import com.eshop.enums.OrderState;
 import com.eshop.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,7 +69,7 @@ public class CommerceService {
         return cp;
     }
 
-
+    @Transactional
     public CartProduct createCartProduct(User user, Integer productId, Integer initQuantity) throws InvalidProductQuantityException, ProductNotFoundException {
         Product product = productService.findById(productId);
 
@@ -92,6 +92,7 @@ public class CommerceService {
         return cartProductDAO.save(cp);
     }
 
+    @Transactional
     public CartProduct updateCartProduct(CartProduct oldCartProduct, Integer newQuantity) throws InvalidProductQuantityException {
         if (newQuantity.compareTo(1) < 0) {
             throw new InvalidProductQuantityException();
@@ -188,7 +189,7 @@ public class CommerceService {
             return orderFound;
         }
     }
-
+    @Transactional
     public Order updateOrder(Order updated) {
         try {
             Order existing = this.findOrderById(updated.getId());
@@ -199,6 +200,7 @@ public class CommerceService {
             return null;
         }
     }
+    @Transactional
     public void deleteOrderById(Integer id) {
         this.orderDAO.deleteById(id);
     }
@@ -214,6 +216,7 @@ public class CommerceService {
       }
     }
 
+    @Transactional
     public Order createOrderForUser(User user) throws ProductCartEmptyException {
 
         if(user.getCartProductList().size() == 0){
