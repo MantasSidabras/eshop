@@ -106,7 +106,7 @@ class UserApi {
   }
 
   checkCartIntegrity = id => {
-    return fetch(`http://localhost:8080/api/user/${id}/cart`, {
+    return fetch(Config.url + `/user/${id}/cart`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

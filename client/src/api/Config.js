@@ -1,4 +1,4 @@
 class Config {
-  url = 'http://localhost:8080/api';
+  url = '/api';
 }
 export default new Config();

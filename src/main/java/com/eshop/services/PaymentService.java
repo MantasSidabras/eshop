@@ -18,6 +18,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,9 @@ import java.util.List;
 public class PaymentService implements PaymentMethod{
 
     private final String url = "https://mock-payment-processor.appspot.com/v1/payment";
-    private final String userAuth = "technologines:platformos";
+
+    @Value("${payment.user}")
+    private String userAuth;
     
     @Async
     public void sendPayment(Payment payment) throws Exception {
